@@ -29,6 +29,5 @@ node_modules
 
 lib/
 data/
-config/key.txt
 .fuse_hidden.*
 .npmignore
