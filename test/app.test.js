@@ -1,4 +1,4 @@
-
+/* eslint-env mocha */
 'use strict'
 
 const assert = require('assert')
@@ -13,7 +13,7 @@ describe('Feathers application tests', () => {
 
   after(function (done) {
     this.server.close(done)
-  });
+  })
 
   it('starts and shows the index page', (done) => {
     request('http://localhost:3030', (err, res, body) => {

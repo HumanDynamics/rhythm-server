@@ -1,3 +1,4 @@
+/* eslint-env mocha */
 'use strict'
 
 const assert = require('assert')
@@ -22,12 +23,12 @@ describe('meeting service', () => {
     assert.ok(app.service('meetings'))
   })
 
-  it('creates a new meeting', () => {
+  it('creates a new meeting', (done) => {
     app.service('meetings')
        .create(testMeeting, {})
        .then((meeting) => {
-         assert(meeting === testMeeting)
-         return meeting
+         assert(meeting._id === testMeeting._id)
+         done()
        }).catch((err) => {
          done(err)
        })

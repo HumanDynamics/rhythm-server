@@ -7,37 +7,37 @@
 const winston = require('winston')
 const helpers = require('../helpers')
 const crypto = helpers.crypto
-const transform_keys = helpers.transform_keys
+const transformKeys = helpers.transformKeys
 
-function encrypt_hook (keys) {
-  var encrypt_hook = function (hook) {
+function encryptHook (keys) {
+  var encryptHook = function (hook) {
     winston.log('debug', '>>> ENCRYPTING:', hook.data)
 
-    function encrypt_ids (data) {
-      return transform_keys(data, keys, crypto.encrypt)
+    function encryptIds (data) {
+      return transformKeys(data, keys, crypto.encrypt)
     }
 
     if (hook.data != null) {
-      var encrypted_data = encrypt_ids(hook.data)
-      hook.data = encrypted_data
+      var encryptedData = encryptIds(hook.data)
+      hook.data = encryptedData
     }
 
     if (hook.params != null) {
       /* winston.log("debug", "encrypting params:", hook.params); */
-      var encrypted_params = encrypt_ids(hook.params)
+      var encryptedParams = encryptIds(hook.params)
       /* winston.log("debug", "encrypted params:", encrypted_params); */
-      hook.params = encrypted_params
+      hook.params = encryptedParams
     }
     return hook
   }
-  return encrypt_hook
+  return encryptHook
 }
 
-function decrypt_hook (keys) {
-  var decrypt_hook = function (hook) {
+function decryptHook (keys) {
+  var decryptHook = function (hook) {
     winston.log('debug', '>>>DECRYPTING:', hook.result)
     function decrypt_ids (data) {
-      return transform_keys(data, keys, crypto.decrypt)
+      return transformKeys(data, keys, crypto.decrypt)
     }
 
     if (hook.result !== null && hook.result.length > 0) {
@@ -47,10 +47,10 @@ function decrypt_hook (keys) {
     }
     return hook
   }
-  return decrypt_hook
+  return decryptHook
 }
 
 module.exports = {
-  decrypt: decrypt_hook,
-  encrypt: encrypt_hook
+  decrypt: decryptHook,
+  encrypt: encryptHook
 }

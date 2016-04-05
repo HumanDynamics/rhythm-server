@@ -1,10 +1,11 @@
-'use strict';
+/* eslint-env mocha */
+'use strict'
 
-const assert = require('assert');
-const app = require('../../../src/app');
+const assert = require('assert')
+const app = require('../../../src/app')
 
 describe('utterance service', () => {
   it('registered the utterances service', () => {
-    assert.ok(app.service('utterances'));
-  });
-});
+    assert.ok(app.service('utterances'))
+  })
+})
