@@ -4,14 +4,14 @@
 
 const winston = require('winston')
 const _ = require('underscore')
-const turnAnalytics = require('turn-analytics')
+const turnAnalytics = require('./turn-analytics')
 
 // local variables to keep track of job
 var meetingProcessIds = {}
 const TURNS_COMPUTE_INTERVAL = 5 * 1000
 const TURNS_COMPUTE_WINDOW = 5 * 60 * 1000
 
-var startComputingTurns = function (meeting) {
+var startComputingTurns = function (app, meeting) {
   winston.log('info', 'starting computing turns for hangout:', meeting)
 
   // if it's being run, don't start another one...
@@ -20,8 +20,8 @@ var startComputingTurns = function (meeting) {
     return
   }
 
-  var pid = setInterval(function () {
-    turnAnalytics.computeTurns(meeting, new Date(Date.now() - TURNS_COMPUTE_WINDOW), new Date())
+  var pid = setInterval(() => {
+    turnAnalytics.computeTurns(app, meeting, new Date(Date.now() - TURNS_COMPUTE_WINDOW), new Date())
   }, TURNS_COMPUTE_INTERVAL)
 
   meetingProcessIds[meeting] = pid

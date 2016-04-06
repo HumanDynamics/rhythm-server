@@ -5,7 +5,6 @@
 
 const winston = require('winston')
 const _ = require('underscore')
-const app = require('../../app')
 
 // Assumes turns is reported in order
 // Simply looks at order of speaking events, and counts a 'transition' where
@@ -30,7 +29,7 @@ function getTurnTransitions (turns) {
 // of the form:
 // {<participantId>: <total ms>, ...}
 // if participant_ids is false, matches on all participants.
-function computeTurns (meeting, from, to) {
+function computeTurns (app, meeting, from, to) {
   winston.log('info', 'getting turn data for hangout', meeting, from, to)
 
   app.service('utterances').find({
