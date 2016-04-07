@@ -5,24 +5,24 @@ const assert = require('assert')
 const request = require('request')
 const app = require('../src/app')
 
-before(function (done) {
+before(function(done) {
   this.server = app.listen(3030)
-  this.server.once('listening', () => done())
+  this.server.once('listening', done)
 })
 
-after(function (done) {
+after(function(done) {
   this.server.close(done)
 })
 
-describe('Feathers application tests', () => {
-  it('starts and shows the index page', (done) => {
-    request('http://localhost:3030', (err, res, body) => {
+describe('Feathers application tests', function() {
+  it('starts and shows the index page', function(done) {
+    request('http://localhost:3030', function(err, res, body) {
       assert.ok(body.indexOf('<html>') !== -1)
       done(err)
     })
   })
 
-  describe('404', () => {
+  describe('404', function() {
     /* it('shows a 404 HTML page', (done) => {
        request('http://localhost:3030/path/to/nowhere', (err, res, body) => {
        assert.equal(res.statusCode, 404)
@@ -31,11 +31,11 @@ describe('Feathers application tests', () => {
        })
        }) */
 
-    it('shows a 404 JSON error without stack trace', (done) => {
+    it('shows a 404 JSON error without stack trace', function(done) {
       request({
         url: 'http://localhost:3030/path/to/nowhere',
         json: true
-      }, (err, res, body) => {
+      }, function(err, res, body) {
         assert.equal(res.statusCode, 404)
         assert.equal(body.code, 404)
         assert.equal(body.message, 'Page not found')
