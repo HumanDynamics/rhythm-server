@@ -5,16 +5,16 @@ const assert = require('assert')
 const request = require('request')
 const app = require('../src/app')
 
+before(function (done) {
+  this.server = app.listen(3030)
+  this.server.once('listening', () => done())
+})
+
+after(function (done) {
+  this.server.close(done)
+})
+
 describe('Feathers application tests', () => {
-  before(function (done) {
-    this.server = app.listen(3030)
-    this.server.once('listening', () => done())
-  })
-
-  after(function (done) {
-    this.server.close(done)
-  })
-
   it('starts and shows the index page', (done) => {
     request('http://localhost:3030', (err, res, body) => {
       assert.ok(body.indexOf('<html>') !== -1)
