@@ -21,5 +21,5 @@ module.exports = function () {
   const meetingService = app.service('/meetings')
   meetingService.before(hooks.before)
   meetingService.after(hooks.after)
-  meetingService.filter(globalFilters.encryptParticipantFilter)
+  meetingService.filter(globalFilters.decryptParticipantFilter)
 }

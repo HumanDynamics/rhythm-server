@@ -12,13 +12,16 @@ const TURNS_COMPUTE_INTERVAL = 5 * 1000
 const TURNS_COMPUTE_WINDOW = 5 * 60 * 1000
 
 var startComputingTurns = function (app, meeting) {
-  winston.log('info', 'starting computing turns for hangout:', meeting)
+  winston.log('info', 'starting computing turns for meeting:', meeting)
 
   // if it's being run, don't start another one...
   if (_.has(meetingProcessIds, meeting)) {
-    winston.log('info', 'already computing turns for hangout', meeting)
+    winston.log('info', 'already computing turns for meeting', meeting)
     return
   }
+
+  // do one computation now
+  turnAnalytics.computeTurns(app, meeting, new Date(Date.now() - TURNS_COMPUTE_WINDOW), new Date())
 
   var pid = setInterval(() => {
     turnAnalytics.computeTurns(app, meeting, new Date(Date.now() - TURNS_COMPUTE_WINDOW), new Date())
@@ -29,7 +32,7 @@ var startComputingTurns = function (app, meeting) {
 
 var stopComputingTurns = function (meeting) {
   if (_.has(meetingProcessIds, meeting)) {
-    winston.log('info', 'stopping computing turns for hangout:', meeting)
+    winston.log('info', 'stopping computing turns for meeting:', meeting)
     var pid = meetingProcessIds[meeting]
     clearInterval(pid)
     delete meetingProcessIds[meeting]

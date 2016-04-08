@@ -30,19 +30,23 @@ function getTurnTransitions (turns) {
 // {<participantId>: <total ms>, ...}
 // if participant_ids is false, matches on all participants.
 function computeTurns (app, meeting, from, to) {
+  from = new Date(from)
+  to = new Date(to)
   winston.log('info', 'getting turn data for hangout', meeting, from, to)
 
   app.service('utterances').find({
     query: {
-      meeting: meeting,
-      start_time: {
-        $gt: from.toISOString(),
-        $lt: to.toISOString()
-      }
+      meeting: meeting
+      // TODO: date stuff here isn't working all of a sudden.
+      // should be able to do meeting AND start time.
+      // start_time: {
+      //   $gt: from,
+      //   $lt: to
+      // }
     }
   }).then((utterances) => {
     // {'participant': [utteranceObj, ...]}
-    var participantUtterances = _.groupBy(utterances, 'particiant')
+    var participantUtterances = _.groupBy(utterances, 'participant')
 
     // {'participant': # of utterances}
     var numUtterances = _.mapObject(participantUtterances, (val, key) => {
@@ -52,30 +56,31 @@ function computeTurns (app, meeting, from, to) {
     // total number of utterances by all participants
     var totalUtterances = _.reduce(_.pairs(numUtterances), (memo, val) => {
       return memo + val[1]
-    })
+    }, 0)
 
     // distribution / "share" of utterances by participant
     var utteranceDistribution = []
     _.mapObject(numUtterances, (val, key) => {
       utteranceDistribution.push({
-        'participant_id': key,
-        'turns': val / totalUtterances
+        participant: key,
+        turns: val / totalUtterances
       })
     })
 
     var transitions = getTurnTransitions(utterances)
 
-    app.service('turns').create({
+    var turnObj = {
       meeting: meeting,
       turns: utteranceDistribution,
       transitions: transitions,
       timestamp: new Date(),
-      from: from.toISOString(),
-      to: to.toISOString()
-    }, {}).then((turns) => {
+      from: from,
+      to: to
+    }
+    app.service('turns').create(turnObj, {}).then((turns) => {
       winston.log('info', 'saved turns for meeting:', meeting)
     }).catch((err) => {
-      winston.log('error', 'could not save turns for meeting:', meeting, 'error:', err)
+      winston.log('error', 'could not save turns for meeting:', turnObj, 'error:', err)
     })
   })
 }

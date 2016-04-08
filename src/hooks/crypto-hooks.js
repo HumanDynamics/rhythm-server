@@ -39,9 +39,9 @@ function decryptHook (keys) {
       return transformKeys(data, keys, crypto.decrypt)
     }
 
-    if (hook.result !== null && hook.result.length > 0) {
+    if (hook.result !== null) {
       var decrypted = decrypt_ids(hook.result)
-      winston.log('debug', 'decrypted:', decrypted)
+      winston.log('info', 'decrypted:', decrypted)
       hook.result = decrypted
     }
     return hook

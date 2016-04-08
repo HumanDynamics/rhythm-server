@@ -10,13 +10,13 @@ const Schema = mongoose.Schema
 
 const turnSchema = new Schema({
   meeting: {type: String, ref: 'Meeting'},
-  participant: {type: String, ref: 'Participant'},
+  timestamp: Date,
   from: Date,
   to: Date,
-  data: {
-    participant: {type: mongoose.Schema.Types.ObjectId, ref: 'Participant'},
+  turns: [{
+    participant: {type: String, ref: 'participant'},
     turns: Number
-  }
+  }]
 })
 
 const turnModel = mongoose.model('turn', turnSchema)
