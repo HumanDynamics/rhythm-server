@@ -3,6 +3,7 @@
 'use strict'
 
 const winston = require('winston')
+const turnJob = require('../jobs').turnJob
 
 function configure (socket, app) {
   winston.log('info', 'registering socketio custom events.')
@@ -41,6 +42,23 @@ function configure (socket, app) {
            active: true
          })
        })
+
+    // if we now only have one participant, then the hangout started again
+    if (data.hangout_participants.length === 1) {
+      winston.log('info', 'only have one participant now, re-computing talk times...')
+
+      app.service('meeting').patch(data.meeting, {
+        active: true
+      })
+
+      app.service('meetingEvents').create({
+        meeting: data.meeting,
+        event: 'start',
+        timestamp: new Date()
+      })
+
+      turnJob.startJob(data.meeting)
+    }
   })
 }
 
