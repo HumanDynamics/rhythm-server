@@ -2,6 +2,9 @@
 
 const globalHooks = require('../../../hooks')
 const computeTurnHook = require('./compute-turn-hook')
+const activateMeetingHook = require('./activate-meeting-hook')
+const deactivateMeetingHook = require('./deactivate-meeting-hook')
+const participantsEventHook = require('./participants-event-hook')
 
 function addStartTime (hook) {
   hook.data.start_time = new Date()
@@ -15,14 +18,14 @@ function updateTime (hook) {
 
 exports.before = {
   all: [globalHooks.encryptHook(['participants'])],
-  create: [addStartTime],
+  create: [addStartTime, activateMeetingHook],
   update: [updateTime],
-  patch: [updateTime]
+  patch: [updateTime, activateMeetingHook, deactivateMeetingHook]
 }
 
 exports.after = {
   all: [globalHooks.decryptHook(['participants'])],
-  create: [computeTurnHook],
+  create: [computeTurnHook, participantsEventHook],
   update: [computeTurnHook],
-  patch: [computeTurnHook]
+  patch: [computeTurnHook, participantsEventHook]
 }
