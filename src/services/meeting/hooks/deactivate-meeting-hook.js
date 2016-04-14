@@ -18,7 +18,7 @@ function createMeetingEndEvent (hook) {
     meeting: meetingId,
     event: 'end',
     timestamp: new Date()
-  }).then((meetingEvent) => {
+  }, {}).then((meetingEvent) => {
     return hook
   })
 }
@@ -33,8 +33,9 @@ module.exports = function (hook) {
                    hook.data.active = false
                    hook.data.endTime = new Date()
                    return createMeetingEndEvent(hook)
+                 } else {
+                   return hook
                  }
-                 return hook
                })
   }
 }

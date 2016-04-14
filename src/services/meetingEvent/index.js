@@ -9,11 +9,11 @@ module.exports = function () {
   const app = this
 
   const options = {
-    Model: meetingEvent,
-    paginate: {
-      default: 5,
-      max: 25
-    }
+    Model: meetingEvent
+    /* paginate: {o
+       default: 5,
+       max: 25
+       } */
   }
 
   // Initialize our service with any options it requires
