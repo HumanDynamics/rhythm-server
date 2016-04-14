@@ -34,6 +34,7 @@ module.exports = function (hook) {
                  .then((meeting) => {
                    if (shouldMakeMeetingActive(hook.data.participants, meeting)) {
                      hook.data.active = true
+                     hook.data.endTime = null
                      return createMeetingStartEvent(hook)
                    }
                    return hook
