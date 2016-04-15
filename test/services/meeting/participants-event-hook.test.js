@@ -45,6 +45,21 @@ describe('participants event hook', function () {
   })
 
   it('creates a participantEvent when a meeting is created', function (done) {
+    app.service('participantEvents').find({
+      query: {
+        meeting: meetingId,
+        $sort: {timestamp: -1}
+      }
+    }).then(function (participantEvents) {
+      var participants = participantEvents.data[0].participants
+      assert(participants.length === 0)
+      done()
+    }).catch(function (err) {
+      done(err)
+    })
+  })
+
+  it('creates a participantEvent when a meeting is changed', function (done) {
     app.service('meetings').patch(meetingId, {
       participants: ['p1', 'p2']
     }).then(function (meeting) {
