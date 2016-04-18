@@ -17,7 +17,15 @@ describe('hangout joined event', function (done) {
       name: 'fakeParticipantName'
     }
 
-    var socket = io.connect('http://localhost:3030')
+    var socket = io.connect('http://localhost:3030', {
+      'transports': [
+        'websocket',
+        'flashsocket',
+        'jsonp-polling',
+        'xhr-polling',
+        'htmlfile'
+      ]
+    })
 
     socket.emit('meetingJoined', fakeJoinedEvent)
 
@@ -80,7 +88,15 @@ describe('heartbeats', function () {
 
   it('should end a meeting after the heartbeat expires', function (done) {
     this.timeout(12000)
-    var socket = io.connect('http://localhost:3030')
+    var socket = io.connect('http://localhost:3030', {
+      'transports': [
+        'websocket',
+        'flashsocket',
+        'jsonp-polling',
+        'xhr-polling',
+        'htmlfile'
+      ]
+    })
     socket.emit('heartbeat-start', {
       participant: 'p1',
       meeting: meetingId
