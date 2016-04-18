@@ -15,6 +15,7 @@ before(function (done) {
 })
 
 after(function (done) {
+  this.timeout(5000)
   this.server.close(done)
 })
 
@@ -75,10 +76,16 @@ describe('Load tests', function () {
             endTime: new Date((new Date()).getTime() + 50),
             volumes: _(10).times((n) => { return Faker.Helpers.randomNumber(5) })
           })
-        })
+        }, interval)
       })()
       ioIndex++
     }
-    done();
+
+    setTimeout(done, 15000);
+    /*var turns = app.service('turns')
+    turns.on('created', function (turn) {
+      console.log("got a turn", turn)
+      done();
+    })*/
   })
 })
