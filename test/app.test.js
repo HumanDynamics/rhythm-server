@@ -6,6 +6,8 @@ const request = require('request')
 const app = require('../src/app')
 const io = require('socket.io-client')
 const feathers = require('feathers')
+const Faker = require('Faker')
+const _ = require('underscore')
 
 before(function (done) {
   this.server = app.listen(3030)
@@ -57,16 +59,26 @@ describe('Load tests', function () {
     while (ioIndex < 100) {
       (function () {
         var socket = io.connect('http://localhost:3030', {'force new connection': true})
-        socket.emit('hangout::joined', {
-          participantId: 'participant'+ioIndex,
-          participantName: 'Participant '+ioIndex,
-          participantLocale: 'en_US',
+        socket.emit('meetingJoined', {
+          participant: 'participant'+ioIndex,
+          name: 'Participant '+ioIndex,
           meeting: 'meeting'+ioIndex,
           participants: []
+        })
+
+        var interval = Math.floor(Math.random()*1001) + 1000;
+        setInterval(function () {
+          socket.emit('speaking', {
+            meeting: 'meeting'+ioIndex,
+            participant: 'participant'+ioIndex,
+            startTime: new Date(),
+            endTime: new Date((new Date()).getTime() + 50),
+            volumes: _(10).times((n) => { return Faker.Helpers.randomNumber(5) })
+          })
         })
       })()
       ioIndex++
     }
-    done()
+    done();
   })
 })
