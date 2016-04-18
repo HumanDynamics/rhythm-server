@@ -29,6 +29,14 @@ app.use(compress())
    .configure(hooks())
    .configure(rest())
    .configure(socketio((io) => {
+     io.set('transports', [
+       'websocket',
+       'flashsocket',
+       'htmlfile',
+       'xhr-polling',
+       'jsonp-polling'
+     ])
+
      io.on('connection', (socket) => {
        events.configure(socket, app)
      })

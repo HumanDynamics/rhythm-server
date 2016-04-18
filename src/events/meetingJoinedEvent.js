@@ -20,6 +20,7 @@ function getOrCreateParticipant (data, app) {
                 _id: data.participant,
                 name: data.name,
                 consent: data.consent || false,
+                locale: data.locale,
                 consentDate: data.consentDate || null
               }).then(() => {
                 return {data: data, app: app}
