@@ -40,3 +40,67 @@ describe('hangout joined event', function (done) {
     }, 1500)
   })
 })
+
+var n = 0
+
+function createMeeting () {
+  var d1 = new Date()
+  var d2 = d1
+  d2 = d2.setDate(d2.getDate() - 2)
+
+  var activeMeeting = {
+    _id: 'heartbeat-event' + n,
+    participants: ['ph1', 'ph2'],
+    startTime: d2,
+    endTime: null,
+    active: true
+  }
+
+  return app.service('meetings').create(activeMeeting)
+            .then(function (meeting) {
+              assert(meeting.active === true)
+              n += 1
+              return meeting
+            }).catch(function (err) {
+              return err
+            })
+}
+
+describe('heartbeats', function () {
+  var meetingId = null
+
+  beforeEach(function (done) {
+    createMeeting().then(function (meeting) {
+      meetingId = meeting._id
+      done()
+    }).catch(function (err) {
+      done(err)
+    })
+  })
+
+  it('should end a meeting after the heartbeat expires', function (done) {
+    this.timeout(12000)
+    var socket = io.connect('http://localhost:3030')
+    socket.emit('heartbeat-start', {
+      participant: 'p1',
+      meeting: meetingId
+    })
+    socket.emit('heartbeat-start', {
+      participant: 'p2',
+      meeting: meetingId
+    })
+
+    setTimeout(function () {
+      app.service('meetings').get(meetingId)
+         .then(function (meeting) {
+           assert(meeting.active === false)
+           assert(meeting.participants.length === 0)
+           socket.disconnect()
+           done()
+         }).catch(function (err) {
+           socket.disconnect()
+           done(err)
+         })
+    }, 11000)
+  })
+})
