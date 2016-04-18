@@ -4,7 +4,8 @@
 const assert = require('assert')
 const request = require('request')
 const app = require('../src/app')
-const loadtest = require('loadtest')
+const io = require('socket.io-client')
+const feathers = require('feathers')
 
 before(function (done) {
   this.server = app.listen(3030)
@@ -49,29 +50,23 @@ describe('Feathers application tests', function () {
 
 
 describe('Load tests', function () {
-  this.timeout(20000)
-  it('should add particpants to hangouts', function (done) {
-    var requestId = 0;
-    var testOpts = {
-      url: 'ws://localhost:3030',
-			concurrency: 10,
-      maxSeconds: 10,
-      body: {
-        type: 'hangout::joined',
-        participantId: requestId,
-        participantName: 'Test Participant ' + requestId,
-        participantLocale: 'Test Locale',
-        meeting: 'Meeting ' + requestId,
-        participants: []
-      }
-    }
+  this.timeout(30000)
+  var ioIndex = 0
 
-    loadtest.loadTest(testOpts, function (error, result) {
-      if (error) {
-        done(err)
-      }
-      console.log(result)
-      done()
-    })
+  it('creates 100 sockets', function (done) {
+    while (ioIndex < 100) {
+      (function () {
+        var socket = io.connect('http://localhost:3030', {'force new connection': true})
+        socket.emit('hangout::joined', {
+          participantId: 'participant'+ioIndex,
+          participantName: 'Participant '+ioIndex,
+          participantLocale: 'en_US',
+          meeting: 'meeting'+ioIndex,
+          participants: []
+        })
+      })()
+      ioIndex++
+    }
+    done()
   })
 })
