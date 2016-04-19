@@ -68,8 +68,8 @@ describe('Load tests', function () {
         })
 
         var interval = Math.floor(Math.random()*1001) + 1000;
-        setInterval(function () {
-          socket.emit('speaking', {
+        var intervalId = setInterval(function () {
+          socket.emit('utterance::create', {
             meeting: 'meeting'+ioIndex,
             participant: 'participant'+ioIndex,
             startTime: new Date(),
@@ -77,15 +77,30 @@ describe('Load tests', function () {
             volumes: _(10).times((n) => { return Faker.Helpers.randomNumber(5) })
           })
         }, interval)
+
+        setTimeout(function () {
+            clearInterval(intervalId)
+            socket.disconnect()
+        }, 15000)
+
       })()
       ioIndex++
     }
 
-    setTimeout(done, 15000);
-    /*var turns = app.service('turns')
+    setTimeout(done, 20000)
+
+    })
+
+    it('receives turn events for each hangout', function (done) {
+    var turns = app.service('turns')
+    var isNotDone = true;
     turns.on('created', function (turn) {
       console.log("got a turn", turn)
-      done();
-    })*/
+      if (isNotDone) {
+        done();
+      }
+      isNotDone = false;
+    })
+
   })
 })
