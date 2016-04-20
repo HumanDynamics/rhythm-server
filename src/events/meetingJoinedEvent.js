@@ -3,6 +3,7 @@
 'use strict'
 
 const winston = require('winston')
+const _ = require('underscore')
 
 function getOrCreateParticipant (data, app) {
   return app.service('participants').get(data.participant)
@@ -15,8 +16,8 @@ function getOrCreateParticipant (data, app) {
                           return {data: data, app: app}
                         })
             }).catch((err) => {
-              winston.log('info', 'creating a new participant:', err)
-              app.service('participants').create({
+              winston.log('info', 'creating a new participant...')
+              return app.service('participants').create({
                 _id: data.participant,
                 name: data.name,
                 consent: data.consent || false,
@@ -26,31 +27,38 @@ function getOrCreateParticipant (data, app) {
               }).then((participant) => {
                 winston.log('info', 'created a new participant', participant)
                 return {data: data, app: app}
+              }).catch((err) => {
+                winston.log('info', 'couldnt make a new participant', err)
+                return {data: data, app: app}
               })
             })
 }
 
 function getOrCreateMeeting (obj) {
+  winston.log('info', 'getting or creating a meeting...')
   var data = obj.data
   var app = obj.app
-  return app.service('meetings').get(data.meeting)
-            .then((meeting) => {
-              app.service('meetings').patch(meeting._id, {
-                participants: data.participants
-              }).then((meeting) => {
-                return meeting
-              })
-            }).catch((err) => {
-              // no meeting found
-              winston.log('info', 'no meeting found', err)
-              app.service('meetings').create({
-                _id: data.meeting,
-                participants: data.participants,
-                active: true
-              }).then((meeting) => {
-                return meeting
-              })
-            })
+  var participantIds = _.pluck(data.participants, 'participant')
+  app.service('meetings').get(data.meeting)
+               .then((meeting) => {
+                 return app.service('meetings').patch(meeting._id, {
+                   participants: participantIds
+                 }).then((meeting) => {
+                   return meeting
+                 })
+               }).catch((err) => {
+                 // no meeting found
+                 winston.log('info', 'no meeting found', data)
+                 return app.service('meetings').create({
+                   _id: data.meeting,
+                   participants: participantIds,
+                   active: true
+                 }).then((meeting) => {
+                   return meeting
+                 }).catch((err) => {
+                   winston.log('info', 'couldnt create new meeting', err)
+                 })
+               })
 }
 
 module.exports.configure = function (socket, app) {
@@ -58,5 +66,8 @@ module.exports.configure = function (socket, app) {
     winston.log('info', 'meeting joined event:', data)
     return getOrCreateParticipant(data, app)
     .then(getOrCreateMeeting)
+    .catch((err) => {
+      winston.log('info', 'unable to handle successfully: ', err)
+    })
   })
 }
