@@ -22,7 +22,8 @@ function getOrCreateParticipant (data, app) {
                 consent: data.consent || false,
                 locale: data.locale,
                 consentDate: data.consentDate || null
-              }).then(() => {
+              }).then((participant) => {
+                winston.log('info', 'created a new participant', participant)
                 return {data: data, app: app}
               })
             })
@@ -53,6 +54,7 @@ function getOrCreateMeeting (obj) {
 
 module.exports.configure = function (socket, app) {
   socket.on('meetingJoined', function (data) {
+    winston.log('info', 'meeting joined event:', data)
     return getOrCreateParticipant(data, app)
     .then(getOrCreateMeeting)
   })
