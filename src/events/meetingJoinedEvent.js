@@ -11,7 +11,7 @@ function getOrCreateParticipant (data, app) {
               // participant already exists
               return app.service('participants')
                         .patch(participant._id, {
-                          meetings: participant.meetings.concat([data.meeting])
+                          meetings: _.uniq(participant.meetings.concat([data.meeting]))
                         }).then(() => {
                           return {data: data, app: app}
                         })
