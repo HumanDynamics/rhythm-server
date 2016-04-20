@@ -21,7 +21,8 @@ function getOrCreateParticipant (data, app) {
                 name: data.name,
                 consent: data.consent || false,
                 locale: data.locale,
-                consentDate: data.consentDate || null
+                consentDate: data.consentDate || null,
+                meetings: [data.meeting]
               }).then((participant) => {
                 winston.log('info', 'created a new participant', participant)
                 return {data: data, app: app}
