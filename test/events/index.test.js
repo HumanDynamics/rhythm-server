@@ -7,7 +7,7 @@ const winston = require('winston')
 const app = require('../../src/app')
 const io = require('socket.io-client')
 
-describe('hangout joined event', function (done) {
+describe('meeting joined event', function (done) {
   it('creates a participant & meeting when they join for the first time', function (done) {
     this.timeout(2000)
 
