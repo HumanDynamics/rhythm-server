@@ -5,7 +5,6 @@ const assert = require('assert')
 const request = require('request')
 const app = require('../src/app')
 const io = require('socket.io-client')
-const feathers = require('feathers')
 const Faker = require('Faker')
 const _ = require('underscore')
 
@@ -51,7 +50,6 @@ describe('Feathers application tests', function () {
   })
 })
 
-
 describe('Load tests', function () {
   this.timeout(30000)
   var ioIndex = 0
@@ -61,17 +59,17 @@ describe('Load tests', function () {
       (function () {
         var socket = io.connect('http://localhost:3030', {'force new connection': true})
         socket.emit('meetingJoined', {
-          participant: 'participant'+ioIndex,
-          name: 'Participant '+ioIndex,
-          meeting: 'meeting'+ioIndex,
+          participant: 'participant' + ioIndex,
+          name: 'Participant ' + ioIndex,
+          meeting: 'meeting' + ioIndex,
           participants: []
         })
 
-        var interval = Math.floor(Math.random()*1001) + 1000;
+        var interval = Math.floor(Math.random() * 1001) + 1000
         var intervalId = setInterval(function () {
           socket.emit('utterance::create', {
-            meeting: 'meeting'+ioIndex,
-            participant: 'participant'+ioIndex,
+            meeting: 'meeting' + ioIndex,
+            participant: 'participant' + ioIndex,
             startTime: new Date(),
             endTime: new Date((new Date()).getTime() + 50),
             volumes: _(10).times((n) => { return Faker.Helpers.randomNumber(5) })
@@ -79,8 +77,8 @@ describe('Load tests', function () {
         }, interval)
 
         setTimeout(function () {
-            clearInterval(intervalId)
-            socket.disconnect()
+          clearInterval(intervalId)
+          socket.disconnect()
         }, 15000)
 
       })()
@@ -89,18 +87,18 @@ describe('Load tests', function () {
 
     setTimeout(done, 20000)
 
-    })
-
-    it('receives turn events for each hangout', function (done) {
-    var turns = app.service('turns')
-    var isNotDone = true;
-    turns.on('created', function (turn) {
-      console.log("got a turn", turn)
-      if (isNotDone) {
-        done();
-      }
-      isNotDone = false;
-    })
-
   })
+
+  it('receives turn events for each hangout', function (done) {
+    var turns = app.service('turns')
+    var isNotDone = true
+    turns.on('created', function (turn) {
+      console.log('got a turn', turn)
+      if (isNotDone) {
+        done()
+      }
+      isNotDone = false
+    })
+  })
+
 })
