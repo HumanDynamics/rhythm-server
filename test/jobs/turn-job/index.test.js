@@ -3,6 +3,7 @@
 
 const assert = require('assert')
 const Faker = require('Faker')
+const winston = require('winston')
 const _ = require('underscore')
 
 const app = require('../../../src/app')
@@ -84,7 +85,9 @@ describe('turn job hook', () => {
           }
         }).then((turns) => {
           // pull out just the turns
+          winston.log('info', turns)
           var turn = _.map(turns[0].turns, (t) => { return _.omit(t, '_id') })
+          winston.log('info', turn, expectedTurnData)
           assert(JSON.stringify(turn) === JSON.stringify(expectedTurnData))
           done()
         }).catch((err) => {

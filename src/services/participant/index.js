@@ -9,6 +9,10 @@ module.exports = function () {
   const app = this
 
   const options = {
+    paginate: {
+      default: 5,
+      max: 25
+    },
     Model: participant
   }
 

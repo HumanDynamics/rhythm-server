@@ -25,5 +25,5 @@ module.exports = function () {
   turnService.after(hooks.after)
 
   // set up filters
-  turnService.filter(globalFilters.encryptParticipantFilter)
+  turnService.filter(globalFilters.decryptParticipantFilter)
 }
