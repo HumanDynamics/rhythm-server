@@ -4,10 +4,10 @@ const globalHooks = require('../../../hooks')
 const participantCryptoHooks = require('./participant-crypto-hooks.js')
 
 exports.before = {
-  all: [globalHooks.encryptHook(['_id', 'name'])],
-  find: [],
+  all: [],
+  find: [globalHooks.encryptHook(['_id', 'name'])],
   get: [participantCryptoHooks.encryptId],
-  create: [],
+  create: [globalHooks.encryptHook(['_id', 'name'])],
   update: [participantCryptoHooks.encryptId],
   patch: [participantCryptoHooks.encryptId],
   remove: [participantCryptoHooks.encryptId]

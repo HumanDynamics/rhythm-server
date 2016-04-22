@@ -16,7 +16,7 @@ function getOrCreateParticipant (data, app) {
                           return {data: data, app: app}
                         })
             }).catch((err) => {
-              winston.log('info', 'creating a new participant...')
+              winston.log('info', 'creating a new participant...', err)
               return app.service('participants').create({
                 _id: data.participant,
                 name: data.name,
@@ -48,7 +48,7 @@ function getOrCreateMeeting (obj) {
                  })
                }).catch((err) => {
                  // no meeting found
-                 winston.log('info', 'no meeting found', data)
+                 winston.log('info', 'no meeting found', data, err)
                  return app.service('meetings').create({
                    _id: data.meeting,
                    participants: participantIds,
