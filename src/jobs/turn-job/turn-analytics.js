@@ -40,8 +40,8 @@ function computeTurns (app, meeting, from, to) {
       // TODO: date stuff here isn't working all of a sudden.
       // should be able to do meeting AND start time.
       $and: [
-        {startTime: {$gte: from}},
-        {endTime: {$lte: to}}
+        {startTime: {$gte: from.toISOString()}},
+        {endTime: {$lte: to.toISOString()}}
       ]
     }
   }).then((utterances) => {
