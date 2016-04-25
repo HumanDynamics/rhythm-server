@@ -1,7 +1,7 @@
 'use strict'
 
 const _ = require('underscore')
-const winston = require('winston')
+// const winston = require('winston')
 const crypto = require('./crypto')
 
 // general json transform on object.
