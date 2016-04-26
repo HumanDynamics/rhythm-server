@@ -8,6 +8,8 @@ const io = require('socket.io-client')
 const Faker = require('Faker')
 const _ = require('underscore')
 
+const testUsers = 50
+
 before(function (done) {
   this.server = app.listen(3030)
   this.server.once('listening', done)
@@ -54,8 +56,8 @@ describe('Load tests', function () {
   this.timeout(30000)
   var ioIndex = 0
 
-  it('creates 100 sockets', function (done) {
-    while (ioIndex < 100) {
+  it('creates ' + testUsers + ' sockets', function (done) {
+    while (ioIndex < testUsers) {
       (function () {
         var socket = io.connect('http://localhost:3030', {'force new connection': true})
         socket.emit('meetingJoined', {
@@ -85,19 +87,32 @@ describe('Load tests', function () {
       ioIndex++
     }
 
-    setTimeout(done, 20000)
+    setTimeout(done, 25000)
 
   })
 
   it('receives turn events for each hangout', function (done) {
     var turns = app.service('turns')
-    var isNotDone = true
+    var recvdTurns = []
+    for (var i = 0; i < testUsers; i++) { recvdTurns[i] = 0 }
+    var isDone = false
+
     turns.on('created', function (turn) {
-      console.log('got a turn', turn)
-      if (isNotDone) {
-        done()
+      var meeting = parseInt(turn.meeting.split('meeting')[1], 10)
+
+      if (recvdTurns[meeting] >= 3) {
+        if (!isDone) {
+          isDone = true
+          for (var i = 0; i < testUsers; i++) {
+            assert.equal(recvdTurns[i], 3)
+          }
+          done()
+          turns.off('created')
+        }
+      } else {
+        recvdTurns[meeting] += 1
       }
-      isNotDone = false
+
     })
   })
 
