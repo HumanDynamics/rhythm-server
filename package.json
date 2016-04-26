@@ -43,6 +43,8 @@
     "Faker": "^0.7.2",
     "mocha": "^2.4.5",
     "mocha-mongo": "^0.2.0",
-    "request": "^2.69.0"
+    "request": "^2.69.0",
+    "feathers-client": "^1.1.0",
+    "socket.io-client": "^1.4.5",
   }
 }
