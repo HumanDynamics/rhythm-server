@@ -13,6 +13,7 @@ const bodyParser = require('body-parser')
 const socketio = require('feathers-socketio')
 const middleware = require('./middleware')
 const services = require('./services')
+const events = require('./events')
 
 const app = module.exports = feathers()
 
@@ -27,6 +28,10 @@ app.use(compress())
    .use(bodyParser.urlencoded({ extended: true }))
    .configure(hooks())
    .configure(rest())
-   .configure(socketio())
+   .configure(socketio((io) => {
+     io.on('connection', (socket) => {
+       events.configure(socket, app)
+     })
+   }))
    .configure(services)
    .configure(middleware)

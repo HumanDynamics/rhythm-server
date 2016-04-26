@@ -1,6 +1,7 @@
 'use strict'
 
 const globalHooks = require('../../../hooks')
+const computeTurnHook = require('./compute-turn-hook')
 
 function addStartTime (hook) {
   hook.data.start_time = new Date()
@@ -20,5 +21,8 @@ exports.before = {
 }
 
 exports.after = {
-  all: [globalHooks.decryptHook(['participants'])]
+  all: [globalHooks.decryptHook(['participants'])],
+  create: [computeTurnHook],
+  update: [computeTurnHook],
+  patch: [computeTurnHook]
 }

@@ -8,16 +8,14 @@ const helpers = require('../helpers')
 const transformKeys = helpers.transformKeys
 const crypto = helpers.crypto
 
-function encryptParticipantFilter (data, connection) {
-  console.log('encrypting data:', data)
+function decryptParticipantFilter (data, connection) {
   data = transformKeys(data,
-      ['participant', 'participants'],
-      crypto.decrypt)
-  /* data = json_transform(data, 'participants', function(ps){return _.map(ps, crypto.decrypt)});- */
+                       ['participant', 'participants'],
+                       crypto.decrypt)
   winston.log('info', 'data decrypted:', data)
   return data
 }
 
 module.exports = {
-  encryptParticipantFilter: encryptParticipantFilter
+  decryptParticipantFilter: decryptParticipantFilter
 }

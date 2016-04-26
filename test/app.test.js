@@ -4,25 +4,31 @@
 const assert = require('assert')
 const request = require('request')
 const app = require('../src/app')
+const io = require('socket.io-client')
+const Faker = require('Faker')
+const _ = require('underscore')
 
-describe('Feathers application tests', () => {
-  before(function (done) {
-    this.server = app.listen(3030)
-    this.server.once('listening', () => done())
-  })
+const testUsers = 50
 
-  after(function (done) {
-    this.server.close(done)
-  })
+before(function (done) {
+  this.server = app.listen(3030)
+  this.server.once('listening', done)
+})
 
-  it('starts and shows the index page', (done) => {
-    request('http://localhost:3030', (err, res, body) => {
+after(function (done) {
+  this.timeout(5000)
+  this.server.close(done)
+})
+
+describe('Feathers application tests', function () {
+  it('starts and shows the index page', function (done) {
+    request('http://localhost:3030', function (err, res, body) {
       assert.ok(body.indexOf('<html>') !== -1)
       done(err)
     })
   })
 
-  describe('404', () => {
+  describe('404', function () {
     /* it('shows a 404 HTML page', (done) => {
        request('http://localhost:3030/path/to/nowhere', (err, res, body) => {
        assert.equal(res.statusCode, 404)
@@ -31,11 +37,11 @@ describe('Feathers application tests', () => {
        })
        }) */
 
-    it('shows a 404 JSON error without stack trace', (done) => {
+    it('shows a 404 JSON error without stack trace', function (done) {
       request({
         url: 'http://localhost:3030/path/to/nowhere',
         json: true
-      }, (err, res, body) => {
+      }, function (err, res, body) {
         assert.equal(res.statusCode, 404)
         assert.equal(body.code, 404)
         assert.equal(body.message, 'Page not found')
@@ -44,4 +50,70 @@ describe('Feathers application tests', () => {
       })
     })
   })
+})
+
+describe('Load tests', function () {
+  this.timeout(30000)
+  var ioIndex = 0
+
+  it('creates ' + testUsers + ' sockets', function (done) {
+    while (ioIndex < testUsers) {
+      (function () {
+        var socket = io.connect('http://localhost:3030', {'force new connection': true})
+        socket.emit('meetingJoined', {
+          participant: 'participant' + ioIndex,
+          name: 'Participant ' + ioIndex,
+          meeting: 'meeting' + ioIndex,
+          participants: []
+        })
+
+        var interval = Math.floor(Math.random() * 1001) + 1000
+        var intervalId = setInterval(function () {
+          socket.emit('utterance::create', {
+            meeting: 'meeting' + ioIndex,
+            participant: 'participant' + ioIndex,
+            startTime: new Date(),
+            endTime: new Date((new Date()).getTime() + 50),
+            volumes: _(10).times((n) => { return Faker.Helpers.randomNumber(5) })
+          })
+        }, interval)
+
+        setTimeout(function () {
+          clearInterval(intervalId)
+          socket.disconnect()
+        }, 15000)
+
+      })()
+      ioIndex++
+    }
+
+    setTimeout(done, 25000)
+
+  })
+
+  it('receives turn events for each hangout', function (done) {
+    var turns = app.service('turns')
+    var recvdTurns = []
+    for (var i = 0; i < testUsers; i++) { recvdTurns[i] = 0 }
+    var isDone = false
+
+    turns.on('created', function (turn) {
+      var meeting = parseInt(turn.meeting.split('meeting')[1], 10)
+
+      if (recvdTurns[meeting] >= 3) {
+        if (!isDone) {
+          isDone = true
+          for (var i = 0; i < testUsers; i++) {
+            assert.equal(recvdTurns[i], 3)
+          }
+          done()
+          turns.off('created')
+        }
+      } else {
+        recvdTurns[meeting] += 1
+      }
+
+    })
+  })
+
 })

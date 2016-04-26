@@ -13,7 +13,7 @@ exports.before = {
 }
 
 exports.after = {
-  all: [globalHooks.encryptHook(['_id', 'name'])],
+  all: [globalHooks.decryptHook(['_id', 'name'])],
   find: [],
   get: [],
   create: [],
