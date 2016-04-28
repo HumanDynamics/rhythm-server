@@ -7,15 +7,15 @@ const io = require('socket.io-client')
 const _ = require('underscore')
 const feathers = require('feathers-client')
 
-var socket = io('http://localhost:3030') // , {
-  /* 'transports': [
-     'websocket',
-     'flashsocket',
-     'htmlfile',
-     'xhr-polling',
-     'jsonp-polling'
-     ]
-     }) */
+var socket = io('http://localhost:3000', {
+  'transports': [
+    'websocket',
+    'flashsocket',
+    'htmlfile',
+    'xhr-polling',
+    'jsonp-polling'
+  ]
+})
 
 describe('meeting service', function () {
   var app = feathers()
