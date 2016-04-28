@@ -16,7 +16,7 @@
     "node": ">= 0.12.0"
   },
   "scripts": {
-    "test": "standard && npm run mocha",
+    "test": "standard src/ && standard test/ && npm run mocha",
     "start": "node src/",
     "mocha": "mocha test/ --recursive"
   },

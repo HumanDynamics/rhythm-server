@@ -31,3 +31,6 @@ lib/
 data/
 .fuse_hidden.*
 .npmignore
+public/www
+public/bower_components
+public/node_modules

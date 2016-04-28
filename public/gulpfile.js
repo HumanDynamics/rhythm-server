@@ -4,7 +4,7 @@ const changed = require('gulp-changed')
 const gulpBowerFiles = require('gulp-bower-files')
 
 // compile into `www` directory
-var dest = '../www'
+var dest = './www'
 
 // Compiles LESS > CSS
 gulp.task('build-less', function () {
