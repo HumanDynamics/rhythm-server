@@ -1,21 +1,41 @@
 # rhythm-server
 
 > server for breakout, a measurement and feedback framework for human communication
-[![Build Status](https://travis-ci.org/HumanDynamics/rhythm-server.svg?branch=master)](https://travis-ci.org/HumanDynamics/rhythm-server)
+
+[![Build Status](https://travis-ci.org/HumanDynamics/rhythm-server.svg?branch=development)](https://travis-ci.org/HumanDynamics/rhythm-server)
 
 ## About
 
-This project uses [Feathers](http://feathersjs.com). An open source web  framework for building modern real-time applications.
+[rhythm-server](https://rhythm.mit.edu) is an open framework for
+recording human communication data and providing real-time aggregate
+statistics about that meeting data. 
 
-## Getting Started
+Rhythm-server provides a back-end data store and real-time engine for
+data that may be collected by group dynamics researchers, such as
+speaking events. Rhythm clients implement measurement systems for
+different platforms, and send measurements to the Rhythm server for
+storage and processing.
 
-Getting up and running is as easy as 1, 2, 3.
+Rhythm-server is built using [NodeJS](https://nodejs.org/), and uses
+the [feathers](http://feathersjs.com) framework for providing
+real-time functionality.
 
-1. Make sure you have [NodeJS](https://nodejs.org/) and [npm](https://www.npmjs.com/) installed.
-2. Install your dependencies
+The Rhythm team currently maintains the
+[Rhythm Meeting Mediator](https://github.com/HumanDynamics/rhythm-meeting-mediator)
+client, which provides real-time meeting visualizations inspired by
+[the original meeting mediator](http://hd.media.mit.edu/tech-reports/TR-616.pdf)
+in a Google Hangout.
+
+## Installation
+
+1. Make sure you have [NodeJS](https://nodejs.org/) and
+   [npm](https://www.npmjs.com/) installed. We recommend using
+   [nvm](https://github.com/creationix/nvm) to manage your node
+   installations.
+2. Install dependencies:
 
     ```
-    cd path/to/breakout-server; npm install
+    cd path/to/rhythm-server; npm install
     ```
 
 3. Start your app
@@ -26,33 +46,15 @@ Getting up and running is as easy as 1, 2, 3.
 
 ## Testing
 
-Simply run `npm test` and all your tests in the `test/` directory will be run.
-
-## Scaffolding
-
-Feathers has a powerful command line interface. Here are a few things it can do:
-
-```
-$ npm install -g feathers-cli             # Install Feathers CLI
-
-$ feathers generate service               # Generate a new Service
-$ feathers generate hook                  # Generate a new Hook
-$ feathers generate model                 # Generate a new Model
-$ feathers help                           # Show all commands
-```
-
-## Help
-
-For more information on all the things you can do with Feathers visit [docs.feathersjs.com](http://docs.feathersjs.com).
+We use [Mocha](https://mochajs.org) for testing. The test harness can
+be run through `npm`, by running `npm test` in the root directory of the repository.
 
 ## Changelog
 
 __0.1.0__
 
-- Initial release
+- Initial release, basic server/meeting functionality.
 
 ## License
-
-Copyright (c) 2015
 
 Licensed under the [MIT license](LICENSE).
