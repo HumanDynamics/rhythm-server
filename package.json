@@ -16,9 +16,10 @@
     "node": ">= 0.12.0"
   },
   "scripts": {
-    "test": "standard src/ && standard test/ && npm run mocha",
+    "test": "standard src/ && standard test/ && npm run mocha && npm run coverage",
     "start": "node src/",
-    "mocha": "mocha test/ --recursive"
+    "mocha": "mocha test/ --recursive",
+    "coverage": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- --ui bdd -R spec -t 5000"
   },
   "dependencies": {
     "body-parser": "^1.15.0",
@@ -39,12 +40,13 @@
     "winston": "^2.2.0"
   },
   "devDependencies": {
-    "standard": "^3.0.0",
     "Faker": "^0.7.2",
+    "feathers-client": "^1.1.0",
+    "istanbul": "^0.4.3",
     "mocha": "^2.4.5",
     "mocha-mongo": "^0.2.0",
     "request": "^2.69.0",
-    "feathers-client": "^1.1.0",
-    "socket.io-client": "^1.4.5"
+    "socket.io-client": "^1.4.5",
+    "standard": "^3.0.0"
   }
 }
