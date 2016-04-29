@@ -19,7 +19,7 @@
     "test": "standard src/ && standard test/ && npm run mocha && npm run coverage",
     "start": "node src/",
     "mocha": "mocha test/ --recursive",
-    "coverage": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- --ui bdd -R spec -t 5000"
+    "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && istanbul-coveralls"
   },
   "dependencies": {
     "body-parser": "^1.15.0",
@@ -41,8 +41,10 @@
   },
   "devDependencies": {
     "Faker": "^0.7.2",
+    "coveralls": "^2.11.9",
     "feathers-client": "^1.1.0",
     "istanbul": "^0.4.3",
+    "istanbul-coveralls": "^1.0.3",
     "mocha": "^2.4.5",
     "mocha-mongo": "^0.2.0",
     "request": "^2.69.0",
