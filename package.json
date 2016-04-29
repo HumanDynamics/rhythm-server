@@ -16,7 +16,7 @@
     "node": ">= 0.12.0"
   },
   "scripts": {
-    "test": "standard src/ && standard test/ && npm run mocha && npm run coverage",
+    "test": "standard src/ && standard test/ && npm run mocha",
     "start": "node src/",
     "mocha": "mocha test/ --recursive",
     "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && istanbul-coveralls"
