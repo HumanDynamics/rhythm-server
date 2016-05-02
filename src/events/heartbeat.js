@@ -3,11 +3,20 @@ var winston = require('winston')
 
 // wait 2 seconds to consider a meeting dead.
 var waitingThreshold = 10 * 1000
+// {meetingId: [{participant: <participantId>, timestamp: <timestamp>}, ...]
 var heartbeats = {}
 var heartbeatListener = null
 
+// Returns true if the given heartbeat has timed out.
+var checkHeartbeat = function (heartbeat) {
+  var delta = (new Date()) - heartbeat.timestamp
+  return (delta > waitingThreshold)
+}
+
 // checks a given list of heartbeats for timeouts. If all hearbeats have
 // timed out, then set the associated meeting to inactive.
+// If only some participants have timed out, remove them from the meeting in the DB,
+// and stop their heartbeats.
 var checkHeartbeats = function (meeting, socket, app) {
   var timedOuts = _.map(heartbeats[meeting], checkHeartbeat)
   if (_.every(timedOuts)) {
@@ -18,15 +27,29 @@ var checkHeartbeats = function (meeting, socket, app) {
     }).catch((err) => {
       winston.log('info', 'Unable to stop heartbeat for meeting', err)
     })
+  } else if (_.some(timedOuts)) {
+    var participantsToRemove = []
+    _.each(heartbeats[meeting], (heartbeat, index) => {
+      if (timedOuts[index] === true) {
+        participantsToRemove.push(heartbeats[meeting][index].participant)
+      }
+    })
+
+    app.service('meetings').patch(meeting, {}, {
+      remove_participants: participantsToRemove
+    }).then(function (meeting) {
+      _.each(participantsToRemove, function (participant) {
+        if (!_.contains(meeting.participants, participant)) {
+          stopHeartbeat({
+            meeting: meeting,
+            participant: participant
+          })
+        }
+      })
+    })
   } else {
     return
   }
-}
-
-// Returns true if the given heartbeat has timed out.
-var checkHeartbeat = function (heartbeat) {
-  var delta = (new Date()) - heartbeat.timestamp
-  return (delta > waitingThreshold)
 }
 
 // checks all meetings / heartbeats for timeouts.

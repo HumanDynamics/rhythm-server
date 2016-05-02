@@ -58,7 +58,7 @@ function createMeeting () {
 
   var activeMeeting = {
     _id: 'heartbeat-event' + n,
-    participants: ['ph1', 'ph2'],
+    participants: ['p1', 'p2'],
     startTime: d2,
     endTime: null,
     active: true
@@ -111,6 +111,44 @@ describe('heartbeats', function () {
          .then(function (meeting) {
            assert(meeting.active === false)
            assert(meeting.participants.length === 0)
+           socket.disconnect()
+           done()
+         }).catch(function (err) {
+           socket.disconnect()
+           done(err)
+         })
+    }, 11000)
+  })
+
+  it('should remove a participant after their heartbeat expires', function (done) {
+    this.timeout(12000)
+    var socket = io.connect('http://localhost:3000', {
+      'transports': [
+        'websocket',
+        'flashsocket',
+        'jsonp-polling',
+        'xhr-polling',
+        'htmlfile'
+      ]
+    })
+    socket.emit('heartbeat-start', {
+      participant: 'p1',
+      meeting: meetingId
+    })
+
+    setTimeout(function () {
+      socket.emit('heartbeat-start', {
+        participant: 'p2',
+        meeting: meetingId
+      })
+    }, 8000)
+
+    setTimeout(function () {
+      app.service('meetings').get(meetingId)
+         .then(function (meeting) {
+           winston.log('info', 'heartbeat meeting:', meeting)
+           assert(meeting.active === true)
+           assert(meeting.participants.length === 1)
            socket.disconnect()
            done()
          }).catch(function (err) {
