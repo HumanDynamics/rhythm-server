@@ -12,9 +12,27 @@ const turnAnalytics = require('../../../src/jobs/turn-job/turn-analytics')
 
 var startTime = (new Date()).getTime() - 1 * 1000
 
+var testParticipants = [
+  {
+    _id: 'p1a',
+    consent: true,
+    name: 'p1'
+  },
+  {
+    _id: 'p2a',
+    consent: true,
+    name: 'p2'
+  },
+  {
+    _id: 'p3a',
+    consent: true,
+    name: 'p3'
+  }
+]
+
 var testMeeting = {
   _id: Faker.Helpers.randomNumber(500).toString(),
-  participants: ['p1', 'p2', 'p3'],
+  participants: ['p1a', 'p2a', 'p3a'],
   startTime: Faker.Date.recent(),
   active: true
 }
@@ -41,14 +59,28 @@ var testUtterances = [
 ]
 
 var expectedTurnData = [{
-  participant: 'p1',
+  participant: 'p1a',
   turns: (2 / 3)
 }, {
-  participant: 'p2',
+  participant: 'p2a',
   turns: (1 / 3)
 }]
 
 describe('turn job hook', () => {
+  before(function (done) {
+    _.each(testParticipants, (p) => {
+      app.service('participants').create(p)
+         .then((p) => {
+           if (p._id === 'p3a') {
+             done()
+           }
+         }).catch((err) => {
+           winston.log('info', 'couldnt create that participant', err)
+           done(err)
+         })
+    })
+  })
+
   it('started computing turns when a meeting was created', (done) => {
     app.service('meetings').create(testMeeting)
     .then((meeting) => {

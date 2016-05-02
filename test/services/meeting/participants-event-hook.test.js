@@ -3,7 +3,6 @@
 'use strict'
 
 const assert = require('assert')
-/* const winston = require('winston') */
 const _ = require('underscore')
 const app = require('../../../src/app')
 
