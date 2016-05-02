@@ -11,10 +11,10 @@ module.exports = function (hook) {
                  return hook
                } else {
                  winston.log('info', 'NOT creating utterance, do not have consent')
-                 return
+                 hook.result = {'created': false}
                }
              }).catch((err) => {
-               winston.log('info', 'Unable to block utterance creation', err)
-               return hook
+               winston.log('info', 'Unable to create utterance, participant does not exist yet', err)
+               hook.result = {'created': false}
              })
 }
