@@ -52,7 +52,8 @@ function getOrCreateMeeting (obj) {
                  return app.service('meetings').create({
                    _id: data.meeting,
                    participants: participantIds,
-                   active: true
+                   active: true,
+                   meta: JSON.parse(data.meta)
                  }).then((meeting) => {
                    return meeting
                  }).catch((err) => {
