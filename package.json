@@ -18,7 +18,9 @@
   "scripts": {
     "test": "standard src/ && npm run mocha",
     "start": "node src/",
-    "mocha": "./node_modules/.bin/mocha $(find test -type f \\( ! -name load* \\) )"
+    "mocha": "./node_modules/.bin/mocha $(find test -type f \\( ! -name load* \\) )",
+    "loadtest": "./node_modules/.bin/mocha test/load.test.js"
+      
   },
   "dependencies": {
     "body-parser": "^1.15.0",
