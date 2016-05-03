@@ -4,11 +4,6 @@
 const assert = require('assert')
 const request = require('request')
 const app = require('../src/app')
-const io = require('socket.io-client')
-const Faker = require('Faker')
-const _ = require('underscore')
-
-const testUsers = 50
 
 before(function (done) {
   this.server = app.listen(3030)
@@ -50,70 +45,4 @@ describe('Feathers application tests', function () {
       })
     })
   })
-})
-
-describe('Load tests', function () {
-  this.timeout(30000)
-  var ioIndex = 0
-
-  it('creates ' + testUsers + ' sockets', function (done) {
-    while (ioIndex < testUsers) {
-      (function () {
-        var socket = io.connect('http://localhost:3030', {'force new connection': true})
-        socket.emit('meetingJoined', {
-          participant: 'participant' + ioIndex,
-          name: 'Participant ' + ioIndex,
-          meeting: 'meeting' + ioIndex,
-          participants: []
-        })
-
-        var interval = Math.floor(Math.random() * 1001) + 1000
-        var intervalId = setInterval(function () {
-          socket.emit('utterance::create', {
-            meeting: 'meeting' + ioIndex,
-            participant: 'participant' + ioIndex,
-            startTime: new Date(),
-            endTime: new Date((new Date()).getTime() + 50),
-            volumes: _(10).times((n) => { return Faker.Helpers.randomNumber(5) })
-          })
-        }, interval)
-
-        setTimeout(function () {
-          clearInterval(intervalId)
-          socket.disconnect()
-        }, 15000)
-
-      })()
-      ioIndex++
-    }
-
-    setTimeout(done, 25000)
-
-  })
-
-  it('receives turn events for each hangout', function (done) {
-    var turns = app.service('turns')
-    var recvdTurns = []
-    for (var i = 0; i < testUsers; i++) { recvdTurns[i] = 0 }
-    var isDone = false
-
-    turns.on('created', function (turn) {
-      var meeting = parseInt(turn.meeting.split('meeting')[1], 10)
-
-      if (recvdTurns[meeting] >= 3) {
-        if (!isDone) {
-          isDone = true
-          for (var i = 0; i < testUsers; i++) {
-            assert.equal(recvdTurns[i], 3)
-          }
-          done()
-          turns.off('created')
-        }
-      } else {
-        recvdTurns[meeting] += 1
-      }
-
-    })
-  })
-
 })
