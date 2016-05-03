@@ -4,12 +4,11 @@
 'use strict';
 
 const _ = require('underscore');
-const winston = require('winston');
 
 // Filter the result set with the meta query if one exists
 function apply_unstructured_query(hook) {
   if(hook.params.meta) {
-    hook.result.data = hook.result.data.filter(current => {
+    hook.result = hook.result.filter(current => {
       if (_.has(current, 'meta')) {
         var match = true;
         _.each(_.keys(hook.params.meta), function(key) {
