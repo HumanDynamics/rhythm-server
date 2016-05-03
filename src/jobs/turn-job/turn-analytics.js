@@ -36,13 +36,13 @@ function computeTurns (app, meeting, from, to) {
 
   app.service('utterances').find({
     query: {
-      meeting: meeting
+      meeting: meeting,
       // TODO: date stuff here isn't working all of a sudden.
       // should be able to do meeting AND start time.
-      // start_time: {
-      //   $gt: from,
-      //   $lt: to
-      // }
+      $and: [
+        {startTime: {$gte: from.toISOString()}},
+        {endTime: {$lte: to.toISOString()}}
+      ]
     }
   }).then((utterances) => {
     // {'participant': [utteranceObj, ...]}
@@ -82,6 +82,8 @@ function computeTurns (app, meeting, from, to) {
     }).catch((err) => {
       winston.log('error', 'could not save turns for meeting:', turnObj, 'error:', err)
     })
+  }).catch((err) => {
+    winston.log('error', 'couldnt get turns...', err)
   })
 }
 

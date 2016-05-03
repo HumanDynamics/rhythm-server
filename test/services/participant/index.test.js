@@ -27,4 +27,15 @@ describe('participant service', () => {
       done(err)
     })
   })
+
+  it('patches a participant', function (done) {
+    app.service('participants').patch(testParticipant._id, {
+      consent: true
+    }).then((participant) => {
+      assert(participant.consent === true)
+      done()
+    }).catch((err) => {
+      done(err)
+    })
+  })
 })

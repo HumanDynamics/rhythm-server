@@ -1,0 +1,109 @@
+@import "../../bower_components/bootstrap/less/bootstrap.less";
+
+@brand-primary: #F9B747;
+
+@text-color: #343434;
+
+.navbar {
+    background-color: @brand-primary;
+    border-bottom: 0px;
+}
+
+.navbar-default .navbar-brand {
+    color: #343434;
+    font-weight: 700;
+    font-family: sans-serif;
+    font-size: 2em;
+    margin-top: .7em;
+    margin-bottom: .5em;
+}
+
+.navbar-default .navbar-nav li a {
+    color: #343434;
+    font-weight: 400;
+    font-family: sans-serif;
+    font-size: 1.2em;
+    margin-top: 1.5em;
+    margin-bottom: .5em;
+}
+
+.navbar-default .navbar-nav li a:hover {
+    color: #6B6B6B;
+}
+
+.hero-container {
+    background-color: @brand-primary;
+}
+
+.hero-copy-container {
+    margin-top: 50px;
+    margin-bottom: 50px;
+
+    h1 {
+        font-size: 4em;
+        font-weight: 700;
+        color: #343434;
+        margin-bottom: 20px;
+    }
+
+    p {
+        font-size: 1.5em;
+        font-weight: 400;
+        margin-right: 20px;
+        margin-left: 20px;
+    }
+}
+
+.navbar-collapse {
+    border-top: 0px;
+//    background-color: @gray-lighter;
+}
+
+// #badge-img {
+//     max-width: 500px;
+// }
+
+#breakout-img {
+    margin-top: 40px;
+}
+
+.center-block {
+    margin: 0 auto;
+}
+.btn-outline {
+    background-color: transparent;
+    color: inherit;
+    transition: all .5s;
+}
+
+.btn-primary.btn-outline {
+    color: @brand-primary
+}
+
+.feature-row {
+    margin-top: 20px;
+}
+
+.btn-primary.btn-outline:hover,
+.btn-success.btn-outline:hover,
+.btn-info.btn-outline:hover,
+.btn-warning.btn-outline:hover,
+.btn-danger.btn-outline:hover {
+    color: #fff;
+}
+
+.section-title-link {
+    color: @text-color;
+    text-decoration: none;
+}
+
+.section-title-link:visited {
+    color: @text-color;
+    text-decoration: none;
+}
+
+
+.section-title-link:hover {
+    text-decoration: none;
+    color: @brand-primary;
+}

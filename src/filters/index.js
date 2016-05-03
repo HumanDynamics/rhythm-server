@@ -9,11 +9,11 @@ const transformKeys = helpers.transformKeys
 const crypto = helpers.crypto
 
 function decryptParticipantFilter (data, connection) {
-  data = transformKeys(data,
+  var transformed = transformKeys(data,
                        ['participant', 'participants'],
                        crypto.decrypt)
-  winston.log('info', 'data decrypted:', data)
-  return data
+  winston.log('info', 'filter decrypted:', transformed)
+  return transformed
 }
 
 module.exports = {
