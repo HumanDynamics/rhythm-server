@@ -13,6 +13,7 @@ const meetingSchema = new Schema({
   startTime: {type: Date, 'default': Date.now},
   endTime: Date,
   active: Boolean,
+  meetingUrl: String,
   meta: Object
 })
 

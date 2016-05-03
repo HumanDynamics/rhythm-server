@@ -53,6 +53,7 @@ function getOrCreateMeeting (obj) {
                    _id: data.meeting,
                    participants: participantIds,
                    active: true,
+                   meetingUrl: data.meetingUrl,
                    meta: JSON.parse(data.meta)
                  }).then((meeting) => {
                    return meeting
