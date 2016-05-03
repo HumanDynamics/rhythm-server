@@ -16,9 +16,9 @@
     "node": ">= 0.12.0"
   },
   "scripts": {
-    "test": "standard && npm run mocha",
+    "test": "standard src/ && npm run mocha",
     "start": "node src/",
-    "mocha": "mocha test/ --recursive"
+    "mocha": "./node_modules/.bin/mocha $(find test -type f \\( ! -name load* \\) )"
   },
   "dependencies": {
     "body-parser": "^1.15.0",
