@@ -6,6 +6,8 @@ const activateMeetingHook = require('./activate-meeting-hook')
 const deactivateMeetingHook = require('./deactivate-meeting-hook')
 const participantsEventHook = require('./participants-event-hook')
 const removeParticipantsHook = require('./remove-participants-hook')
+const extractUnstructuredQueryHook = require('./extract_unstructured_query-hook')
+const applyUnstructuredQueryHook = require('./apply_unstructured_query-hook')
 
 function addStartTime (hook) {
   hook.data.start_time = new Date()
@@ -19,7 +21,7 @@ function updateTime (hook) {
 
 exports.before = {
   create: [addStartTime, activateMeetingHook, globalHooks.encryptHook(['participants'])],
-  find: [globalHooks.encryptHook(['participants'])],
+  find: [globalHooks.encryptHook(['participants']), extractUnstructuredQueryHook],
   update: [updateTime, globalHooks.encryptHook(['participants'])],
   patch: [updateTime, activateMeetingHook,
           deactivateMeetingHook, removeParticipantsHook,
@@ -31,5 +33,6 @@ exports.after = {
   create: [computeTurnHook, participantsEventHook],
   update: [computeTurnHook],
   patch: [computeTurnHook, participantsEventHook],
-  all: [globalHooks.decryptHook(['participants'])]
+  all: [globalHooks.decryptHook(['participants'])],
+  find: [applyUnstructuredQueryHook]
 }
