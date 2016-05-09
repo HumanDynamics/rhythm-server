@@ -12,7 +12,9 @@ const meetingSchema = new Schema({
   participants: [{type: String, ref: 'Participant'}],
   startTime: {type: Date, 'default': Date.now},
   endTime: Date,
-  active: Boolean
+  active: Boolean,
+  meetingUrl: String,
+  meta: Object
 })
 
 const meetingModel = mongoose.model('meeting', meetingSchema)
