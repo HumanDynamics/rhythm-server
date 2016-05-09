@@ -1,8 +1,13 @@
 @import "../../bower_components/bootstrap/less/bootstrap.less";
 
 @brand-primary: #F9B747;
+@brand-info: #5EA8BE;
 
 @text-color: #343434;
+
+html, body {
+    overflow-x: hidden; 
+}
 
 .navbar {
     background-color: @brand-primary;
@@ -106,4 +111,53 @@
 .section-title-link:hover {
     text-decoration: none;
     color: @brand-primary;
+}
+
+.footer {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin-top: 20px;
+    background: @brand-primary;
+}
+
+a.contact-link {
+    color: @text-color;
+}
+a.contact-link:hover {
+    color: @text-color;
+    text-decoration: underline;
+}
+
+a.contact-link:visited {
+    color: @text-color;
+}
+
+.hangout-button {
+  margin-top: 20px;
+  margin-bottom: -10px; }
+
+.scientist-icon {
+  width: 75px;
+  height: 75px;
+  margin-bottom: 20px;
+  background-image: url("/assets/people-1.svg");
+}
+
+.people-icon {
+  width: 75px;
+  height: 75px;
+  margin-bottom: 20px;
+  background-image: url("/assets/people.svg");
+}
+
+
+.chat-icon {
+  width: 75px;
+  height: 75px;
+  margin-bottom: 20px;
+  background-image: url("/assets/interface.svg");
+}
+
+.feature-container {
+    margin-top: 30px;
 }
