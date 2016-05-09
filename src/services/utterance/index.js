@@ -9,11 +9,7 @@ module.exports = function () {
   const app = this
 
   const options = {
-    Model: utterance,
-    paginate: {
-      default: 5,
-      max: 25
-    }
+    Model: utterance
   }
 
   // Initialize our service with any options it requires
@@ -28,5 +24,5 @@ module.exports = function () {
   // Set up our after hooks
   utteranceService.after(hooks.after)
 
-  utteranceService.filter(globalFilters.encryptParticipantFilter)
+  utteranceService.filter(globalFilters.decryptParticipantFilter)
 }

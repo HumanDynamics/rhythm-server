@@ -9,8 +9,8 @@ exports.hook = function (hook) {
   hook.app.service('utterances').find(
     {
       query: {
-        $and: [{meeting: hook.data.meeting_id},
-               {participant: hook.data.participant_id}]
+        $and: [{meeting: hook.data.meeting},
+               {participant: hook.data.participant}]
       }
     }).then((foundUtterances) => {
       var time_match_threshold = 2 * 1000 // threshold for times being "matched", in ms

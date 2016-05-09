@@ -14,7 +14,7 @@ describe('meeting service', () => {
     _id: Faker.Helpers.randomNumber(500).toString(),
     participants: ['p1', 'p2', 'p3'],
     startTime: Faker.Date.recent(),
-    active: true
+    active: false
   }
 
   console.log('test meeting:', testMeeting)
@@ -23,7 +23,9 @@ describe('meeting service', () => {
     assert.ok(app.service('meetings'))
   })
 
-  it('creates a new meeting', (done) => {
+  var clean = mongo.cleanCollections(['meetings'])
+
+  it('creates a new meeting', clean(function (db, done) {
     app.service('meetings')
        .create(testMeeting, {})
        .then((meeting) => {
@@ -32,7 +34,7 @@ describe('meeting service', () => {
        }).catch((err) => {
          done(err)
        })
-  })
+  }))
 
   it('encrypted the new meeting', ready(function (db, done) {
     db.collection('meetings').find(

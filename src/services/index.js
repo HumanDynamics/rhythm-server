@@ -1,6 +1,6 @@
 'use strict'
 
-const utteranceDistribution = require('./utteranceDistribution');
+const utteranceDistribution = require('./utteranceDistribution')
 
 const turn = require('./turn')
 const participantEvent = require('./participantEvent')
@@ -26,5 +26,5 @@ module.exports = function () {
   app.configure(meetingEvent)
   app.configure(participantEvent)
   app.configure(turn)
-  app.configure(utteranceDistribution);
+  app.configure(utteranceDistribution)
 }

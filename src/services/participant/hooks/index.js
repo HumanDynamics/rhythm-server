@@ -1,23 +1,24 @@
 'use strict'
 
 const globalHooks = require('../../../hooks')
+const participantCryptoHooks = require('./participant-crypto-hooks.js')
 
 exports.before = {
-  all: [globalHooks.encryptHook(['_id', 'name'])],
-  find: [],
-  get: [],
-  create: [],
-  update: [],
-  patch: [],
-  remove: []
+  all: [],
+  find: [globalHooks.encryptHook(['_id', 'name'])],
+  get: [participantCryptoHooks.encryptId],
+  create: [globalHooks.encryptHook(['_id', 'name'])],
+  update: [participantCryptoHooks.encryptId],
+  patch: [participantCryptoHooks.encryptId],
+  remove: [participantCryptoHooks.encryptId]
 }
 
 exports.after = {
-  all: [globalHooks.encryptHook(['_id', 'name'])],
+  all: [globalHooks.decryptHook(['_id', 'name'])],
   find: [],
-  get: [],
+  get: [participantCryptoHooks.decryptId],
   create: [],
-  update: [],
-  patch: [],
-  remove: []
+  update: [participantCryptoHooks.decryptId],
+  patch: [participantCryptoHooks.decryptId],
+  remove: [participantCryptoHooks.decryptId]
 }
