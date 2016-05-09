@@ -42,19 +42,19 @@ var testUtterances = [
     participant: testMeeting.participants[0],
     startTime: new Date(startTime),
     endTime: new Date(startTime + 1 * 50),
-    volumes: _(10).times((n) => { return Faker.Helpers.randomNumber(5) })
+    volumes: _(10).times((n) => { return {'timestamp': '1', 'vol': Faker.Helpers.randomNumber(5) }})
   },
   { meeting: testMeeting._id,
     participant: testMeeting.participants[0],
     startTime: new Date(startTime + 2 * 50),
     endTime: new Date(startTime + 3 * 50),
-    volumes: _(10).times((n) => { return Faker.Helpers.randomNumber(5) })
+    volumes: _(10).times((n) => { return {'timestamp': '1', 'vol': Faker.Helpers.randomNumber(5) }})
   },
   { meeting: testMeeting._id,
     participant: testMeeting.participants[1],
     startTime: new Date(startTime + 3 * 50),
     endTime: new Date(startTime + 4 * 50),
-    volumes: _(10).times((n) => { return Faker.Helpers.randomNumber(5) })
+    volumes: _(10).times((n) => { return {'timestamp': '1', 'vol': Faker.Helpers.randomNumber(5) }})
   }
 ]
 

@@ -13,7 +13,10 @@ const utteranceSchema = new Schema({
   meeting: {type: String, ref: 'Meeting'},
   startTime: Date,
   endTime: Date,
-  volumes: [Number]
+  volumes: [{
+    timestamp: String,
+    vol: Number
+  }]
 })
 
 const utteranceModel = mongoose.model('utterance', utteranceSchema)

@@ -39,6 +39,7 @@ function getOrCreateMeeting (obj) {
   var data = obj.data
   var app = obj.app
   var participantIds = _.pluck(data.participants, 'participant')
+  var meta = (_.has(data, 'meta') && data.meta !== undefined) ? data.meta : '{}'
   app.service('meetings').get(data.meeting)
                .then((meeting) => {
                  return app.service('meetings').patch(meeting._id, {
@@ -54,7 +55,7 @@ function getOrCreateMeeting (obj) {
                    participants: participantIds,
                    active: true,
                    meetingUrl: data.meetingUrl,
-                   meta: JSON.parse(data.meta)
+                   meta: JSON.parse(meta)
                  }).then((meeting) => {
                    return meeting
                  }).catch((err) => {
