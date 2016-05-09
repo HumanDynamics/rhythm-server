@@ -18,10 +18,10 @@ exports.hook = function (hook) {
       // filter them, find if any are very close:
       var matches = _.filter(foundUtterances,
                              function (utterance) {
-                               var start_diff = date_diff(utterance.start_time,
-                                                          hook.data.start_time)
-                               var end_diff = date_diff(utterance.end_time,
-                                                        hook.data.end_time)
+                               var start_diff = date_diff(utterance.startTime,
+                                                          hook.data.startTime)
+                               var end_diff = date_diff(utterance.endTime,
+                                                        hook.data.endTime)
                                return (start_diff < time_match_threshold ||
                                        end_diff < time_match_threshold)
                              })

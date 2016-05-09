@@ -2,15 +2,16 @@
 
 const globalHooks = require('../../../hooks')
 const repeatHook = require('./repeatHook').hook
+const participantConsentedHook = require('./participant-consented-hook')
 
 exports.before = {
-  all: [globalHooks.encryptHook(['participant'])],
-  find: [],
-  get: [],
-  create: [repeatHook],
-  update: [],
-  patch: [],
-  remove: []
+  all: [],
+  find: [globalHooks.encryptHook(['participant'])],
+  get: [globalHooks.encryptHook(['participant'])],
+  create: [participantConsentedHook, repeatHook, globalHooks.encryptHook(['participant'])],
+  update: [globalHooks.encryptHook(['participant'])],
+  patch: [globalHooks.encryptHook(['participant'])],
+  remove: [globalHooks.encryptHook(['participant'])]
 }
 
 exports.after = {
