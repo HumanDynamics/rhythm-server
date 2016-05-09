@@ -8,11 +8,7 @@ module.exports = function () {
   const app = this
 
   const options = {
-    Model: meeting,
-    paginate: {
-      default: 5,
-      max: 25
-    }
+    Model: meeting
   }
 
   app.use('/meetings', service(options))
