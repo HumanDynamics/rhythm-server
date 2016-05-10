@@ -3,14 +3,14 @@
 // apply_unstructured_query-hook. This was done as feathers does
 // not cater for querying meta data via the query string.
 
-'use strict';
+'use strict'
 
 // Move the meta query onto the params object so it
 // does not interfere with the default REST queries
-function extract_unstructured_query(hook) {
-  if(hook.params.query.meta) {
-    hook.params.meta = hook.params.query.meta;
-    delete hook.params.query.meta;
+function extract_unstructured_query (hook) {
+  if (hook.params.query.meta) {
+    hook.params.meta = hook.params.query.meta
+    delete hook.params.query.meta
   }
 }
 
