@@ -5,7 +5,7 @@
 const winston = require('winston')
 const meetingJoinedEvent = require('./meetingJoinedEvent')
 const cameraMute = require('./cameraMute')
-const videoMute = require('./videoMute')
+const microphoneMute = require('./microphoneMute')
 const heartbeat = require('./heartbeat')
 
 function configure (socket, app) {
