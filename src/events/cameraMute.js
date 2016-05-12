@@ -7,7 +7,7 @@ function saveCameraMuteEvent(socket, app) {
     winston.log('info', 'Camera Mute event:', data)
 
     app.service('meetingEvents').create({
-      meetingId: data.meetingId,
+      meeting: data.meetingId,
       event: 'cameraMute',
       data: {
         isCameraMute: data.isCameraMute,

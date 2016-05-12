@@ -7,7 +7,7 @@ function saveMicrophoneMuteEvent(socket, app) {
     winston.log('info', 'Microphone Mute event:', data);
 
     app.service('meetingEvents').create({
-      meetingId: data.meetingId,
+      meeting: data.meetingId,
       event: 'microphoneMute',
       data: {
         isMicrophoneMute: data.isMicrophoneMute,
