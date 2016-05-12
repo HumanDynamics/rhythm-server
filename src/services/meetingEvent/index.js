@@ -27,6 +27,4 @@ module.exports = function () {
 
   // Set up our after hooks
   meetingEventService.after(hooks.after)
-
-  meetingEventService.filter(globalFilters.decryptParticipantFilter)
 }

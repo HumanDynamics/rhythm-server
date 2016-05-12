@@ -10,10 +10,8 @@ const Schema = mongoose.Schema
 
 const meetingEventSchema = new Schema({
   meeting: {type: String, ref: 'Meeting'},
-  event: {
-    type: String,
-    enum: ['end', 'start']
-  },
+  event: String,
+  data: Object,
   timestamp: Date
 })
 

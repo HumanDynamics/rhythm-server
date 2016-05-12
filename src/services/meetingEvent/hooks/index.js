@@ -1,7 +1,9 @@
 'use strict'
 
+const globalHooks = require('../../../hooks')
+
 exports.before = {
-  all: [],
+  all: [globalHooks.encryptHook(['participant'])],
   find: [],
   get: [],
   create: [],
@@ -11,7 +13,7 @@ exports.before = {
 }
 
 exports.after = {
-  all: [],
+  all: [globalHooks.decryptHook(['participant'])],
   find: [],
   get: [],
   create: [],
@@ -19,3 +21,4 @@ exports.after = {
   patch: [],
   remove: []
 }
+
