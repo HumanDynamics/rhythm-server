@@ -12,7 +12,7 @@ function configure (socket, app) {
   winston.log('info', 'registering socketio custom events.')
   meetingJoinedEvent.configure(socket, app)
   cameraMute.configure(socket, app)
-  videoMute.configure(socket, app)
+  microphoneMute.configure(socket, app)
   heartbeat.configure(socket, app)
 }
 
