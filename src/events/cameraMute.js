@@ -2,10 +2,7 @@
 
 const winston = require('winston')
 
-var app;
-var socket;
-
-function saveCameraMuteEvent() {
+function saveCameraMuteEvent(socket, app) {
   socket.on('cameraMute', function (data) {
     winston.log('info', 'Camera Mute event:', event)
 
@@ -22,8 +19,5 @@ function saveCameraMuteEvent() {
 }
 
 module.exports.configure = function (socket, app) {
-  app = app;
-  socket = socket;
-
-  saveCameraMuteEvent();
+  saveCameraMuteEvent(socket, app);
 }
