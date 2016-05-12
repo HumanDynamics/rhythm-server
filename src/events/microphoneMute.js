@@ -4,8 +4,6 @@ const winston = require('winston')
 
 function saveMicrophoneMuteEvent(socket, app) {
   socket.on('microphoneMute', function (data) {
-    winston.log('info', 'Microphone Mute event:', data);
-
     app.service('meetingEvents').create({
       meeting: data.meetingId,
       event: 'microphoneMute',
@@ -14,7 +12,7 @@ function saveMicrophoneMuteEvent(socket, app) {
         participantId: data.participantId
       },
       timestamp: new Date()
-    }).catch((err) => { winston.log('info', 'Could not create new meeting event', err) })
+    })
   })
 }
 

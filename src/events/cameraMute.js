@@ -4,8 +4,6 @@ const winston = require('winston')
 
 function saveCameraMuteEvent(socket, app) {
   socket.on('cameraMute', function (data) {
-    winston.log('info', 'Camera Mute event:', data)
-
     app.service('meetingEvents').create({
       meeting: data.meetingId,
       event: 'cameraMute',
@@ -15,8 +13,6 @@ function saveCameraMuteEvent(socket, app) {
       },
       timestamp: new Date()
     })
-    .then((message) => { winston.log('info', 'Event created', message) })
-    .catch((err) => { winston.log('info', 'Could not create new meeting event', err) })
   })
 }
 
