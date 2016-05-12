@@ -4,7 +4,7 @@ const winston = require('winston')
 
 function saveMicrophoneMuteEvent(socket, app) {
   socket.on('microphoneMute', function (data) {
-    winston.log('info', 'Microphone Mute event:', event);
+    winston.log('info', 'Microphone Mute event:', data);
 
     app.service('meetingEvents').create({
       meetingId: data.meetingId,
