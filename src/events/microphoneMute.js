@@ -14,7 +14,7 @@ function saveMicrophoneMuteEvent(socket, app) {
         participantId: data.participantId
       },
       timestamp: new Date()
-    })
+    }).catch((err) => { winston.log('info', 'Could not create new meeting event', err) })
   })
 }
 
