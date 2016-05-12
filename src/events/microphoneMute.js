@@ -3,7 +3,7 @@
 const winston = require('winston')
 
 function saveMicrophoneMuteEvent(event) {
-  winston.log('info', 'Microphone Mute event:', data)
+  winston.log('info', 'Microphone Mute event:', event)
 }
 
 module.exports.configure = function (socket, app) {
