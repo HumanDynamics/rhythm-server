@@ -15,7 +15,7 @@ function saveMicrophoneMuteEvent() {
       data: {
         isMicrophoneMute: data.isMicrophoneMute,
         participantId: data.participantId
-      }
+      },
       timestamp: new Date()
     })
   })

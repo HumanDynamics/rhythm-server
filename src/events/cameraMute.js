@@ -15,7 +15,7 @@ function saveCameraMuteEvent() {
       data: {
         isCameraMute: data.isCameraMute,
         participantId: data.participantId
-      }
+      },
       timestamp: new Date()
     })
   })
