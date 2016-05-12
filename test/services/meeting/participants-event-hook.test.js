@@ -59,23 +59,26 @@ describe('participants event hook', function () {
   })
 
   it('creates a participantEvent when a meeting is changed', function (done) {
+    this.timeout = 3000
     app.service('meetings').patch(meetingId, {
       participants: ['p1', 'p2']
     }).then(function (meeting) {
-      app.service('participantEvents').find({
-        query: {
-          meeting: meetingId,
-          $sort: {timestamp: -1}
-        }
-      }).then(function (participantEvents) {
-        var participants = participantEvents.data[0].participants
-        assert(_.contains(participants, 'p1'))
-        assert(_.contains(participants, 'p2'))
-        assert(participants.length === 2)
-        done()
-      }).catch(function (err) {
-        done(err)
-      })
+      setTimeout(function () {
+        app.service('participantEvents').find({
+          query: {
+            meeting: meetingId,
+            $sort: {timestamp: -1}
+          }
+        }).then(function (participantEvents) {
+          var participants = participantEvents.data[0].participants
+          assert(_.contains(participants, 'p1'))
+          assert(_.contains(participants, 'p2'))
+          assert(participants.length === 2)
+          done()
+        }).catch(function (err) {
+          done(err)
+        })
+      }, 1000)
     }).catch(function (err) {
       done(err)
     })
