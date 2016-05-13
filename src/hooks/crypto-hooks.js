@@ -11,7 +11,7 @@ const transformKeys = helpers.transformKeys
 
 function encryptHook (keys) {
   return function (hook) {
-    winston.log('info', '>>> ENCRYPTING:', hook.data, hook.params.query, hook.method)
+    // winston.log('info', '>>> ENCRYPTING:', hook.data, hook.params.query, hook.method)
 
     function encryptIds (data) {
       return transformKeys(data, keys, crypto.encrypt)
@@ -35,14 +35,14 @@ function encryptHook (keys) {
 
 function decryptHook (keys) {
   return function (hook) {
-    winston.log('info', '>>>DECRYPTING..')
+    // winston.log('info', '>>>DECRYPTING..')
     function decrypt_ids (data) {
       return transformKeys(data, keys, crypto.decrypt)
     }
 
     if (hook.result !== null) {
       var decrypted = decrypt_ids(hook.result)
-      winston.log('info', 'decrypted:', decrypted)
+      // winston.log('info', 'decrypted:', decrypted)
       hook.result = decrypted
       return hook
     }
