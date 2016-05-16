@@ -16,13 +16,6 @@ after(function (done) {
 })
 
 describe('Feathers application tests', function () {
-  /* it('starts and shows the index page', function (done) {
-     request('http://localhost:3000', function (err, res, body) {
-     assert.ok(body.indexOf('<html>') !== -1)
-     done(err)
-     })
-     }) */
-
   describe('404', function () {
     it('shows a 404 JSON error without stack trace', function (done) {
       request({
