@@ -1,9 +1,9 @@
 // hello-world.jsx
 
-import React from 'react';
-import AppBar from 'material-ui/lib/app-bar';
-import NavMenu from './NavMenu';
-import HangoutTable from './hangoutList';
+import React from 'react'
+import AppBar from 'material-ui/lib/app-bar'
+import NavMenu from './NavMenu'
+import MeetingTable from './meetingList'
 
 
 
@@ -44,7 +44,7 @@ class Home extends React.Component {
         console.log("pagebody");
         switch (this.state.tab) {
             case 0:
-                return (<HangoutTable></HangoutTable>);
+                return (<MeetingTable/>)
             case 1:
                 return (<p>user Table</p>);
             default:

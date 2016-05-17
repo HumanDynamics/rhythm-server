@@ -2,7 +2,7 @@ import ParticipantActionCreators from '../actions/ParticipantActionCreators';
 import io from 'socket.io-client';
 import feathers from 'feathers-client';
 
-var socket = io.connect('breakout-dev.media.mit.edu', {'transports': [
+var socket = io.connect('localhost:3000', {'transports': [
     'websocket',
     'flashsocket',
     'jsonp-polling',
