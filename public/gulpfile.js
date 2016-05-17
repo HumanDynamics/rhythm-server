@@ -1,32 +1,11 @@
-const gulp = require('gulp')
-const less = require('gulp-less')
-const changed = require('gulp-changed')
-const gulpBowerFiles = require('gulp-bower-files')
+/*
+	gulpfile.js
+	===========
+	Rather than manage one giant configuration file responsible
+	for creating multiple tasks, each task has been broken out into
+	its own file in gulp/tasks. Any file in that folder gets automatically
+	required by the loop in ./gulp/index.js (required below).
+	To add a new task, simply add a new task file to gulp/tasks.
+*/
 
-// compile into `www` directory
-var dest = './www'
-
-// Compiles LESS > CSS
-gulp.task('build-less', function () {
-  return gulp.src('src/styles/style.less')
-             .pipe(less())
-             .pipe(gulp.dest(dest + '/css'))
-})
-
-gulp.task('html', function () {
-  return gulp.src('./src/index.html')
-             .pipe(changed(dest))
-             .pipe(gulp.dest(dest))
-})
-
-gulp.task('img', function () {
-  return gulp.src('./src/assets/*')
-             .pipe(changed(dest + '/assets'))
-             .pipe(gulp.dest(dest + '/assets'))
-})
-
-gulp.task('bower-files', function () {
-  gulpBowerFiles().pipe(gulp.dest(dest + '/lib'))
-})
-
-gulp.task('default', ['build-less', 'html', 'bower-files', 'img'])
+require('./gulp');
