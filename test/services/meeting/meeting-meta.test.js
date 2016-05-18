@@ -28,6 +28,15 @@ describe('meta data in meeting', function () {
     meta: {key: 'value'}
   }
 
+  var m3 = {
+    _id: 'meeting-metadata-3',
+    participants: [],
+    startTime: d2,
+    endTime: d1,
+    active: false,
+    meta: {key: 'value with spaces'}
+  }
+
   it('successfully saves a meeting with no metadata', function (done) {
     app.service('meetings').create(m1)
        .then(function (meeting) {
@@ -57,6 +66,19 @@ describe('meta data in meeting', function () {
        }).catch(function (err) {
          done(err)
        })
+  })
+
+  it('successfully finds the meeting after url decoding the meta fields', function (done) {
+    app.service('meetings').create(m3).then(function(meeting) {
+      app.service('meetings').find({query: {meta: {key: 'value%20with%20spaces'}}})
+       .then(function (meetings) {
+        assert(meetings[0]._id === 'meeting-metadata-3')
+         done()
+       }).catch(function (err) {
+         done(err)
+       })
+    })
+
   })
 
   it('doesnt find a meeting with meta when there isnt one', function (done) {
