@@ -65,7 +65,7 @@ var checkAllHeartbeats = function (socket, app) {
 // ID in the heartbeat.
 var stopHeartbeat = function (heartbeat) {
   winston.log('info', 'Stopping heartbeat for meeting:', heartbeat.meeting)
-  heartbeats[meeting] = _.filter(heartbeats[meeting], function (obj) {
+  heartbeats[heartbeat.meeting] = _.filter(heartbeats[heartbeat.meeting], function (obj) {
     return obj.participant !== heartbeat.participant
   })
 }
