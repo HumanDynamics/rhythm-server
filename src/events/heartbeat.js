@@ -65,8 +65,16 @@ var checkAllHeartbeats = function (socket, app) {
 // ID in the heartbeat.
 var stopHeartbeat = function (heartbeat) {
   winston.log('info', 'Stopping heartbeat for meeting:', heartbeat.meeting)
-  heartbeat.meeting = _.filter(heartbeat.meeting, function (obj) {
+  heartbeats[meeting] = _.filter(heartbeats[meeting], function (obj) {
     return obj.participant !== heartbeat.participant
+  })
+}
+
+var maybeAddParticipantToMeeting = function (meeting, participant) {
+  app.service('meetings').patch(meeting, {}, {
+    add_participant: participant
+  }).then(function (meeting) {
+    winston.log('info', 'added participant to meeting:', meeting)
   })
 }
 
@@ -88,6 +96,7 @@ var updateHeartbeat = function (heartbeat) {
   } else {
     heartbeats[heartbeat.meeting] = [hbObj]
   }
+  maybeAddParticipantToMeeting(heartbeat.meeting, heartbeat.participant)
   return
 }
 
