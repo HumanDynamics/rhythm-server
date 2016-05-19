@@ -41,7 +41,7 @@ var checkHeartbeats = function (meeting, socket, app) {
       _.each(participantsToRemove, function (participant) {
         if (!_.contains(meeting.participants, participant)) {
           stopHeartbeat({
-            meeting: meeting,
+            meeting: meeting._id,
             participant: participant
           })
         }
@@ -70,7 +70,7 @@ var stopHeartbeat = function (heartbeat) {
   })
 }
 
-var maybeAddParticipantToMeeting = function (meeting, participant) {
+var maybeAddParticipantToMeeting = function (meeting, participant, app) {
   app.service('meetings').patch(meeting, {}, {
     add_participant: participant
   }).then(function (meeting) {
@@ -82,26 +82,28 @@ var maybeAddParticipantToMeeting = function (meeting, participant) {
 // revised timestamp.
 // TODO: If we receive a heartbeat from a meeting that is marked as inactive,
 // mark it as active.
-var updateHeartbeat = function (heartbeat) {
-  _.each(heartbeats[heartbeat.meeting], function (obj) {
-    if (obj.participant === heartbeat.participant) {
-      obj.timestamp = new Date()
-      return
+var updateHeartbeat = function (app) {
+  return function (heartbeat) {
+    _.each(heartbeats[heartbeat.meeting], function (obj) {
+      if (obj.participant === heartbeat.participant) {
+        obj.timestamp = new Date()
+        return
+      }
+    })
+    // if we're here, we didn't find a matching heartbeat. make a new one.
+    var hbObj = _.extend(heartbeat, {'timestamp': new Date()})
+    if (_.has(heartbeats, heartbeat.meeting)) {
+      heartbeats[heartbeat.meeting].push(hbObj)
+    } else {
+      heartbeats[heartbeat.meeting] = [hbObj]
     }
-  })
-  // if we're here, we didn't find a matching heartbeat. make a new one.
-  var hbObj = _.extend(heartbeat, {'timestamp': new Date()})
-  if (_.has(heartbeats, heartbeat.meeting)) {
-    heartbeats[heartbeat.meeting].push(hbObj)
-  } else {
-    heartbeats[heartbeat.meeting] = [hbObj]
+    maybeAddParticipantToMeeting(heartbeat.meeting, heartbeat.participant, app)
+    return
   }
-  maybeAddParticipantToMeeting(heartbeat.meeting, heartbeat.participant)
-  return
 }
 
 function listenHeartbeats (socket, app) {
-  socket.on('heartbeat-start', updateHeartbeat)
+  socket.on('heartbeat-start', updateHeartbeat(app))
   socket.on('heartbeat-stop', stopHeartbeat)
   heartbeatListener = setInterval(() => {
     checkAllHeartbeats(socket, app)

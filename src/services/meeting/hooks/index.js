@@ -6,6 +6,7 @@ const activateMeetingHook = require('./activate-meeting-hook')
 const deactivateMeetingHook = require('./deactivate-meeting-hook')
 const participantsEventHook = require('./participants-event-hook')
 const removeParticipantsHook = require('./remove-participants-hook')
+const addParticipantHook = require('./add-participant-hook')
 const extractUnstructuredQueryHook = require('./extract_unstructured_query-hook')
 const applyUnstructuredQueryHook = require('./apply_unstructured_query-hook')
 
@@ -24,7 +25,7 @@ exports.before = {
   find: [globalHooks.encryptHook(['participants']), extractUnstructuredQueryHook],
   update: [updateTime, globalHooks.encryptHook(['participants'])],
   patch: [updateTime, activateMeetingHook,
-          deactivateMeetingHook, removeParticipantsHook,
+          deactivateMeetingHook, removeParticipantsHook, addParticipantHook,
           globalHooks.encryptHook(['participants'])],
   get: [globalHooks.encryptHook(['participants'])]
 }
