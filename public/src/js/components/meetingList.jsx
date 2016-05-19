@@ -3,9 +3,11 @@
 import React from 'react'
 import update from 'react-addons-update'
 
+import { Link } from 'react-router'
+
 import {MeetingStore} from '../stores/meetingStore'
 import {ParticipantStore} from '../stores/participantStore'
-import MeetingActions from '../actions/MeetingListActionCreators'
+import MeetingActions from '../actions/MeetingActionCreators'
 
 import Table from 'material-ui/lib/table/table'
 import TableHeaderColumn from 'material-ui/lib/table/table-header-column'
@@ -46,7 +48,7 @@ class MeetingRow extends React.Component {
   render () {
     return (
       <TableRow>
-        <TableRowColumn>{this.props.meeting._id}</TableRowColumn>
+        <TableRowColumn><Link to={`/meeting/${this.props.meeting._id}`}>{this.props.meeting._id}</Link></TableRowColumn>
         <TableRowColumn>{this.getIcon(this.props.meeting.active)}</TableRowColumn>
         <TableRowColumn>
           <RaisedButton

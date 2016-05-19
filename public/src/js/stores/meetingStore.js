@@ -1,11 +1,10 @@
 import _ from 'underscore'
-// var EventEmitter = require('events').EventEmitter
 import MicroEvent from 'microevent'
 
 import AppDispatcher from '../dispatcher/dispatcher'
-import MeetingListConstants from '../constants/MeetingListConstants'
+import MeetingConstants from '../constants/MeetingConstants'
 
-var ActionTypes = MeetingListConstants.ActionTypes
+var ActionTypes = MeetingConstants.ActionTypes
 var CHANGE_EVENT = 'change'
 
 class _MeetingStore {
@@ -23,6 +22,10 @@ class _MeetingStore {
 
   get (id) {
     return this.meetings[id]
+  }
+
+  getTurn (id) {
+    return this.meetings[id].turn
   }
 }
 
@@ -54,6 +57,11 @@ function _changeMeetingActive (meeting_id, active) {
   }
 }
 
+function _updateTurn (turn, meeting_id) {
+  console.log('turns for meeting:', turn, meeting_id)
+  MeetingStore.meetings[meeting_id].turn = turn
+}
+
 AppDispatcher.register(function (payload) {
   switch (payload.type) {
     case ActionTypes.RECEIVE_ALL_MEETINGS:
@@ -70,7 +78,10 @@ AppDispatcher.register(function (payload) {
       break
     case ActionTypes.UPDATE_MEETING_ACTIVE:
       _changeMeetingActive(payload.meeting_id, payload.active)
-      /* meetingStore.trigger(CHANGE_EVENT) */
+      break
+    case ActionTypes.UPDATE_MEETING_TURNS:
+      _updateTurn(payload.turn, payload.meeting)
+      MeetingStore.trigger(CHANGE_EVENT)
       break
     default:
   }

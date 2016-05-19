@@ -5,8 +5,6 @@ import AppBar from 'material-ui/lib/app-bar'
 import NavMenu from './NavMenu'
 import MeetingTable from './meetingList'
 
-
-
 class Nav extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -62,4 +60,5 @@ class Home extends React.Component {
     }
 }
 
-exports.Home = Home;
+exports.Home = Home
+exports.Nav = Nav
