@@ -4,7 +4,8 @@
     "mongodb": "mongodb://localhost:27017/breakout",
     "www": "../public/www",
     "auth": {
-        "idField": "id",
+        "successRedirect": false,
+        "failureRedirect": false,
         "token": {
             "secret": "dpMAJsnypHrA/vhwToEDJ1YpitIc8V7TUmxnlD5fJNuPjprAoOmorxeOXrRVcrVnJyVd2plomU9Tnv78UJD+qg=="
         },

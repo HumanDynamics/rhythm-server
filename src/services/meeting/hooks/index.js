@@ -1,6 +1,7 @@
 'use strict'
 
 const globalHooks = require('../../../hooks')
+const authHooks = require('feathers-authentication').hooks
 const computeTurnHook = require('./compute-turn-hook')
 const activateMeetingHook = require('./activate-meeting-hook')
 const deactivateMeetingHook = require('./deactivate-meeting-hook')
@@ -21,19 +22,26 @@ function updateTime (hook) {
 }
 
 exports.before = {
-  create: [addStartTime, activateMeetingHook, globalHooks.encryptHook(['participants'])],
-  find: [globalHooks.encryptHook(['participants']), extractUnstructuredQueryHook],
-  update: [updateTime, globalHooks.encryptHook(['participants'])],
+  all: [authHooks.verifyToken()],
+  create: [addStartTime,
+           activateMeetingHook,
+           globalHooks.encryptHook(['participants'])],
+  find: [globalHooks.encryptHook(['participants']),
+         extractUnstructuredQueryHook],
+  update: [updateTime,
+           globalHooks.encryptHook(['participants'])],
   patch: [updateTime, activateMeetingHook,
-          deactivateMeetingHook, removeParticipantsHook, addParticipantHook,
+          deactivateMeetingHook,
+          removeParticipantsHook,
+          addParticipantHook,
           globalHooks.encryptHook(['participants'])],
   get: [globalHooks.encryptHook(['participants'])]
 }
 
 exports.after = {
+  all: [authHooks.verifyToken(), globalHooks.decryptHook(['participants'])],
   create: [computeTurnHook, participantsEventHook],
   update: [computeTurnHook],
   patch: [computeTurnHook, participantsEventHook],
-  all: [globalHooks.decryptHook(['participants'])],
   find: [applyUnstructuredQueryHook]
 }
