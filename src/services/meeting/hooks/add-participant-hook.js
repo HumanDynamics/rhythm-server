@@ -12,7 +12,8 @@ module.exports = function (hook) {
     return hook.app.service('meetings').get(hook.id)
         .then((meeting) => {
           var oldParticipants = meeting.participants
-          if (_.contains(oldParticipants, hook.data.participant)) {
+          if (_.contains(oldParticipants, hook.params.add_participant)) {
+            winston.log('info', 'meeting already contains participant:', hook.params.add_participant)
             return hook
           } else {
             hook.data.participants = _.union(oldParticipants, [hook.params.add_participant])

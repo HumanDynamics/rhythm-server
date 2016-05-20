@@ -166,4 +166,47 @@ describe('heartbeats', function () {
          })
     }, 11000)
   })
+
+  it('should start a meeting if a participants heartbeat starts again', function (done) {
+    this.timeout(15000)
+    var socket = io.connect('http://localhost:3000', {
+      'transports': [
+        'websocket',
+        'flashsocket',
+        'jsonp-polling',
+        'xhr-polling',
+        'htmlfile'
+      ]
+    })
+
+    socket.emit('heartbeat-start', {
+      participant: 'p1',
+      meeting: meetingId
+    })
+
+    setTimeout(function () {
+      app.service('meetings').get(meetingId)
+         .then(function (meeting) {
+           assert(!meeting.active)
+           assert(meeting.participants.length === 0)
+           return meeting
+         }).then(function (meeting) {
+           socket.emit('heartbeat-start', {
+             participant: 'p1',
+             meeting: meetingId
+           })
+           return meeting._id
+         }).then(function (meetingId) {
+           app.service('meetings').get(meetingId)
+              .then(function (meeting) {
+                assert(meeting.active)
+                assert(_.contains(meeting.participants, 'p1'))
+                done()
+              })
+         }).catch(function (err) {
+           winston.log('info', '[heartbeats] err:', err)
+           done(err)
+         })
+    }, 12000)
+  })
 })

@@ -64,18 +64,32 @@ var checkAllHeartbeats = function (socket, app) {
 // removes all heartbeat records that match the given meeting ID and participant
 // ID in the heartbeat.
 var stopHeartbeat = function (heartbeat) {
-  winston.log('info', 'Stopping heartbeat for meeting:', heartbeat.meeting)
+  winston.log('info', 'Stopping heartbeat for meeting:', heartbeat.meeting, heartbeat.participant)
   heartbeats[heartbeat.meeting] = _.filter(heartbeats[heartbeat.meeting], function (obj) {
     return obj.participant !== heartbeat.participant
   })
+  winston.log('info', 'Stopped heartbeat:', heartbeats[heartbeats.meeting])
 }
 
 var maybeAddParticipantToMeeting = function (meeting, participant, app) {
-  app.service('meetings').patch(meeting, {}, {
-    add_participant: participant
-  }).then(function (meeting) {
-    winston.log('info', 'added participant to meeting:', meeting)
-  })
+  app.service('meetings').get(meeting)
+     .then((meeting) => {
+       if (_.contains(meeting.participants, participant)) {
+         return false
+       } else {
+         return true
+       }
+     }).then((shouldAdd) => {
+       if (shouldAdd) {
+         app.service('meetings').patch(meeting, {}, {
+           add_participant: participant
+         }).then((meeting) => {
+           winston.log('info', 'added participant to meeting:', meeting)
+         })
+       }
+     }).catch((err) => {
+       winston.log('error', 'Couldnt get meeting participants or couldnt add participant:', err)
+     })
 }
 
 // Either creates a new heartbeat record, or updates an existing one with a
@@ -84,21 +98,33 @@ var maybeAddParticipantToMeeting = function (meeting, participant, app) {
 // mark it as active.
 var updateHeartbeat = function (app) {
   return function (heartbeat) {
-    _.each(heartbeats[heartbeat.meeting], function (obj) {
-      if (obj.participant === heartbeat.participant) {
-        obj.timestamp = new Date()
-        return
-      }
-    })
-    // if we're here, we didn't find a matching heartbeat. make a new one.
     var hbObj = _.extend(heartbeat, {'timestamp': new Date()})
+    var foundHeartbeat = false
+//    winston.log('info', 'received heartbeat:', heartbeats)
+
     if (_.has(heartbeats, heartbeat.meeting)) {
-      heartbeats[heartbeat.meeting].push(hbObj)
+      _.each(heartbeats[heartbeat.meeting], function (obj) {
+        // winston.log('info', 'current meeting:', heartbeats[heartbeat.meeting])
+        if (obj.participant === heartbeat.participant) {
+          // winston.log('info', 'updated heartbeat:', obj.participant, heartbeat.participant)
+          obj.timestamp = new Date()
+          foundHeartbeat = true
+          return
+        }
+      })
+      
+      if (!foundHeartbeat) {
+        // if we're here, we didn't find a matching participant in the meeting
+        winston.log('info', 'pushing new heartbeat...')
+        heartbeats[heartbeat.meeting].push(hbObj)
+        maybeAddParticipantToMeeting(heartbeat.meeting, heartbeat.participant, app)
+        }
     } else {
+      winston.log('info', 'no heartbeat for meeting, updating...')
+      // no heartbeats for that meeting
       heartbeats[heartbeat.meeting] = [hbObj]
+      maybeAddParticipantToMeeting(heartbeat.meeting, heartbeat.participant, app)
     }
-    maybeAddParticipantToMeeting(heartbeat.meeting, heartbeat.participant, app)
-    return
   }
 }
 
