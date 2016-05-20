@@ -4,6 +4,7 @@
   "mongodb": "DATABASE_URL",
   "www": "../public/www",
   "auth": {
+    "idField": "id",
     "token": {
       "secret": "FEATHERS_AUTH_SECRET"
     },
