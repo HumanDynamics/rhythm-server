@@ -82,6 +82,9 @@ function createMeetingAndUtterances (testName, ended, done) {
 }
 
 describe('end meeting job', function () {
+  before(function () {
+    endMeetingJob.stopJob()
+  })
   describe('isMeetingEnded', function () {
     var endedMeeting = null
     var aliveMeeting = null
@@ -164,10 +167,8 @@ describe('end meeting job', function () {
                      winston.log('info', '[end-meeting-job] ended meetings:', endedMeetings)
                      assert(endedMeetings[0])
                      assert(!endedMeetings[1])
-                     endMeetingJob.stopJob()
                      done()
                    }).catch(function (err) {
-                     endMeetingJob.stopJob()
                      done(err)
                    })
     })
