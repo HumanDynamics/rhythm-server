@@ -39,7 +39,7 @@ exports.before = {
 }
 
 exports.after = {
-  all: [authHooks.verifyToken(), globalHooks.decryptHook(['participants'])],
+  all: [globalHooks.decryptHook(['participants'])],
   create: [computeTurnHook, participantsEventHook],
   update: [computeTurnHook],
   patch: [computeTurnHook, participantsEventHook],
