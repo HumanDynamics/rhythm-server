@@ -3,6 +3,7 @@
     "port": 3000,
     "mongodb": "mongodb://localhost:27017/breakout",
     "www": "../public/www",
+    "authOn": true,
     "auth": {
         "successRedirect": false,
         "failureRedirect": false,

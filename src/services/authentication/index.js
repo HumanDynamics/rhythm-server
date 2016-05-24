@@ -1,5 +1,6 @@
 'use strict'
 
+const winston = require('winston')
 const authentication = require('feathers-authentication')
 
 module.exports = function () {
@@ -7,5 +8,8 @@ module.exports = function () {
 
   let config = app.get('auth')
 
-  app.configure(authentication(config))
+  if (app.get('authOn')) {
+    winston.log('info', 'configuring authentication...')
+    app.configure(authentication(config))
+  }
 }

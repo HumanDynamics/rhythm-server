@@ -3,6 +3,7 @@
 
 const assert = require('assert')
 const request = require('request')
+const winston = require('winston')
 const app = require('../src/app')
 
 before(function (done) {
@@ -11,6 +12,7 @@ before(function (done) {
 })
 
 after(function (done) {
+  winston.log('info', 'Finishing up!')
   this.timeout(5000)
   this.server.close(done)
 })
