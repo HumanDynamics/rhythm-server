@@ -33,6 +33,10 @@ var isMeetingEnded = function (meeting, passedApp) {
       $sort: {endTime: -1}
     }
   }).then((lastUtterances) => {
+    if (lastUtterances[0].length === 0) {
+      return {meetingShouldEnd: false,
+              meeting: meeting}
+    }
     var msSinceLastUtterance = (new Date().getTime() - new Date(lastUtterances[0].endTime).getTime())
     var meetingShouldEnd = false
     if (lastUtterances.length > 0) {
