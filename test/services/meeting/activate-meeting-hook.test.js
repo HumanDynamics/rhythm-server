@@ -3,10 +3,12 @@
 'use strict'
 
 const assert = require('assert')
-
+const server = require('../../shared/server')
 const app = require('../../../src/app')
 
-describe('activate meeting hook', function () {
+server.load(app);
+
+describe('activate meeting hook', function() {
   var d1 = new Date()
   var d2 = d1
   d2 = d2.setDate(d2.getDate() - 2)
@@ -19,24 +21,23 @@ describe('activate meeting hook', function () {
     active: false
   }
 
-  before(function (done) {
-    app.service('meetings').create(endedMeeting)
-       .then(function (meeting) {
-         assert(meeting.active === false)
-         done()
-       }).catch(function (err) {
-         done(err)
-       })
+  before(function(done) {
+    app.service('meetings').create(endedMeeting).then(function(meeting) {
+        done()
+      })
+      .catch(function(err) {
+        done(err)
+      })
   })
 
-  it('sets an empty meeting active after a participant joins', function (done) {
+  it('sets an empty meeting active after a participant joins', function(done) {
     app.service('meetings').patch(endedMeeting._id, {
       participants: ['p1']
-    }).then(function (meeting) {
+    }).then(function(meeting) {
       assert(meeting.active === true)
       assert(meeting.endTime === null)
       done()
-    }).catch(function (err) {
+    }).catch(function(err) {
       done(err)
     })
   })
