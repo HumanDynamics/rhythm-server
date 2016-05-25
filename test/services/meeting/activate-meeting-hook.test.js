@@ -4,8 +4,6 @@
 
 const assert = require('assert')
 
-const app = require('../../../src/app')
-
 describe('activate meeting hook', function () {
   var d1 = new Date()
   var d2 = d1
@@ -20,7 +18,7 @@ describe('activate meeting hook', function () {
   }
 
   before(function (done) {
-    app.service('meetings').create(endedMeeting)
+    global.app.service('meetings').create(endedMeeting)
        .then(function (meeting) {
          assert(meeting.active === false)
          done()
@@ -30,7 +28,7 @@ describe('activate meeting hook', function () {
   })
 
   it('sets an empty meeting active after a participant joins', function (done) {
-    app.service('meetings').patch(endedMeeting._id, {
+    global.app.service('meetings').patch(endedMeeting._id, {
       participants: ['p1']
     }).then(function (meeting) {
       assert(meeting.active === true)

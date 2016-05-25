@@ -13,12 +13,15 @@ const io = require('socket.io-client')
 const hooks = require('feathers-hooks')
 const user = require('../../src/services/user')
 
-function dropDatabase (db) {
+function dropDatabase () {
   winston.log('info', 'dropping db..')
-  return db.dropDatabase()
-           .then(() => {
-             return db
-           })
+  var connectedDb = null
+  return MongoClient.connect('mongodb://localhost:27017/breakout')
+                    .then((db) => {
+                      connectedDb = db
+                      return db.dropDatabase()
+                    })
+                    .then(() => { return connectedDb })
 }
 
 function createUser (db) {
@@ -54,8 +57,8 @@ function authenticate () {
     ]
   })
   const client = feathers().configure(feathers.socketio(socket))
-                        .configure(feathers.hooks())
-                        .configure(feathers.authentication())
+                           .configure(feathers.hooks())
+                           .configure(feathers.authentication())
   return client.authenticate({
     type: 'local',
     email: 'hello',
@@ -65,16 +68,16 @@ function authenticate () {
   })
 }
 
-beforeEach(function (done) {
-  MongoClient.connect('mongodb://localhost:27017/breakout')
-             .then(dropDatabase)
-             .then(createUser)
-             .then(authenticate)
-             .then((app) => {
-               global.app = app
-               done()
-             }).catch((err) => {
-               done(err)
-               winston.log('info', '[pre-test] error creating test app:', err)
-             })
+before(function (done) {
+  dropDatabase().then(createUser)
+                .then(authenticate)
+                .then((app) => {
+                  global.app = app
+                  done()
+                }).catch((err) => {
+                  done(err)
+                  winston.log('info', '[pre-test] error creating test app:', err)
+                })
 })
+
+module.exports.dropDatabase = dropDatabase
