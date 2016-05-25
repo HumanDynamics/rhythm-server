@@ -1,12 +1,15 @@
 {
-  "host": "breakout-server-app.feathersjs.com",
-  "port": 80,
-  "mongodb": "DATABASE_URL",
-  "www": "../public/www",
-  "auth": {
-    "token": {
-      "secret": "FEATHERS_AUTH_SECRET"
-    },
-    "local": {}
-  }
+    "host": "localhost",
+    "port": 3000,
+    "mongodb": "mongodb://localhost:27017/rhythm",
+    "www": "../public/www",
+    "authOn": true,
+    "auth": {
+        "successRedirect": false,
+        "failureRedirect": false,
+        "token": {
+            "secret": "dpMAJsnypHrA/vhwToEDJ1YpitIc8V7TUmxnlD5fJNuPjprAoOmorxeOXrRVcrVnJyVd2plomU9Tnv78UJD+qg=="
+        },
+        "local": {}
+    }
 }

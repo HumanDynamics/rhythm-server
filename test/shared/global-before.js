@@ -8,6 +8,7 @@ const Promise = require('promise')
 const mongoose = require('mongoose')
 const feathers = require('feathers-client')
 const io = require('socket.io-client')
+const app = require('../../src/app')
 
 // for server
 const hooks = require('feathers-hooks')
@@ -23,10 +24,12 @@ global.socket = io.connect('http://localhost:3000', {
   ]
 })
 
+var mongoUrl = app.get('mongodb')
+
 function dropDatabase () {
   winston.log('info', 'dropping db..')
   var connectedDb = null
-  return MongoClient.connect('mongodb://localhost:27017/breakout')
+  return MongoClient.connect(mongoUrl)
                     .then((db) => {
                       connectedDb = db
                       return db.dropDatabase()
@@ -38,7 +41,7 @@ function createUser (db) {
   winston.log('info', 'creating user...')
   return new Promise(function (resolve, reject) {
     db.close().then(function () {
-      mongoose.connect('mongodb://localhost:27017/breakout')
+      mongoose.connect(mongoUrl)
       mongoose.Promise = global.Promise
     })
     var serverNoAuth = feathersServer().configure(hooks()).configure(user)

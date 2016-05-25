@@ -7,15 +7,17 @@ const winston = require('winston')
 const app = require('../src/app')
 
 before(function (done) {
-  this.server = app.listen(3000)
-  this.server.once('listening', done)
+  global.app = app
+  winston.log('info', 'mongo:', global.app.get('mongodb'))
+  global.server = app.listen(3000)
+  global.server.once('listening', done)
 })
 
 after(function (done) {
   winston.log('info', 'Finishing up!')
   this.timeout(7000)
   global.socket.disconnect()
-  this.server.close(done)
+  global.server.close(done)
   done()
 })
 
