@@ -8,14 +8,16 @@ const _ = require('underscore')
 const winston = require('winston')
 
 module.exports = function (hook) {
-  if (hook.params.add_participant) {
+  if (hook.data.add_participant) {
+    winston.log('info', 'adding participant:', hook.data.add_participant)
     return hook.app.service('meetings').get(hook.id)
         .then((meeting) => {
           var oldParticipants = meeting.participants
-          if (_.contains(oldParticipants, hook.data.participant)) {
+          if (_.contains(oldParticipants, hook.data.add_participant)) {
             return hook
           } else {
-            hook.data.participants = _.union(oldParticipants, [hook.params.add_participant])
+            hook.data.participants = _.union(oldParticipants, [hook.data.add_participant])
+            delete hook.data.add_participant
             return hook
           }
         }).catch((err) => {
@@ -23,6 +25,7 @@ module.exports = function (hook) {
           return hook
         })
   } else {
+    winston.log('info', 'not adding participant:', hook.data, hook.id)
     return hook
   }
 }

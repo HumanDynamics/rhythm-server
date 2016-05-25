@@ -4,7 +4,6 @@
 const assert = require('assert')
 const winston = require('winston')
 const feathers = require('feathers-client')
-const _ = require('underscore')
 const io = require('socket.io-client')
 
 describe('authorization', function () {

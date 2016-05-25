@@ -13,6 +13,16 @@ const io = require('socket.io-client')
 const hooks = require('feathers-hooks')
 const user = require('../../src/services/user')
 
+global.socket = io.connect('http://localhost:3000', {
+  'transports': [
+    'websocket',
+    'flashsocket',
+    'jsonp-polling',
+    'xhr-polling',
+    'htmlfile'
+  ]
+})
+
 function dropDatabase () {
   winston.log('info', 'dropping db..')
   var connectedDb = null
@@ -47,16 +57,7 @@ function createUser (db) {
 }
 
 function authenticate () {
-  var socket = io.connect('http://localhost:3000', {
-    'transports': [
-      'websocket',
-      'flashsocket',
-      'jsonp-polling',
-      'xhr-polling',
-      'htmlfile'
-    ]
-  })
-  const client = feathers().configure(feathers.socketio(socket))
+  const client = feathers().configure(feathers.socketio(global.socket))
                            .configure(feathers.hooks())
                            .configure(feathers.authentication())
   return client.authenticate({
@@ -78,6 +79,10 @@ before(function (done) {
                   done(err)
                   winston.log('info', '[pre-test] error creating test app:', err)
                 })
+})
+
+after(function (done) {
+  dropDatabase().then(() => { done() }).catch((err) => { done(err) })
 })
 
 module.exports.dropDatabase = dropDatabase

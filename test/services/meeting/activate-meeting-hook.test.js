@@ -3,6 +3,7 @@
 'use strict'
 
 const assert = require('assert')
+const dropDatabase = require('../../shared/global-before').dropDatabase
 
 describe('activate meeting hook', function () {
   var d1 = new Date()
@@ -18,13 +19,23 @@ describe('activate meeting hook', function () {
   }
 
   before(function (done) {
-    global.app.service('meetings').create(endedMeeting)
-       .then(function (meeting) {
-         assert(meeting.active === false)
-         done()
-       }).catch(function (err) {
-         done(err)
-       })
+    dropDatabase().then(() => {
+      global.app.service('meetings').create(endedMeeting)
+            .then(function (meeting) {
+              assert(meeting.active === false)
+              done()
+            })
+    }).catch((err) => { done(err) })
+  })
+
+  after(function (done) {
+    global.app.service('meetings').patch(endedMeeting._id, {
+      participants: []
+    }).then((meeting) => {
+      done()
+    }).catch((err) => {
+      done(err)
+    })
   })
 
   it('sets an empty meeting active after a participant joins', function (done) {

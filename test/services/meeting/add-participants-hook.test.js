@@ -5,8 +5,7 @@
 const assert = require('assert')
 const winston = require('winston')
 const _ = require('underscore')
-
-const app = require('../../../src/app')
+const dropDatabase = require('../../shared/global-before').dropDatabase
 
 var n = 0
 
@@ -23,7 +22,7 @@ function createMeeting () {
     active: true
   }
 
-  return app.service('meetings').create(activeMeeting)
+  return global.app.service('meetings').create(activeMeeting)
             .then(function (meeting) {
               assert(meeting.active === true)
               n += 1
@@ -35,6 +34,10 @@ function createMeeting () {
 
 describe('add participants hook', function () {
   var meetingId = null
+  before(function (done) {
+    dropDatabase().then(() => { done() })
+                  .catch((err) => { done(err) })
+  })
 
   beforeEach(function (done) {
     createMeeting().then(function (meeting) {
@@ -45,10 +48,20 @@ describe('add participants hook', function () {
     })
   })
 
+  afterEach(function (done) {
+    global.app.service('meetings').patch(meetingId, {
+      participants: []
+    }).then((meeting) => {
+      done()
+    }).catch((err) => {
+      done(err)
+    })
+  })
+
   it('adds a participant to a meeting when it receives an add_participants query ', function (done) {
-    app.service('meetings').patch(meetingId, {}, {
+    global.app.service('meetings').patch(meetingId, {
       add_participant: 'p3'
-    }).then(function (meeting) {
+    }, {}).then(function (meeting) {
       winston.log('info', 'added participants? :', meeting)
       assert(_.isEqual(meeting.participants, ['p1', 'p2', 'p3']))
       done()
@@ -58,7 +71,7 @@ describe('add participants hook', function () {
   })
 
   it('patches without an add_participant query', function (done) {
-    app.service('meetings').patch(meetingId, {
+    global.app.service('meetings').patch(meetingId, {
       participants: ['p1', 'p2', 'p3', 'p4']
     }).then(function (meeting) {
       assert(_.isEqual(meeting.participants, ['p1', 'p2', 'p3', 'p4']))

@@ -4,8 +4,7 @@
 
 const assert = require('assert')
 const winston = require('winston')
-
-const app = require('../../../src/app')
+const dropDatabase = require('../../shared/global-before').dropDatabase
 
 var n = 0
 
@@ -22,7 +21,7 @@ function createMeeting () {
     active: true
   }
 
-  return app.service('meetings').create(activeMeeting)
+  return global.app.service('meetings').create(activeMeeting)
      .then(function (meeting) {
        assert(meeting.active === true)
        n += 1
@@ -35,6 +34,11 @@ function createMeeting () {
 describe('deactivate meeting hook', function () {
   var meetingId = null
 
+  before(function (done) {
+    dropDatabase().then(() => { done() })
+                  .catch((err) => { done(err) })
+  })
+
   beforeEach(function (done) {
     createMeeting().then(function (meeting) {
       meetingId = meeting
@@ -45,7 +49,7 @@ describe('deactivate meeting hook', function () {
   })
 
   it('sets an empty meeting inactive after all participants leave', function (done) {
-    app.service('meetings').patch(meetingId, {
+    global.app.service('meetings').patch(meetingId, {
       participants: []
     }).then(function (meeting) {
       winston.log('info', 'deactivated meeting:', meeting)
@@ -58,10 +62,10 @@ describe('deactivate meeting hook', function () {
   })
 
   it('creates a meeting end event successfully', function (done) {
-    app.service('meetings').patch(meetingId, {
+    global.app.service('meetings').patch(meetingId, {
       participants: []
     }).then(function (meeting) {
-      app.service('meetingEvents').find({
+      global.app.service('meetingEvents').find({
         query: { $and: [{meeting: meetingId},
                         {event: 'end'}]
         }

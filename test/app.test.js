@@ -13,8 +13,10 @@ before(function (done) {
 
 after(function (done) {
   winston.log('info', 'Finishing up!')
-  this.timeout(5000)
+  this.timeout(7000)
+  global.socket.disconnect()
   this.server.close(done)
+  done()
 })
 
 describe('Feathers application tests', function () {

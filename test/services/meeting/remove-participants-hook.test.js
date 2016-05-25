@@ -5,8 +5,7 @@
 const assert = require('assert')
 const winston = require('winston')
 const _ = require('underscore')
-
-const app = require('../../../src/app')
+const dropDatabase = require('../../shared/global-before').dropDatabase
 
 var n = 0
 
@@ -23,7 +22,7 @@ function createMeeting () {
     active: true
   }
 
-  return app.service('meetings').create(activeMeeting)
+  return global.app.service('meetings').create(activeMeeting)
             .then(function (meeting) {
               assert(meeting.active === true)
               n += 1
@@ -34,6 +33,11 @@ function createMeeting () {
 }
 
 describe('remove participants hook', function () {
+  before(function (done) {
+    dropDatabase().then(() => { done() })
+                  .catch((err) => { done(err) })
+  })
+
   var meetingId = null
 
   beforeEach(function (done) {
@@ -45,10 +49,20 @@ describe('remove participants hook', function () {
     })
   })
 
+  afterEach(function (done) {
+    global.global.app.service('meetings').patch(meetingId, {
+      participants: []
+    }).then((meeting) => {
+      done()
+    }).catch((err) => {
+      done(err)
+    })
+  })
+
   it('removes a participant when it receives a remove_participants query ', function (done) {
-    app.service('meetings').patch(meetingId, {}, {
+    global.app.service('meetings').patch(meetingId, {
       remove_participants: ['p1', 'p2']
-    }).then(function (meeting) {
+    }, {}).then(function (meeting) {
       winston.log('info', 'removed participants? :', meeting)
       assert(_.isEqual(meeting.participants, ['p3']))
       done()
@@ -58,7 +72,7 @@ describe('remove participants hook', function () {
   })
 
   it('patches without a remove_participant query', function (done) {
-    app.service('meetings').patch(meetingId, {
+    global.app.service('meetings').patch(meetingId, {
       participants: ['p1', 'p2', 'p3', 'p4']
     }).then(function (meeting) {
       assert(_.isEqual(meeting.participants, ['p1', 'p2', 'p3', 'p4']))

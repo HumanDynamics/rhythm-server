@@ -4,7 +4,7 @@
 
 const assert = require('assert')
 const _ = require('underscore')
-const app = require('../../../src/app')
+const dropDatabase = require('../../shared/global-before').dropDatabase
 
 var n = 0
 
@@ -21,7 +21,7 @@ function createMeeting () {
     active: false
   }
 
-  return app.service('meetings').create(activeMeeting)
+  return global.app.service('meetings').create(activeMeeting)
             .then(function (meeting) {
               assert(meeting.active === false)
               n += 1
@@ -32,6 +32,10 @@ function createMeeting () {
 }
 
 describe('participants event hook', function () {
+  before(function (done) {
+    dropDatabase().then(() => { done() })
+                  .catch((err) => { done(err) })
+  })
   var meetingId = null
 
   beforeEach(function (done) {
@@ -44,7 +48,7 @@ describe('participants event hook', function () {
   })
 
   it('creates a participantEvent when a meeting is created', function (done) {
-    app.service('participantEvents').find({
+    global.app.service('participantEvents').find({
       query: {
         meeting: meetingId,
         $sort: {timestamp: -1}
@@ -60,11 +64,11 @@ describe('participants event hook', function () {
 
   it('creates a participantEvent when a meeting is changed', function (done) {
     this.timeout = 3000
-    app.service('meetings').patch(meetingId, {
+    global.app.service('meetings').patch(meetingId, {
       participants: ['p1', 'p2']
     }).then(function (meeting) {
       setTimeout(function () {
-        app.service('participantEvents').find({
+        global.app.service('participantEvents').find({
           query: {
             meeting: meetingId,
             $sort: {timestamp: -1}

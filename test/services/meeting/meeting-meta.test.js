@@ -5,8 +5,13 @@
 const assert = require('assert')
 const app = require('../../../src/app')
 const _ = require('underscore')
+const dropDatabase = require('../../shared/global-before').dropDatabase
 
 describe('meta data in meeting', function () {
+  before(function (done) {
+    dropDatabase().then(() => { done() })
+                  .catch((err) => { done(err) })
+  })
   var d1 = new Date()
   var d2 = d1
   d2 = d2.setDate(d2.getDate() - 2)
