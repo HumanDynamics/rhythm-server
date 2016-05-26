@@ -44,6 +44,7 @@
     "Faker": "^0.7.2",
     "coveralls": "^2.11.9",
     "feathers-client": "^1.1.0",
+    "feathers-hooks": "^1.5.3",
     "istanbul": "^0.4.3",
     "istanbul-coveralls": "^1.0.3",
     "mocha": "^2.4.5",
