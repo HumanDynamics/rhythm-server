@@ -51,6 +51,15 @@ be run through `npm`, by running `npm test` in the root directory of the reposit
 
 ## Changelog
 
+__0.2.0__
+- removing "heartbeats" to keep clients connected to server. The
+  server now knows that meetings have ended when no speaking events have been sent for ~5 minutes.
+- added support for various other meeting events: 
+  - participant microphone mute events
+  - participant video events
+- added support for unstructured 'meta' data being saved with a
+  meeting, and support for querying that meta data through feathers.
+
 __0.1.0__
 
 - Initial release, basic server/meeting functionality.

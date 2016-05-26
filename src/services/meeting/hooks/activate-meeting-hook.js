@@ -7,8 +7,7 @@
 const _ = require('underscore')
 
 function shouldMakeMeetingActive (newParticipants, meetingObject) {
-  return (newParticipants.length === 1 &&
-          meetingObject.participants.length === 0 &&
+  return (newParticipants.length >= 1 &&
           meetingObject.active === false)
 }
 

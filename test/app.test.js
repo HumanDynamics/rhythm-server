@@ -18,7 +18,6 @@ after(function (done) {
   this.timeout(7000)
   global.socket.disconnect()
   global.server.close(done)
-  done()
 })
 
 describe('Feathers application tests', function () {
