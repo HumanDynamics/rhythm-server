@@ -3,6 +3,7 @@
 const service = require('feathers-mongoose')
 const user = require('./user-model')
 const hooks = require('./hooks')
+const globalFilters = require('../../filters')
 
 module.exports = function () {
   const app = this
@@ -26,4 +27,5 @@ module.exports = function () {
 
   // Set up our after hooks
   userService.after(hooks.after)
+  userService.filter(globalFilters.authenticationFilter)  
 }
