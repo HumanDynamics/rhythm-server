@@ -27,5 +27,5 @@ module.exports = function () {
 
   // Set up our after hooks
   userService.after(hooks.after)
-  userService.filter(globalFilters.authenticationFilter)
+//  userService.filter(globalFilters.authenticationFilter)
 }
