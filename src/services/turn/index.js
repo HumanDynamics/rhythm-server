@@ -3,6 +3,7 @@
 const service = require('feathers-mongoose')
 const turn = require('./turn-model')
 const hooks = require('./hooks')
+const globalFilters = require('../../filters')
 
 module.exports = function () {
   const app = this
@@ -22,4 +23,5 @@ module.exports = function () {
 
   // Set up our after hooks
   turnService.after(hooks.after)
+  turnService.filter(globalFilters.authenticationFilter)
 }

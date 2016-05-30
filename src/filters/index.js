@@ -16,6 +16,15 @@ function decryptParticipantFilter (data, connection) {
   return transformed
 }
 
+function authenticationFilter (data, connection) {
+  winston.log('info', 'auth CONNECTION', connection.user)
+  if (!connection.user) {
+    return false
+  }
+  return data
+}
+
 module.exports = {
-  decryptParticipantFilter: decryptParticipantFilter
+  decryptParticipantFilter: decryptParticipantFilter,
+  authenticationFilter: authenticationFilter
 }
