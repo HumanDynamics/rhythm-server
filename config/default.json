@@ -12,6 +12,6 @@
         "expiresIn": "14d",
         "local": {}
     },
-    "defaultUserEmail": "rhythm-user",
-    "defaultUserPassword": "horseACTUALLYsteel2"
+    "defaultUserEmail": "rhythm-default-user",
+    "defaultUserPassword": "rhythm-default-password"
 }
