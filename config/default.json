@@ -9,7 +9,7 @@
         "token": {
             "secret": "dpMAJsnypHrA/vhwToEDJ1YpitIc8V7TUmxnlD5fJNuPjprAoOmorxeOXrRVcrVnJyVd2plomU9Tnv78UJD+qg=="
         },
-        "expiresIn": "14d",
+        "expiresIn": "1000d",
         "local": {}
     },
     "defaultUserEmail": "rhythm-default-user",
