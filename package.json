@@ -38,6 +38,7 @@
     "mongoose": "^4.4.11",
     "passport": "^0.3.2",
     "promise": "^7.1.1",
+    "pug": "^0.1.0",
     "serve-favicon": "^2.3.0",
     "socket.io-client": "^1.4.6",
     "underscore": "^1.8.3",
