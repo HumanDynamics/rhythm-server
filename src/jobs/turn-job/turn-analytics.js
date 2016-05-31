@@ -42,7 +42,8 @@ function computeTurns (app, meeting, from, to) {
       $and: [
         {startTime: {$gte: from.toISOString()}},
         {endTime: {$lte: to.toISOString()}}
-      ]
+      ],
+      $select: ['participant', 'meeting', 'startTime', 'endTime']
     }
   }).then((utterances) => {
     // {'participant': [utteranceObj, ...]}
