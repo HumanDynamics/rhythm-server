@@ -30,7 +30,8 @@ var isMeetingEnded = function (meeting, passedApp) {
   return app.service('utterances').find({
     query: {
       meeting: meeting,
-      $sort: {endTime: -1}
+      $sort: {endTime: -1},
+      $limit: 1
     }
   }).then((lastUtterances) => {
     if (lastUtterances[0].length === 0) {
