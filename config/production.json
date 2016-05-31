@@ -7,7 +7,7 @@
     "auth": {
         "idField": "id",
         "token": {
-            "secret": "dpMAJsnypHrA/vhwToEDJ1YpitIc8V7TUmxnlD5fJNuPjprAoOmorxeOXrRVcrVnJyVd2plomU9Tnv78UJD+qg=="
+            "secret": "my-secret"
         },
         "expiresIn": "7d",
         "local": {}
