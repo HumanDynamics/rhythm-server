@@ -17,7 +17,7 @@
   },
   "scripts": {
     "test": "standard src/ && standard test/ && npm run mocha",
-    "start": "node src/",
+    "start": "./node_modules/forever/bin/forever src/",
     "mocha": "./node_modules/.bin/mocha $(find test -type f \\( ! -name load* \\) )",
     "loadtest": "./node_modules/.bin/mocha test/load.test.js",
     "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && istanbul-coveralls"
@@ -35,6 +35,7 @@
     "feathers-mongoose": "^3.3.6",
     "feathers-rest": "^1.2.4",
     "feathers-socketio": "^1.3.3",
+    "forever": "^0.15.2",
     "mongoose": "^4.4.11",
     "passport": "^0.3.2",
     "promise": "^7.1.1",
