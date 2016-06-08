@@ -1,7 +1,7 @@
 {
   "name": "breakout-server",
   "description": "server for breakout, a measurement and feedback framework for human communication",
-  "version": "0.0.0",
+  "version": "0.3.0",
   "homepage": "",
   "main": "src/",
   "keywords": [
@@ -13,7 +13,7 @@
   "contributors": [],
   "bugs": {},
   "engines": {
-    "node": ">= 0.12.0"
+    "node": "5.4.0"
   },
   "scripts": {
     "test": "standard src/ && standard test/ && npm run mocha",
