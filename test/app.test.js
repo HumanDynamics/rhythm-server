@@ -8,7 +8,7 @@ const app = require('../src/app')
 
 before(function (done) {
   global.app = app
-  winston.log('info', 'mongo:', global.app.get('mongodb'))
+  winston.log('info', 'mongo:', process.env.MONGODB_URI)
   global.server = app.listen(3000)
   global.server.once('listening', done)
 })

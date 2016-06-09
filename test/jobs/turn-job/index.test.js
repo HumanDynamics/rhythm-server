@@ -110,11 +110,10 @@ describe('turn computation', function (done) {
         }
       }).then((turns) => {
         // pull out just the turns
-        winston.log('info', turns)
         var turn = _.map(turns[0].turns, (t) => { return _.omit(t, '_id') })
-        winston.log('info', turn, expectedTurnData)
-        assert(JSON.stringify(turn) === JSON.stringify(expectedTurnData))
-        assert(turns[0].transitions === 1)
+        winston.log('info', JSON.stringify(turn), JSON.stringify(expectedTurnData), turns[0].transitions)
+        assert.equal(JSON.stringify(turn), JSON.stringify(expectedTurnData))
+        assert.equal(turns[0].transitions, 1)
         done()
       }).catch((err) => {
         done(err)

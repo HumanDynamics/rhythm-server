@@ -14,7 +14,7 @@ const app = require('../../src/app')
 const hooks = require('feathers-hooks')
 const user = require('../../src/services/user')
 
-global.socket = io.connect('http://localhost:3000', {
+global.socket = io.connect('http://localhost:' + process.env.PORT, {
   'transports': [
     'websocket',
     'flashsocket',
@@ -24,7 +24,7 @@ global.socket = io.connect('http://localhost:3000', {
   ]
 })
 
-var mongoUrl = app.get('mongodb')
+var mongoUrl = process.env.MONGODB_URI
 
 function dropDatabase () {
   winston.log('info', 'dropping db..')
