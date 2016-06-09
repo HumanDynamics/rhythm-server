@@ -1,18 +1,4 @@
 {
     "host": "localhost",
-    "port": 3000,
-    "mongodb": "mongodb://localhost:27017/rhythm",
-    "www": "../public/www",
-    "authOn": true,
-    "auth": {
-        "idField": "id",
-        "token": {
-            "secret": "my-secret"
-        },
-        "expiresIn": "7d",
-        "local": {}
-    },
-    "defaultUserEmail": "rhythm-default-user",
-    "defaultUserPassword": "rhythm-default-password"
-
+    "www": "../public/www"
 }

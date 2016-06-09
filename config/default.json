@@ -1,17 +1,4 @@
 {
     "host": "localhost",
-    "port": 3000,
-    "mongodb": "mongodb://localhost:27017/breakout-default",
-    "www": "../public/www",
-    "authOn": true,
-    "auth": {
-        "idField": "id",
-        "token": {
-            "secret": "dpMAJsnypHrA/vhwToEDJ1YpitIc8V7TUmxnlD5fJNuPjprAoOmorxeOXrRVcrVnJyVd2plomU9Tnv78UJD+qg=="
-        },
-        "expiresIn": "1000d",
-        "local": {}
-    },
-    "defaultUserEmail": "rhythm-default-user",
-    "defaultUserPassword": "rhythm-default-password"
+    "www": "../public/www"
 }

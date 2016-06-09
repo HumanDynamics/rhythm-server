@@ -3,7 +3,6 @@ const fs = require('fs')
 const feathers = require('feathers-client')
 const io = require('socket.io-client')
 
-
 var socket = io.connect('http://localhost:3000', {
   'transports': [
     'websocket',
@@ -23,9 +22,8 @@ module.exports = function () {
     .configure(feathers.hooks())
     .configure(feathers.authentication())
 
-  const DEFAULT_USER_EMAIL = app.get('defaultUserEmail')
-  const DEFAULT_USER_PASSWORD = app.get('defaultUserPassword')
-  console.log('email/pass:', DEFAULT_USER_EMAIL, DEFAULT_USER_PASSWORD)
+  const DEFAULT_USER_EMAIL = process.env.DEFAULT_USER_EMAIL
+  const DEFAULT_USER_PASSWORD = process.env.DEFAULT_USER_PASSWORD
 
   return app.service('users').find({
     email: DEFAULT_USER_EMAIL
