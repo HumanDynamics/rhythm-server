@@ -2,7 +2,7 @@
 
 > server for breakout, a measurement and feedback framework for human communication
 
-[![Build Status](https://travis-ci.org/HumanDynamics/rhythm-server.svg?branch=development)](https://travis-ci.org/HumanDynamics/rhythm-server)
+[![Build Status](https://travis-ci.org/HumanDynamics/rhythm-server.svg?branch=master)](https://travis-ci.org/HumanDynamics/rhythm-server)
 
 ## About
 
