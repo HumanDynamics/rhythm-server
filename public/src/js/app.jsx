@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 import { Router, Route, browserHistory } from 'react-router'
 import {Nav, Home} from './components/components'
+import {Login} from './components/login'
 import MeetingTable from './components/meetingList'
 import MeetingSummary from './components/meeting/meetingSummary'
 import MeetingListAPIUtils from './api/MeetingAPIUtils'
@@ -14,7 +15,7 @@ const App = React.createClass({
     return (
       <div>
         <Nav/>
-          {this.props.children}
+        {this.props.children}
       </div>
     )
   }
@@ -33,9 +34,10 @@ const app = {
     const mountNode = document.getElementById('reactAppContainer')
     ReactDOM.render(
       <Router history={browserHistory}>
-          <Route path='/' component={App}>
-            <Route path='meetings' component={MeetingTable}/>
-            <Route path='meeting/:meetingId' component={MeetingSummary}/>
+        <Route path='/' component={App}>
+          <Route path='/' component={Login}/>
+          <Route path='meetings' component={MeetingTable}/>
+          <Route path='meeting/:meetingId' component={MeetingSummary}/>
         </Route>
       </Router>,
       mountNode
