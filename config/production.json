@@ -1,13 +1,4 @@
 {
-  "host": "breakout-server-app.feathersjs.com",
-  "port": 80,
-  "mongodb": "DATABASE_URL",
-  "www": "../public/www",
-  "auth": {
-    "idField": "id",
-    "token": {
-      "secret": "FEATHERS_AUTH_SECRET"
-    },
-    "local": {}
-  }
+    "host": "localhost",
+    "www": "../public/www"
 }

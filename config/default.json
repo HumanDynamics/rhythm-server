@@ -1,13 +1,4 @@
 {
     "host": "localhost",
-    "port": 3000,
-    "mongodb": "mongodb://localhost:27017/breakout",
-    "www": "../public/www",
-    "auth": {
-        "idField": "id",
-        "token": {
-            "secret": "dpMAJsnypHrA/vhwToEDJ1YpitIc8V7TUmxnlD5fJNuPjprAoOmorxeOXrRVcrVnJyVd2plomU9Tnv78UJD+qg=="
-        },
-        "local": {}
-    }
+    "www": "../public/www"
 }

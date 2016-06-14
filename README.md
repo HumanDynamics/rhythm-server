@@ -2,7 +2,7 @@
 
 > server for breakout, a measurement and feedback framework for human communication
 
-[![Build Status](https://travis-ci.org/HumanDynamics/rhythm-server.svg?branch=development)](https://travis-ci.org/HumanDynamics/rhythm-server)
+[![Build Status](https://travis-ci.org/HumanDynamics/rhythm-server.svg?branch=master)](https://travis-ci.org/HumanDynamics/rhythm-server)
 
 ## About
 
@@ -50,6 +50,15 @@ We use [Mocha](https://mochajs.org) for testing. The test harness can
 be run through `npm`, by running `npm test` in the root directory of the repository.
 
 ## Changelog
+
+__0.2.0__
+- removing "heartbeats" to keep clients connected to server. The
+  server now knows that meetings have ended when no speaking events have been sent for ~5 minutes.
+- added support for various other meeting events: 
+  - participant microphone mute events
+  - participant video events
+- added support for unstructured 'meta' data being saved with a
+  meeting, and support for querying that meta data through feathers.
 
 __0.1.0__
 

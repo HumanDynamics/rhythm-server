@@ -13,7 +13,8 @@ const socketio = require('feathers-socketio')
 const middleware = require('./middleware')
 const services = require('./services')
 const events = require('./events')
-
+const jobs = require('./jobs')
+const scripts = require('./scripts')
 const app = module.exports = feathers()
 
 app.configure(configuration(path.join(__dirname, '..')))
@@ -41,3 +42,6 @@ app.use(compress())
    }))
    .configure(services)
    .configure(middleware)
+   .configure(scripts)
+
+jobs.endMeetingJob.startJob(app)

@@ -29,4 +29,6 @@ module.exports = function () {
   participantService.after(hooks.after)
 
   participantService.filter(globalFilters.decryptParticipantFilter)
+
+  participantService.filter(globalFilters.authenticationFilter)
 }

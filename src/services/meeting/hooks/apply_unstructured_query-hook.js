@@ -6,13 +6,13 @@
 const _ = require('underscore')
 
 // Filter the result set with the meta query if one exists
-function apply_unstructured_query (hook) {
+function applyUnstructuredQuery (hook) {
   if (hook.params.meta) {
     hook.result = hook.result.filter((current) => {
       if (_.has(current, 'meta')) {
         var match = true
         _.each(_.keys(hook.params.meta), function (key) {
-          if (current.meta == null || current.meta[key] !== hook.params.meta[key]) {
+          if (current.meta == null || current.meta[key] !== decodeURI(hook.params.meta[key])) {
             match = false
           }
         })
@@ -23,5 +23,5 @@ function apply_unstructured_query (hook) {
 }
 
 module.exports = function (hook) {
-  return apply_unstructured_query(hook)
+  return applyUnstructuredQuery(hook)
 }

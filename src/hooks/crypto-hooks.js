@@ -2,9 +2,9 @@
 
 // crypto-hooks.js
 //
-// A collection of feathers hooks to encrypt and decrypt objects in-transit.
+// A collection of feathers hooks to encrypt and decrypt objects
+// in-transit.
 
-const winston = require('winston')
 const helpers = require('../helpers')
 const crypto = helpers.crypto
 const transformKeys = helpers.transformKeys
@@ -36,12 +36,12 @@ function encryptHook (keys) {
 function decryptHook (keys) {
   return function (hook) {
     // winston.log('info', '>>>DECRYPTING..')
-    function decrypt_ids (data) {
+    function decryptIds (data) {
       return transformKeys(data, keys, crypto.decrypt)
     }
 
     if (hook.result !== null) {
-      var decrypted = decrypt_ids(hook.result)
+      var decrypted = decryptIds(hook.result)
       // winston.log('info', 'decrypted:', decrypted)
       hook.result = decrypted
       return hook

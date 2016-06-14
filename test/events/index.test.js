@@ -3,158 +3,58 @@
 
 const assert = require('assert')
 const winston = require('winston')
-
-const app = require('../../src/app')
+const dropDatabase = require('../shared/global-before').dropDatabase
 const io = require('socket.io-client')
 
 describe('meeting joined event', function (done) {
-  it('creates a participant & meeting when they join for the first time', function (done) {
-    this.timeout(2000)
-
-    var fakeJoinedEvent = {
-      participant: 'joinedParticipantId',
-      meeting: 'meetingName',
-      name: 'fakeParticipantName'
-    }
-
-    var socket = io.connect('http://localhost:3000', {
-      'transports': [
-        'websocket',
-        'flashsocket',
-        'jsonp-polling',
-        'xhr-polling',
-        'htmlfile'
-      ]
-    })
-
-    socket.emit('meetingJoined', fakeJoinedEvent)
-
-    setTimeout(function () {
-      app.service('participants')
-         .find({
-           query: {
-             _id: fakeJoinedEvent.participant
-           }
-         }).then(function (participant) {
-           winston.log('info', '>>> data from joined event:', participant.data[0]._id === fakeJoinedEvent.participant)
-           assert(participant.data[0]._id === fakeJoinedEvent.participant)
-           socket.disconnect()
-           done()
-         }).catch(function (err) {
-           winston.log('info', 'errrrrred', err)
-           socket.disconnect()
-           done(err)
-         })
-    }, 1500)
-  })
-})
-
-var n = 0
-
-function createMeeting () {
-  var d1 = new Date()
-  var d2 = d1
-  d2 = d2.setDate(d2.getDate() - 2)
-
-  var activeMeeting = {
-    _id: 'heartbeat-event' + n,
-    participants: ['p1', 'p2'],
-    startTime: d2,
-    endTime: null,
-    active: true
+  var fakeJoinedEvent = {
+    participant: 'joinedParticipantId',
+    meeting: 'meetingName',
+    name: 'fakeParticipantName'
   }
 
-  return app.service('meetings').create(activeMeeting)
-            .then(function (meeting) {
-              assert(meeting.active === true)
-              n += 1
-              return meeting
-            }).catch(function (err) {
-              return err
-            })
-}
+  var socket = io.connect('http://localhost:3000', {
+    'transports': [
+      'websocket',
+      'flashsocket',
+      'jsonp-polling',
+      'xhr-polling',
+      'htmlfile'
+    ]
+  })
 
-describe('heartbeats', function () {
-  var meetingId = null
-
-  beforeEach(function (done) {
-    createMeeting().then(function (meeting) {
-      meetingId = meeting._id
+  before(function (done) {
+    dropDatabase().then(() => {
+      socket.emit('meetingJoined', fakeJoinedEvent)
       done()
-    }).catch(function (err) {
+    }).catch((err) => { done(err) })
+  })
+
+  after(function (done) {
+    global.app.service('meetings').patch('meetingName', {
+      active: false
+    }).then((meeting) => {
+      done()
+    }).catch((err) => {
       done(err)
     })
   })
 
-  it('should end a meeting after the heartbeat expires', function (done) {
-    this.timeout(12000)
-    var socket = io.connect('http://localhost:3000', {
-      'transports': [
-        'websocket',
-        'flashsocket',
-        'jsonp-polling',
-        'xhr-polling',
-        'htmlfile'
-      ]
-    })
-    socket.emit('heartbeat-start', {
-      participant: 'p1',
-      meeting: meetingId
-    })
-    socket.emit('heartbeat-start', {
-      participant: 'p2',
-      meeting: meetingId
-    })
+  it('creates a participant & meeting when they join for the first time', function (done) {
+    this.timeout(2000)
 
     setTimeout(function () {
-      app.service('meetings').get(meetingId)
-         .then(function (meeting) {
-           assert(meeting.active === false)
-           assert(meeting.participants.length === 0)
-           socket.disconnect()
-           done()
-         }).catch(function (err) {
-           socket.disconnect()
-           done(err)
-         })
-    }, 11000)
-  })
-
-  it('should remove a participant after their heartbeat expires', function (done) {
-    this.timeout(12000)
-    var socket = io.connect('http://localhost:3000', {
-      'transports': [
-        'websocket',
-        'flashsocket',
-        'jsonp-polling',
-        'xhr-polling',
-        'htmlfile'
-      ]
-    })
-    socket.emit('heartbeat-start', {
-      participant: 'p1',
-      meeting: meetingId
-    })
-
-    setTimeout(function () {
-      socket.emit('heartbeat-start', {
-        participant: 'p2',
-        meeting: meetingId
-      })
-    }, 8000)
-
-    setTimeout(function () {
-      app.service('meetings').get(meetingId)
-         .then(function (meeting) {
-           winston.log('info', 'heartbeat meeting:', meeting)
-           assert(meeting.active === true)
-           assert(meeting.participants.length === 1)
-           socket.disconnect()
-           done()
-         }).catch(function (err) {
-           socket.disconnect()
-           done(err)
-         })
-    }, 11000)
+      global.app.service('participants').get(fakeJoinedEvent.participant)
+            .then(function (participant) {
+              winston.log('info', 'participant:', participant)
+              assert(participant._id === fakeJoinedEvent.participant)
+              socket.disconnect()
+              done()
+            }).catch(function (err) {
+              winston.log('info', 'errrrrred', err)
+              socket.disconnect()
+              done(err)
+            })
+    }, 1500)
   })
 })

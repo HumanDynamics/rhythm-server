@@ -4,6 +4,7 @@
 
 const assert = require('assert')
 const winston = require('winston')
+const _ = require('underscore')
 const dropDatabase = require('../../shared/global-before').dropDatabase
 
 var n = 0
@@ -14,7 +15,7 @@ function createMeeting () {
   d2 = d2.setDate(d2.getDate() - 2)
 
   var activeMeeting = {
-    _id: 'deactivate-meeting-hook-' + n,
+    _id: 'add-participants-hook' + n,
     participants: ['p1', 'p2'],
     startTime: d2,
     endTime: null,
@@ -22,18 +23,17 @@ function createMeeting () {
   }
 
   return global.app.service('meetings').create(activeMeeting)
-     .then(function (meeting) {
-       assert(meeting.active === true)
-       n += 1
-       return meeting
-     }).catch(function (err) {
-       return err
-     })
+            .then(function (meeting) {
+              assert(meeting.active === true)
+              n += 1
+              return meeting
+            }).catch(function (err) {
+              return err
+            })
 }
 
-describe('deactivate meeting hook', function () {
+describe('add participants hook', function () {
   var meetingId = null
-
   before(function (done) {
     dropDatabase().then(() => { done() })
                   .catch((err) => { done(err) })
@@ -48,33 +48,34 @@ describe('deactivate meeting hook', function () {
     })
   })
 
-  it('sets an empty meeting inactive after all participants leave', function (done) {
+  afterEach(function (done) {
     global.app.service('meetings').patch(meetingId, {
       participants: []
-    }).then(function (meeting) {
-      winston.log('info', 'deactivated meeting:', meeting)
-      assert(meeting.active === false)
-      assert(meeting.endTime !== null)
+    }).then((meeting) => {
+      done()
+    }).catch((err) => {
+      done(err)
+    })
+  })
+
+  it('adds a participant to a meeting when it receives an add_participants query ', function (done) {
+    global.app.service('meetings').patch(meetingId, {
+      add_participant: 'p3'
+    }, {}).then(function (meeting) {
+      winston.log('info', 'added participants? :', meeting)
+      assert(_.isEqual(meeting.participants, ['p1', 'p2', 'p3']))
       done()
     }).catch(function (err) {
       done(err)
     })
   })
 
-  it('creates a meeting end event successfully', function (done) {
+  it('patches without an add_participant query', function (done) {
     global.app.service('meetings').patch(meetingId, {
-      participants: []
+      participants: ['p1', 'p2', 'p3', 'p4']
     }).then(function (meeting) {
-      global.app.service('meetingEvents').find({
-        query: { $and: [{meeting: meetingId},
-                        {event: 'end'}]
-        }
-      }).then(function (meetingEvents) {
-        assert(meetingEvents.length > 0)
-        done()
-      }).catch(function (err) {
-        done(err)
-      })
+      assert(_.isEqual(meeting.participants, ['p1', 'p2', 'p3', 'p4']))
+      done()
     }).catch(function (err) {
       done(err)
     })

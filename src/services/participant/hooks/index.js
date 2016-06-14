@@ -2,9 +2,10 @@
 
 const globalHooks = require('../../../hooks')
 const participantCryptoHooks = require('./participant-crypto-hooks.js')
+const authHooks = require('feathers-authentication').hooks
 
 exports.before = {
-  all: [],
+  all: [authHooks.verifyToken()],
   find: [globalHooks.encryptHook(['_id', 'name'])],
   get: [participantCryptoHooks.encryptId],
   create: [globalHooks.encryptHook(['_id', 'name'])],
