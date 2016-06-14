@@ -8,7 +8,6 @@ const Promise = require('promise')
 const mongoose = require('mongoose')
 const feathers = require('feathers-client')
 const io = require('socket.io-client')
-const app = require('../../src/app')
 
 // for server
 const hooks = require('feathers-hooks')
@@ -32,7 +31,7 @@ function dropDatabase () {
   return MongoClient.connect(mongoUrl)
                     .then((db) => {
                       connectedDb = db
-                      return db.dropDatabase()
+                      return connectedDb.dropDatabase()
                     })
                     .then(() => { return connectedDb })
 }

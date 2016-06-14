@@ -6,6 +6,7 @@ var Promise = require('promise')
 const winston = require('winston')
 const _ = require('underscore')
 
+const MAX_TIME_SINCE_MEETING_START = 6 * 60 * 1000
 const MAX_TIME_SINCE_LAST_UTTERANCE = 5 * 60 * 1000
 var pid = null
 var scope = {}
@@ -14,7 +15,10 @@ var scope = {}
 var getActiveMeetings = function () {
   return scope.app.service('meetings').find({
     query: {
-      active: true
+      $and: [
+        {active: true},
+        {endTime: {$gt: new Date(Date.now() - MAX_TIME_SINCE_MEETING_START)}}
+      ]
     }
   }).then((meetings) => {
     return meetings
@@ -34,7 +38,8 @@ var isMeetingEnded = function (meeting, passedApp) {
       $limit: 1
     }
   }).then((lastUtterances) => {
-    if (lastUtterances[0].length === 0) {
+    winston.log('info', 'lastUtterances:', lastUtterances)
+    if (lastUtterances.length === 0) {
       return {meetingShouldEnd: false,
               meeting: meeting}
     }
@@ -42,6 +47,8 @@ var isMeetingEnded = function (meeting, passedApp) {
     var meetingShouldEnd = false
     if (lastUtterances.length > 0) {
       meetingShouldEnd = msSinceLastUtterance > MAX_TIME_SINCE_LAST_UTTERANCE
+      winston.log('info', 'should end?:', msSinceLastUtterance, MAX_TIME_SINCE_LAST_UTTERANCE)
+      winston.log('info', 'should end?:', msSinceLastUtterance > MAX_TIME_SINCE_LAST_UTTERANCE)
     }
     return {meetingShouldEnd: meetingShouldEnd,
             meeting: meeting}
