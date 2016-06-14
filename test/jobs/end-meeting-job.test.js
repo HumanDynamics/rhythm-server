@@ -6,9 +6,8 @@ const Faker = require('Faker')
 const winston = require('winston')
 const _ = require('underscore')
 
-const app = require('../../src/app')
 const endMeetingJob = require('../../src/jobs').endMeetingJob
-endMeetingJob.app = app
+endMeetingJob.app = global.app
 
 var n = 0
 var meetingId = null
@@ -52,14 +51,14 @@ function createMeetingAndUtterances (testName, ended, done) {
 
   meetingId = testName + n
 
-  app.service('meetings').create(testMeeting)
+  global.app.service('meetings').create(testMeeting)
      .then(function (meeting) {
        _.each(testParticipants, function (participant, i, list) {
-         app.service('participants').create(participant)
+         global.app.service('participants').create(participant)
        })
        return testParticipants
      }).then(function (participants) {
-       return app.service('utterances').create(
+       return global.app.service('utterances').create(
          {
            meeting: testMeeting._id,
            startTime: d1,
@@ -96,7 +95,7 @@ describe('end meeting job', function () {
     })
 
     it('should determine if a dead meeting is "ended"', function (done) {
-      endMeetingJob._isMeetingEnded(endedMeeting, app).then(function (res) {
+      endMeetingJob._isMeetingEnded(endedMeeting, global.app).then(function (res) {
         assert(res.meetingShouldEnd)
         done()
       }).catch(function (err) {
@@ -106,7 +105,7 @@ describe('end meeting job', function () {
     })
 
     it('should determine if a current meeting is not "ended"', function (done) {
-      endMeetingJob._isMeetingEnded(aliveMeeting, app).then(function (res) {
+      endMeetingJob._isMeetingEnded(aliveMeeting, global.app).then(function (res) {
         assert(!res.meetingShouldEnd)
         done()
       }).catch(function (err) {
@@ -127,9 +126,9 @@ describe('end meeting job', function () {
     })
 
     it('should change an inactive meetings ended state', function (done) {
-      endMeetingJob._isMeetingEnded(endedMeeting, app).then(function (res) {
+      endMeetingJob._isMeetingEnded(endedMeeting, global.app).then(function (res) {
         assert(res.meetingShouldEnd)
-        return endMeetingJob._maybeEndMeeting(res, app)
+        return endMeetingJob._maybeEndMeeting(res, global.app)
       }).then(function (didEndMeeting) {
         assert(didEndMeeting)
         done()
@@ -139,9 +138,9 @@ describe('end meeting job', function () {
     })
 
     it('shouldnt change an active meetings end state', function (done) {
-      endMeetingJob._isMeetingEnded(aliveMeeting, app).then(function (res) {
+      endMeetingJob._isMeetingEnded(aliveMeeting, global.app).then(function (res) {
         assert(!res.meetingShouldEnd)
-        return endMeetingJob._maybeEndMeeting(res, app)
+        return endMeetingJob._maybeEndMeeting(res, global.app)
       }).then(function (didEndMeeting) {
         assert(!didEndMeeting)
         done()
@@ -162,7 +161,7 @@ describe('end meeting job', function () {
     })
 
     it('should end all inactive meetings', function (done) {
-      endMeetingJob._endInactiveMeetings([endedMeeting, aliveMeeting], app)
+      endMeetingJob._endInactiveMeetings([endedMeeting, aliveMeeting], global.app)
                    .then(function (endedMeetings) {
                      winston.log('info', '[end-meeting-job] ended meetings:', endedMeetings)
                      assert(endedMeetings[0])

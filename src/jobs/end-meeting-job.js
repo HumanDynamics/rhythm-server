@@ -38,7 +38,8 @@ var isMeetingEnded = function (meeting, passedApp) {
       $limit: 1
     }
   }).then((lastUtterances) => {
-    if (lastUtterances[0].length === 0) {
+    winston.log('info', 'lastUtterances:', lastUtterances)
+    if (lastUtterances.length === 0) {
       return {meetingShouldEnd: false,
               meeting: meeting}
     }
@@ -46,6 +47,8 @@ var isMeetingEnded = function (meeting, passedApp) {
     var meetingShouldEnd = false
     if (lastUtterances.length > 0) {
       meetingShouldEnd = msSinceLastUtterance > MAX_TIME_SINCE_LAST_UTTERANCE
+      winston.log('info', 'should end?:', msSinceLastUtterance, MAX_TIME_SINCE_LAST_UTTERANCE)
+      winston.log('info', 'should end?:', msSinceLastUtterance > MAX_TIME_SINCE_LAST_UTTERANCE)
     }
     return {meetingShouldEnd: meetingShouldEnd,
             meeting: meeting}
