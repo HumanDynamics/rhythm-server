@@ -63,8 +63,7 @@ function createMeetingAndUtterances (testName, ended, done) {
            meeting: testMeeting._id,
            startTime: d1,
            endTime: d2,
-           participant: testParticipants[0]._id,
-           volumes: _(10).times((n) => { return { 'timestamp': '1', 'vol': Faker.Helpers.randomNumber(5) } })
+           participant: testParticipants[0]._id
          })
      }).then(function (utterance) {
        if (done !== undefined) {
