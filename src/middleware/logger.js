@@ -5,7 +5,7 @@ const winston = require('winston')
 module.exports = function (app) {
   // Add a logger to our app object for convenience
   app.logger = winston
-  winston.add(winston.transports.File, { filename: '/home/dcalacci/rhythm-server.log' });
+  winston.add(winston.transports.File, { filename: '/home/dcalacci/rhythm-server.log' })
 
   return function (error, req, res, next) {
     if (error) {

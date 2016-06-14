@@ -2,9 +2,9 @@
 
 // crypto-hooks.js
 //
-// A collection of feathers hooks to encrypt and decrypt objects in-transit.
+// A collection of feathers hooks to encrypt and decrypt objects
+// in-transit.
 
-const winston = require('winston')
 const helpers = require('../helpers')
 const crypto = helpers.crypto
 const transformKeys = helpers.transformKeys

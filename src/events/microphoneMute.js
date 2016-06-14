@@ -1,8 +1,6 @@
 'use strict'
 
-const winston = require('winston')
-
-function saveMicrophoneMuteEvent(socket, app) {
+function saveMicrophoneMuteEvent (socket, app) {
   socket.on('microphoneMute', function (data) {
     app.service('meetingEvents').create({
       meeting: data.meetingId,
@@ -17,5 +15,5 @@ function saveMicrophoneMuteEvent(socket, app) {
 }
 
 module.exports.configure = function (socket, app) {
-  saveMicrophoneMuteEvent(socket, app);
+  saveMicrophoneMuteEvent(socket, app)
 }
