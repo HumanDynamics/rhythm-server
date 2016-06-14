@@ -3,7 +3,6 @@
 const service = require('feathers-mongoose')
 const meetingEvent = require('./meetingEvent-model')
 const hooks = require('./hooks')
-const globalFilters = require('../../filters')
 
 module.exports = function () {
   const app = this

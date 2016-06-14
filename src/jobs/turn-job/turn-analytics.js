@@ -13,8 +13,8 @@ const _ = require('underscore')
 // take into account speaking overlap.
 function getTurnTransitions (turns) {
   var transitions = 0
-  var participant_ids = _.map(turns, (turn) => { return turn.participant })
-  _.each(participant_ids, function (t, index, turns) {
+  var participantIds = _.map(turns, (turn) => { return turn.participant })
+  _.each(participantIds, function (t, index, turns) {
     if (index !== 0) {
       if (t !== turns[index - 1]) {
         transitions += 1

@@ -2,7 +2,6 @@
 'use strict'
 
 const assert = require('assert')
-const Faker = require('Faker')
 const winston = require('winston')
 const _ = require('underscore')
 
