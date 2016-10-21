@@ -17,9 +17,10 @@ function decryptParticipantFilter (data, connection) {
 }
 
 function authenticationFilter (data, connection) {
-  winston.log('info', 'auth CONNECTION', connection.user)
-  if (!connection.user) {
-    return false
+    winston.log('info', 'auth CONNECTION', connection, data)
+    if (!connection.user) {
+      winston.log('info', 'User not authenticated.')
+      return false
   }
   return data
 }
