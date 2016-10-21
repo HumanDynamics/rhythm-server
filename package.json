@@ -18,7 +18,7 @@
     "scripts": {
         "test": "npm run stylecheck && npm run mocha",
         "start": "node -r dotenv/config src/",
-        "mocha": "node -r dotenv/config ./node_modules/.bin/mocha $(find test -type f \\( ! -name load* \\) )",
+        "mocha": "node -r dotenv/config ./node_modules/.bin/mocha $(find test -type f \\( ! -name load* \\) | sort)",
         "loadtest": " -r dotenv/config ./node_modules/.bin/mocha test/load.test.js",
         "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && istanbul-coveralls",
         "stylecheck": "find src/ test/ -name *.js | xargs ./node_modules/.bin/standard"
