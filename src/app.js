@@ -36,9 +36,9 @@ app.use(compress())
        'jsonp-polling'
      ])
 
-       io.on('connection', (socket) => {
-           console.log("new connection!")
-           events.configure(socket, app)
+     io.on('connection', (socket) => {
+       console.log('new connection!')
+       events.configure(socket, app)
      })
    }))
    .configure(services)
