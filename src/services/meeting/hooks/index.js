@@ -22,9 +22,7 @@ function updateTime (hook) {
 }
 
 exports.before = {
-  all: [authHooks.verifyToken(),
-        authHooks.populateUser(),
-        authHooks.restrictToAuthenticated()],
+  all: [authHooks.verifyToken()],
   create: [addStartTime, activateMeetingHook, globalHooks.encryptHook(['participants'])],
   find: [globalHooks.encryptHook(['participants']), extractUnstructuredQueryHook],
   update: [updateTime, globalHooks.encryptHook(['participants'])],
