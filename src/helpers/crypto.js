@@ -2,9 +2,7 @@
 
 // crypto.js - some simple cryptography tools
 
-const fs = require('fs')
 const crypto = require('crypto')
-
 const algorithm = 'aes-256-ctr'
 
 // Nodejs encryption with CTR
