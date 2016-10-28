@@ -2,27 +2,76 @@
 
 'use strict'
 
+const _ = require('underscore')
 const assert = require('assert')
 const winston = require('winston')
 const dropDatabase = require('../../shared/global-before').dropDatabase
 
 var n = 0
 
-function createMeeting () {
+function createMeetingAndUtterances (testName) {
   var d1 = new Date()
   var d2 = d1
   d2 = d2.setDate(d2.getDate() - 2)
+  var d3 = d2 + 10 * 1000
+  var d4 = d3 + 30 * 1000
+  var d5 = d4 + 20 * 1000
 
-  var activeMeeting = {
-    _id: 'deactivate-meeting-hook-' + n,
-    participants: ['p1', 'p2'],
+  var testParticipants = [
+    {
+      _id: testName + '-participant-' + n + '-id0',
+      consent: true,
+      name: testName + '-participant-' + n + '-name0'
+    },
+    {
+      _id: testName + '-participant-' + n + '-id1',
+      consent: true,
+      name: testName + '-participant-' + n + '-name1'
+    },
+    {
+      _id: testName + '-participant-' + n + '-id2',
+      consent: true,
+      name: testName + '-participant-' + n + '-name2'
+    }
+  ]
+
+  var testMeeting = {
+    _id: testName + n,
+    participants: [testParticipants[0]._id, testParticipants[1]._id, testParticipants[2]._id],
     startTime: d2,
     endTime: null,
     active: true
   }
 
-  return global.app.service('meetings').create(activeMeeting)
+  var testUtterances = [
+    {
+      meeting: testMeeting._id,
+      startTime: d2,
+      endTime: d3,
+      participant: testParticipants[0]._id
+    },
+    {
+      meeting: testMeeting._id,
+      startTime: d4,
+      endTime: d5,
+      participant: testParticipants[0]._id
+    },
+    {
+      meeting: testMeeting._id,
+      startTime: d3,
+      endTime: d4,
+      participant: testParticipants[1]._id
+    }
+  ]
+
+  return global.app.service('meetings').create(testMeeting)
      .then(function (meeting) {
+       _.each(testParticipants, function (participant, i, list) {
+         global.app.service('participants').create(participant)
+       })
+       _.each(testUtterances, function (utterance, i, list) {
+         global.app.service('utterances').create(utterance)
+       })
        assert(meeting.active === true)
        n += 1
        return meeting
@@ -40,7 +89,7 @@ describe('deactivate meeting hook', function () {
   })
 
   beforeEach(function (done) {
-    createMeeting().then(function (meeting) {
+    createMeetingAndUtterances('deactivate-meeting-hook').then(function (meeting) {
       meetingId = meeting
       done()
     }).catch(function (err) {
