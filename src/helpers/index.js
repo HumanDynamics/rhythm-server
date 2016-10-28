@@ -12,6 +12,8 @@ function jsonTransform (obj, ids, transform) {
     if (value !== null && _.contains(ids, key)) {
       if (Array.isArray(value)) {
         return _.map(value, transform)
+      } else if (value === Object(value)) {
+        return value
       } else {
         return transform(value)
       }
