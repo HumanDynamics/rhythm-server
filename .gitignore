@@ -34,3 +34,8 @@ data/
 public/www
 public/bower_components
 public/node_modules
+
+# WebStorm directories and files
+.idea
+.eslintrc
+src/scripts/DEFAULT_USER_TOKEN.txt
