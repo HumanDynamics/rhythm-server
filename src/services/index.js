@@ -10,6 +10,7 @@ const participant = require('./participant')
 const authentication = require('./authentication')
 const user = require('./user')
 const meeting = require('./meeting')
+const face = require('./face')
 const mongoose = require('mongoose')
 
 module.exports = function () {
@@ -33,4 +34,5 @@ module.exports = function () {
   app.configure(participantEvent)
   app.configure(turn)
   app.configure(utteranceDistribution)
+  app.configure(face)
 }
