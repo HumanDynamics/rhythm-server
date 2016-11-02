@@ -6,7 +6,6 @@ var Promise = require('promise')
 const winston = require('winston')
 const _ = require('underscore')
 
-const MAX_TIME_SINCE_MEETING_START = 6 * 60 * 1000
 const MAX_TIME_SINCE_LAST_UTTERANCE = 5 * 60 * 1000
 var pid = null
 var scope = {}
@@ -15,10 +14,7 @@ var scope = {}
 var getActiveMeetings = function () {
   return scope.app.service('meetings').find({
     query: {
-      $and: [
-        {active: true},
-        {endTime: {$gt: new Date(Date.now() - MAX_TIME_SINCE_MEETING_START)}}
-      ]
+      active: true
     }
   }).then((meetings) => {
     return meetings
