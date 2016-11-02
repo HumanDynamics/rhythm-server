@@ -24,6 +24,7 @@ function reportMeeting (hook) {
 }
 
 function getReportData (hook, callback) {
+  winston.log('info', 'Getting report data ...')
   // find participant events (-> historical participants)
   hook.app.service('participantEvents').find({
     query: {
@@ -87,6 +88,7 @@ function getReportData (hook, callback) {
 }
 
 function createReportVisualization (reportData) {
+  winston.log('info', 'Creating report visualization...')
   var margin = { top: 20, right: 15, bottom: 60, left: 60 }
   var width = 800 - margin.left - margin.right
   var height = 500 - margin.top - margin.bottom
@@ -215,6 +217,7 @@ function createReportVisualization (reportData) {
 }
 
 function sendReport (visualization) {
+  winston.log('info', 'Sending report...')
   // TODO change SMTP configurations
   // define SMTP configurations
   var smtpConfig = {
