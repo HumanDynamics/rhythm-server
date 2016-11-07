@@ -19,19 +19,19 @@ function createMeetingAndUtterances (testName) {
 
   var testParticipants = [
     {
-      _id: testName + '-participant-' + n + '-id0',
+      _id: testName + '-participant-' + n + '-id-0',
       consent: true,
-      name: testName + '-participant-' + n + '-name0'
+      name: testName + '-participant-' + n + '-name-0'
     },
     {
-      _id: testName + '-participant-' + n + '-id1',
+      _id: testName + '-participant-' + n + '-id-1',
       consent: true,
-      name: testName + '-participant-' + n + '-name1'
+      name: testName + '-participant-' + n + '-name-1'
     },
     {
-      _id: testName + '-participant-' + n + '-id2',
+      _id: testName + '-participant-' + n + '-id-2',
       consent: true,
-      name: testName + '-participant-' + n + '-name2'
+      name: testName + '-participant-' + n + '-name-2'
     }
   ]
 

@@ -10,6 +10,7 @@ const winston = require('winston')
 var d3 = require('d3')
 var jsdom = require('jsdom')
 var nodemailer = require('nodemailer')
+var request = require('request')
 
 function shouldMakeMeetingInactive (newParticipants, meetingObject) {
   return (newParticipants.length === 0 &&
@@ -18,18 +19,18 @@ function shouldMakeMeetingInactive (newParticipants, meetingObject) {
 }
 
 function reportMeeting (hook) {
-  getReportData(hook, (reportData) => {
-    sendReport(createReportVisualization(reportData))
+  getReportData(hook, (visualizationData, addresses) => {
+    sendReport(createVisualization(visualizationData), addresses)
   })
 }
 
 function getReportData (hook, callback) {
-  winston.log('info', 'Getting report data ...')
+  winston.log('info', 'Getting report data...')
   // find participant events (-> historical participants)
   hook.app.service('participantEvents').find({
     query: {
       meeting: hook.id,
-      $select: ['participants']
+      $select: [ 'participants' ]
     }
   }).then((participantEvents) => {
     // [[participant, ...], ...]
@@ -44,7 +45,7 @@ function getReportData (hook, callback) {
         _id: {
           $in: participantIdsUnique
         },
-        $select: ['_id', 'name']
+        $select: [ '_id', 'name' ]
       }
     })
   }).then((participants) => {
@@ -52,7 +53,7 @@ function getReportData (hook, callback) {
     hook.app.service('utterances').find({
       query: {
         meeting: hook.id,
-        $select: ['participant', 'meeting', 'startTime', 'endTime']
+        $select: [ 'participant', 'meeting', 'startTime', 'endTime' ]
       }
     }).then((utterances) => {
       // {'participant': [utteranceObject, ...]}
@@ -70,7 +71,7 @@ function getReportData (hook, callback) {
         return sum / lengthsUtterances.length
       })
       // [{'name': ..., 'numUtterances': ..., 'meanLengthUtterances': ...}, ...]
-      var reportData = participants.data.map((participant) => {
+      var visualizationData = participants.data.map((participant) => {
         var participantId = participant[ '_id' ]
         return {
           name: participant[ 'name' ],
@@ -78,16 +79,30 @@ function getReportData (hook, callback) {
           meanLengthUtterances: participantId in meanLengthUtterances ? meanLengthUtterances[ participantId ] : 0
         }
       })
-      callback(reportData)
-    }).catch(function (err) {
-      winston.log('info', '[getReportData] error: ', err)
+      // get mapping between google id and addresses
+      request.get(process.env.MAPPING_URL, function (error, response, body) {
+        // {'_id': address, ...}
+        var mapping = {}
+        if (!error && response.statusCode === 200) {
+          var rows = body.split('\n')
+          for (var i = 0; i < rows.length; i++) {
+            var cols = rows[ i ].split(',')
+            mapping[String(cols[0])] = cols[1]
+          }
+        }
+        // [address, ...]
+        var addresses = participants.data.map((participant) => {
+          return mapping[ participant[ '_id' ] ]
+        })
+        callback(visualizationData, addresses)
+      }).catch(function (error) {
+        winston.log('info', '[getReportData] error: ', error)
+      })
     })
-  }).catch(function (err) {
-    winston.log('info', '[getReportData] error: ', err)
   })
 }
 
-function createReportVisualization (reportData) {
+function createVisualization (visualizationData) {
   winston.log('info', 'Creating report visualization...')
   var margin = { top: 20, right: 15, bottom: 60, left: 60 }
   var width = 800 - margin.left - margin.right
@@ -95,11 +110,11 @@ function createReportVisualization (reportData) {
   var color = d3.scale.category20()
 
   var x = d3.scale.linear()
-    .domain([ 0, d3.max(reportData, function (d) { return d.meanLengthUtterances }) + 5 ])
+    .domain([ 0, d3.max(visualizationData, function (d) { return d.meanLengthUtterances }) + 5 ])
     .range([ 0, width ])
 
   var y = d3.scale.linear()
-    .domain([ 0, d3.max(reportData, function (d) { return d.numUtterances }) + 1 ])
+    .domain([ 0, d3.max(visualizationData, function (d) { return d.numUtterances }) + 1 ])
     .range([ height, 0 ])
 
   var document = jsdom.jsdom()
@@ -152,7 +167,7 @@ function createReportVisualization (reportData) {
   var g = main.append('svg:g')
 
   var node = g.selectAll('scatter-dots')
-    .data(reportData)
+    .data(visualizationData)
     .enter().append('g')
 
   node.append('svg:circle')
@@ -216,7 +231,7 @@ function createReportVisualization (reportData) {
   return html
 }
 
-function sendReport (visualization) {
+function sendReport (visualization, addresses) {
   winston.log('info', 'Sending report...')
   // TODO change SMTP configurations
   // define SMTP configurations
@@ -233,10 +248,9 @@ function sendReport (visualization) {
   var transporter = nodemailer.createTransport(smtpConfig)
   // TODO change email data
   // setup email data
-  var fakeReceivers = ['kfull@mit.edu', 'katharinalorenafull@gmail.com']
   var mailOptions = {
     from: '"Fake User" <fakeuserhd@gmail.com>',
-    to: fakeReceivers,
+    to: addresses,
     subject: 'Fake Subject',
     text: 'Fake Text',
     html: '<b>Fake HTML</b>',
@@ -274,7 +288,9 @@ module.exports = function (hook) {
                  if (shouldMakeMeetingInactive(hook.data.participants, meeting)) {
                    hook.data.active = false
                    hook.data.endTime = new Date()
-                   reportMeeting(hook)
+                   if (process.env.SEND_REPORT) {
+                     reportMeeting(hook)
+                   }
                    return createMeetingEndEvent(hook)
                  } else {
                    return hook
