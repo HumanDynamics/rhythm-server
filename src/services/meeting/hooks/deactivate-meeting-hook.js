@@ -27,18 +27,22 @@ function reportMeeting (hook) {
 function getReportData (hook, callback) {
   winston.log('info', 'Getting report data...')
   // find participant events (-> historical participants)
+  var meetingId = hook.id
+  if (hook.id === Object(hook.id)) {
+    meetingId = hook.id._id
+  }
   return hook.app.service('participants').find({
     query: {
       $select: [ '_id', 'name', 'meetings' ]
     }
   }).then((participants) => {
     var validParticipants = _.filter(participants.data, (participant) => {
-      return _.contains(participant.meetings, hook.id)
+      return _.contains(participant.meetings, meetingId)
     })
     // find utterances
     hook.app.service('utterances').find({
       query: {
-        meeting: hook.id,
+        meeting: meetingId,
         $select: [ 'participant', 'meeting', 'startTime', 'endTime' ]
       }
     }).then((utterances) => {
