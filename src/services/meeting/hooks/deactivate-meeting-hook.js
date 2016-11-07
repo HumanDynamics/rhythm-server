@@ -27,28 +27,14 @@ function reportMeeting (hook) {
 function getReportData (hook, callback) {
   winston.log('info', 'Getting report data...')
   // find participant events (-> historical participants)
-  hook.app.service('participantEvents').find({
+  return hook.app.service('participants').find({
     query: {
-      meeting: hook.id,
-      $select: [ 'participants' ]
+      $select: [ '_id', 'name', 'meetings' ]
     }
-  }).then((participantEvents) => {
-    // [[participant, ...], ...]
-    var participantIds = participantEvents.data.map((participantEvent) => {
-      return participantEvent.participants
-    })
-    // [participant, ...]
-    var participantIdsUnique = _.union.apply(_, participantIds)
-    // find participants
-    return hook.app.service('participants').find({
-      query: {
-        _id: {
-          $in: participantIdsUnique
-        },
-        $select: [ '_id', 'name' ]
-      }
-    })
   }).then((participants) => {
+    var validParticipants = _.filter(participants.data, (participant) => {
+      return _.contains(participant.meetings, hook.id)
+    })
     // find utterances
     hook.app.service('utterances').find({
       query: {
@@ -71,7 +57,7 @@ function getReportData (hook, callback) {
         return sum / lengthsUtterances.length
       })
       // [{'name': ..., 'numUtterances': ..., 'meanLengthUtterances': ...}, ...]
-      var visualizationData = participants.data.map((participant) => {
+      var visualizationData = validParticipants.map((participant) => {
         var participantId = participant[ '_id' ]
         return {
           name: participant[ 'name' ],
@@ -87,11 +73,11 @@ function getReportData (hook, callback) {
           var rows = body.split('\n')
           for (var i = 0; i < rows.length; i++) {
             var cols = rows[ i ].split(',')
-            mapping[String(cols[0])] = cols[1]
+            mapping[ String(cols[ 0 ]) ] = cols[ 1 ]
           }
         }
         // [address, ...]
-        var addresses = participants.data.map((participant) => {
+        var addresses = validParticipants.map((participant) => {
           return mapping[ participant[ '_id' ] ]
         })
         callback(visualizationData, addresses)
