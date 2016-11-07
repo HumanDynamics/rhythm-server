@@ -236,7 +236,7 @@ function sendReport (visualization, addresses) {
   // TODO change SMTP configurations
   // define SMTP configurations
   var smtpConfig = {
-    host: 'smtp.gmail.com',
+    host: process.env.REPORT_EMAIL_HOST,
     port: 465,
     secure: true,
     auth: {
@@ -253,7 +253,7 @@ function sendReport (visualization, addresses) {
     to: addresses,
     subject: process.env.REPORT_EMAIL_SUBJECT,
     text: process.env.REPORT_EMAIL_TEXT,
-    html: '<b></b>',
+    html: process.env.REPORT_EMAIL_TEXT,
     attachments: {
       filename: 'visualization.html',
       content: visualization
