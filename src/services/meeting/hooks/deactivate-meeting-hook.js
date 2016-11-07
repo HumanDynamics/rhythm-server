@@ -240,8 +240,8 @@ function sendReport (visualization, addresses) {
     port: 465,
     secure: true,
     auth: {
-      user: 'fakeuserhd@gmail.com',
-      pass: 'LEXx?nPz.j'
+      user: process.env.REPORT_EMAIL_LOGIN,
+      pass: process.env.REPORT_EMAIL_PASSWORD
     }
   }
   // create transporter object
@@ -249,10 +249,10 @@ function sendReport (visualization, addresses) {
   // TODO change email data
   // setup email data
   var mailOptions = {
-    from: process.env.REPORT_EMAIL,
+    from: process.env.REPORT_EMAIL_FROM,
     to: addresses,
-    subject: process.env.REPORT_SUBJECT,
-    text: process.env.REPORT_TEXT,
+    subject: process.env.REPORT_EMAIL_SUBJECT,
+    text: process.env.REPORT_EMAIL_TEXT,
     html: '<b></b>',
     attachments: {
       filename: 'visualization.html',
