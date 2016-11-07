@@ -249,11 +249,11 @@ function sendReport (visualization, addresses) {
   // TODO change email data
   // setup email data
   var mailOptions = {
-    from: '"Fake User" <fakeuserhd@gmail.com>',
+    from: process.env.REPORT_EMAIL,
     to: addresses,
-    subject: 'Fake Subject',
-    text: 'Fake Text',
-    html: '<b>Fake HTML</b>',
+    subject: process.env.REPORT_SUBJECT,
+    text: process.env.REPORT_TEXT,
+    html: '<b></b>',
     attachments: {
       filename: 'visualization.html',
       content: visualization
