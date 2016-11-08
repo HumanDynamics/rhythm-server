@@ -11,7 +11,7 @@ endMeetingJob.app = global.app
 var n = 0
 var meetingId = null
 
-function createMeetingAndUtterances (testName, ended, done) {
+function createMeetingAndUtterances (testName, ended, hasUtterances, done) {
   var d1 = null
   var d2 = null
   if (ended) {
@@ -57,6 +57,9 @@ function createMeetingAndUtterances (testName, ended, done) {
        })
        return testParticipants
      }).then(function (participants) {
+       if (!hasUtterances) {
+         return
+       }
        return global.app.service('utterances').create(
          {
            meeting: testMeeting._id,
@@ -86,9 +89,9 @@ describe('end meeting job', function () {
     var endedMeeting = null
     var aliveMeeting = null
     before(function (done) {
-      createMeetingAndUtterances('end-meeting-job', true)
+      createMeetingAndUtterances('end-meeting-job', true, true)
       endedMeeting = meetingId
-      createMeetingAndUtterances('end-meeting-job', false, done)
+      createMeetingAndUtterances('end-meeting-job', false, true, done)
       aliveMeeting = meetingId
     })
 
@@ -117,9 +120,9 @@ describe('end meeting job', function () {
     var endedMeeting = null
     var aliveMeeting = null
     before(function (done) {
-      createMeetingAndUtterances('end-meeting-job', true)
+      createMeetingAndUtterances('end-meeting-job', true, true)
       endedMeeting = meetingId
-      createMeetingAndUtterances('end-meeting-job', false, done)
+      createMeetingAndUtterances('end-meeting-job', false, true, done)
       aliveMeeting = meetingId
     })
 
@@ -151,15 +154,33 @@ describe('end meeting job', function () {
   describe('endInactiveMeetings', function () {
     var endedMeeting = null
     var aliveMeeting = null
+    var endedMeetingWithoutUtterances = null
+    var aliveMeetingWithoutUtterances = null
     before(function (done) {
-      createMeetingAndUtterances('end-meeting-job', true)
+      createMeetingAndUtterances('end-meeting-job', true, true)
       endedMeeting = meetingId
-      createMeetingAndUtterances('end-meeting-job', false, done)
+      createMeetingAndUtterances('end-meeting-job', false, true)
       aliveMeeting = meetingId
+      createMeetingAndUtterances('end-meeting-job', true, false)
+      endedMeetingWithoutUtterances = meetingId
+      createMeetingAndUtterances('end-meeting-job', false, false, done)
+      aliveMeetingWithoutUtterances = meetingId
     })
 
     it('should end all inactive meetings', function (done) {
       endMeetingJob._endInactiveMeetings([endedMeeting, aliveMeeting], global.app)
+                   .then(function (endedMeetings) {
+                     winston.log('info', '[end-meeting-job] ended meetings:', endedMeetings)
+                     assert(endedMeetings[0])
+                     assert(!endedMeetings[1])
+                     done()
+                   }).catch(function (err) {
+                     done(err)
+                   })
+    })
+
+    it('should end inactive meetings without utterances', function (done) {
+      endMeetingJob._endInactiveMeetings([endedMeetingWithoutUtterances, aliveMeetingWithoutUtterances], global.app)
                    .then(function (endedMeetings) {
                      winston.log('info', '[end-meeting-job] ended meetings:', endedMeetings)
                      assert(endedMeetings[0])

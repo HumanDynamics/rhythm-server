@@ -34,20 +34,21 @@ var isMeetingEnded = function (meeting, passedApp) {
       $limit: 1
     }
   }).then((lastUtterances) => {
-    winston.log('info', 'lastUtterances:', lastUtterances)
+    var waitFor
     if (lastUtterances.length === 0) {
-      return {meetingShouldEnd: false,
+      waitFor = app.service('meetings').get(meeting).then((meetingObject) => {
+        return (new Date().getTime() - new Date(meetingObject.startTime).getTime())
+      })
+    } else {
+      waitFor = Promise.resolve(new Date().getTime() - new Date(lastUtterances[0].endTime).getTime())
+    }
+    return waitFor.then((elapsedTime) => {
+      var meetingShouldEnd = elapsedTime > MAX_TIME_SINCE_LAST_UTTERANCE
+      winston.log('info', 'should end?:', elapsedTime, MAX_TIME_SINCE_LAST_UTTERANCE)
+      winston.log('info', 'should end?:', elapsedTime > MAX_TIME_SINCE_LAST_UTTERANCE)
+      return {meetingShouldEnd: meetingShouldEnd,
               meeting: meeting}
-    }
-    var msSinceLastUtterance = (new Date().getTime() - new Date(lastUtterances[0].endTime).getTime())
-    var meetingShouldEnd = false
-    if (lastUtterances.length > 0) {
-      meetingShouldEnd = msSinceLastUtterance > MAX_TIME_SINCE_LAST_UTTERANCE
-      winston.log('info', 'should end?:', msSinceLastUtterance, MAX_TIME_SINCE_LAST_UTTERANCE)
-      winston.log('info', 'should end?:', msSinceLastUtterance > MAX_TIME_SINCE_LAST_UTTERANCE)
-    }
-    return {meetingShouldEnd: meetingShouldEnd,
-            meeting: meeting}
+    })
   }).catch((err) => {
     winston.log('error', 'Couldnt find last utterance:', err)
     return {meetingShouldEnd: true,
