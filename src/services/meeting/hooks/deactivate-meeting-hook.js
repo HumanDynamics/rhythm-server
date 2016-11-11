@@ -136,7 +136,7 @@ function createVisualization (visualizationData) {
     .attr('y', -15)
     .attr('dy', '.71em')
     .style('text-anchor', 'end')
-    .text('Avg. Length of Turns')
+    .text('Avg. Length of Turns (in seconds))')
 
   // draw the y axis
   var yAxis = d3.svg.axis()
@@ -211,8 +211,9 @@ function createVisualization (visualizationData) {
     '}\n' +
     '</style>\n'
   var htmlBody = '<body>\n' +
-    '<h1>Your Meeting: Turn Taken</h1>\n' +
-    d3.select(document.body).node().innerHTML + '\n' +
+        '<h1>Your Meeting: Turns Taken</h1>\n' +
+        '<p>We count a "turn" any time you speak for more than around a second. The most creative and productive teams might have their dots clumped near each other, showing that they have all contributed somewhat equally.</p>\n' +
+        d3.select(document.body).node().innerHTML + '\n' +
     '</body>'
   var html = '<!DOCTYPE html>\n' +
     '<meta charset="utf-8">\n' +
