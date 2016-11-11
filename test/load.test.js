@@ -41,6 +41,14 @@ describe('Load tests', function () {
             endTime: new Date((new Date()).getTime() + 50),
             volumes: _(10).times((n) => { return Faker.Helpers.randomNumber(5) })
           })
+          socket.emit('turn::create', {
+            meeting: 'meeting' + ioIndex,
+            participant: 'participant' + ioIndex,
+            start_time: new Date(),
+            end_time: new Date((new Date()).getTime() + 50),
+            timestamp: new Date(),
+            face_delta: Faker.Helpers.randomNumber(5)
+          })
         }, interval)
 
         setTimeout(function () {
