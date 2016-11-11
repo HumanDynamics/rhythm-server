@@ -8,7 +8,7 @@
 
 [rhythm-server](https://rhythm.mit.edu) is an open framework for
 recording human communication data and providing real-time aggregate
-statistics about that data.
+statistics about that data. 
 
 Rhythm-server provides a back-end data store and real-time engine for
 data that may be collected by group dynamics researchers, such as
