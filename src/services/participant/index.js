@@ -11,7 +11,7 @@ module.exports = function () {
   const options = {
     paginate: {
       default: 5,
-      max: 25
+      max: 1000
     },
     Model: participant
   }

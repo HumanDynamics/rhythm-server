@@ -33,6 +33,7 @@ function getReportData (hook, callback) {
   }
   return hook.app.service('participants').find({
     query: {
+      $limit: 1000,
       $select: [ '_id', 'name', 'meetings' ]
     }
   }).then((participants) => {
