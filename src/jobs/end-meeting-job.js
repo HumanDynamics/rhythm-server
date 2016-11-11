@@ -6,7 +6,6 @@ var Promise = require('promise')
 const winston = require('winston')
 const _ = require('underscore')
 
-const MAX_TIME_SINCE_MEETING_START = 6 * 60 * 1000
 const MAX_TIME_SINCE_LAST_UTTERANCE = 5 * 60 * 1000
 var pid = null
 var scope = {}
@@ -15,10 +14,7 @@ var scope = {}
 var getActiveMeetings = function () {
   return scope.app.service('meetings').find({
     query: {
-      $and: [
-        {active: true},
-        {endTime: {$gt: new Date(Date.now() - MAX_TIME_SINCE_MEETING_START)}}
-      ]
+      active: true
     }
   }).then((meetings) => {
     return meetings
@@ -38,20 +34,21 @@ var isMeetingEnded = function (meeting, passedApp) {
       $limit: 1
     }
   }).then((lastUtterances) => {
-    winston.log('info', 'lastUtterances:', lastUtterances)
+    var waitFor
     if (lastUtterances.length === 0) {
-      return {meetingShouldEnd: false,
+      waitFor = app.service('meetings').get(meeting).then((meetingObject) => {
+        return (new Date().getTime() - new Date(meetingObject.startTime).getTime())
+      })
+    } else {
+      waitFor = Promise.resolve(new Date().getTime() - new Date(lastUtterances[0].endTime).getTime())
+    }
+    return waitFor.then((elapsedTime) => {
+      var meetingShouldEnd = elapsedTime > MAX_TIME_SINCE_LAST_UTTERANCE
+      winston.log('info', 'should end?:', elapsedTime, MAX_TIME_SINCE_LAST_UTTERANCE)
+      winston.log('info', 'should end?:', elapsedTime > MAX_TIME_SINCE_LAST_UTTERANCE)
+      return {meetingShouldEnd: meetingShouldEnd,
               meeting: meeting}
-    }
-    var msSinceLastUtterance = (new Date().getTime() - new Date(lastUtterances[0].endTime).getTime())
-    var meetingShouldEnd = false
-    if (lastUtterances.length > 0) {
-      meetingShouldEnd = msSinceLastUtterance > MAX_TIME_SINCE_LAST_UTTERANCE
-      winston.log('info', 'should end?:', msSinceLastUtterance, MAX_TIME_SINCE_LAST_UTTERANCE)
-      winston.log('info', 'should end?:', msSinceLastUtterance > MAX_TIME_SINCE_LAST_UTTERANCE)
-    }
-    return {meetingShouldEnd: meetingShouldEnd,
-            meeting: meeting}
+    })
   }).catch((err) => {
     winston.log('error', 'Couldnt find last utterance:', err)
     return {meetingShouldEnd: true,
