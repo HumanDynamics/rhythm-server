@@ -34,6 +34,7 @@ function getReportData (hook, callback) {
   // find participants
   return hook.app.service('participants').find({
     query: {
+      $limit: 1000,
       $select: [ '_id', 'name', 'meetings' ]
     }
   }).then((participants) => {
@@ -175,7 +176,8 @@ function createHtml (scatterData, historyData, networkData) {
     '}\n' +
     '</style>\n'
   var htmlBody = '<body>\n' +
-    '<h1>Your Meeting: Turn Taken</h1>\n' +
+    '<h1>Your Meeting: Turns Taken</h1>\n' +
+    '<p>We count a "turn" any time you speak for more than around a second. The most creative and productive teams might have their dots clumped near each other, showing that they have all contributed somewhat equally.</p>\n' +
     createScatterVisualization(scatterData) + '\n' +
     '<h1>All Meetings: Number of Turns Taken</h1>\n' +
     createHistoryVisualization(historyData) + '\n' +
@@ -230,7 +232,7 @@ function createScatterVisualization (scatterData) {
     .attr('y', -15)
     .attr('dy', '.71em')
     .style('text-anchor', 'end')
-    .text('Avg. Length of Turns')
+    .text('Avg. Length of Turns (in seconds)')
 
   // draw the y axis
   var yAxis = d3.svg.axis()
