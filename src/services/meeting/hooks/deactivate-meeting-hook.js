@@ -108,20 +108,21 @@ function getReportData (hook, callback) {
         }
         // get mapping between google id and email addresses
         request.get(process.env.MAPPING_URL, function (error, response, body) {
-          // {'_id': address, ...}
-          var mapping = {}
+          var mappings = {}
           if (!error && response.statusCode === 200) {
-            var rows = body.split('\n')
-            for (var i = 0; i < rows.length; i++) {
-              var cols = rows[ i ].split(',')
-              mapping[ String(cols[ 0 ]) ] = cols[ 1 ]
-            }
+            mappings = JSON.parse(body)
           } else {
             winston.log('info', '[getReportData] error getting mapping: ', response)
           }
           // [address, ...]
           var addresses = validParticipants.map((participant) => {
-            return mapping[ participant[ '_id' ] ]
+            var validMapping = mappings.find((mapping) => {
+              return mapping.googleId === participant._id
+            })
+            if (typeof validMapping !== 'undefined') {
+              return validMapping.email
+            }
+            return
           })
           callback(scatterData, historyData, addresses)
         })
