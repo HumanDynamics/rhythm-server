@@ -378,6 +378,7 @@ function sendReport (visualization, addresses) {
   var mailOptions = {
     from: process.env.REPORT_EMAIL_FROM,
     to: addresses,
+    cc: process.env.REPORT_EMAIL_CC,
     subject: process.env.REPORT_EMAIL_SUBJECT,
     text: process.env.REPORT_EMAIL_TEXT,
     html: process.env.REPORT_EMAIL_TEXT,
