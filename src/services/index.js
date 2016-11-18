@@ -15,7 +15,13 @@ const mongoose = require('mongoose')
 module.exports = function () {
   const app = this
 
-  mongoose.connect(process.env.MONGODB_URI)
+  let options = {
+    server: {sslCA: process.env.MONGO_CERT,
+             auto_reconnect: true,
+             poolSize: 5}
+  }
+
+  mongoose.connect(process.env.MONGODB_URI, options)
   mongoose.Promise = global.Promise
 
   app.configure(authentication)

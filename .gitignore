@@ -39,3 +39,7 @@ public/node_modules
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+# WebStorm directories and files
+.idea
+.eslintrc
+src/scripts/DEFAULT_USER_TOKEN.txt

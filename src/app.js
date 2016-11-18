@@ -35,9 +35,9 @@ app.use(compress())
        'xhr-polling',
        'jsonp-polling'
      ])
-     io.set('polling duration', 10)
 
      io.on('connection', (socket) => {
+       console.log('new connection!')
        events.configure(socket, app)
      })
    }))

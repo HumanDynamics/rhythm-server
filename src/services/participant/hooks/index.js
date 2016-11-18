@@ -6,7 +6,7 @@ const authHooks = require('feathers-authentication').hooks
 
 exports.before = {
   all: [authHooks.verifyToken()],
-  find: [globalHooks.encryptHook(['_id', 'name'])],
+  find: [globalHooks.encryptHook(['_id', 'name', '$in', '$nin', '$ne'])],
   get: [participantCryptoHooks.encryptId],
   create: [globalHooks.encryptHook(['_id', 'name'])],
   update: [participantCryptoHooks.encryptId],
