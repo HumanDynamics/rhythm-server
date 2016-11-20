@@ -6,7 +6,7 @@ var Promise = require('promise')
 const winston = require('winston')
 const _ = require('underscore')
 
-const MAX_TIME_SINCE_LAST_UTTERANCE = 5 * 60 * 1000
+const MAX_TIME_SINCE_LAST_UTTERANCE = 60 * 1000 //TODO: change this back to 5*60*1000. made shorter for debugging
 var pid = null
 var scope = {}
 
