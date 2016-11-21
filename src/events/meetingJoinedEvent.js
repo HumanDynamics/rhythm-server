@@ -44,9 +44,12 @@ function getOrCreateMeeting (obj) {
   var meta = (_.has(data, 'meta') && data.meta !== undefined) ? data.meta : '{}'
   app.service('meetings').get(data.meeting)
                .then((meeting) => {
+                 console.log('patching meeting', meeting)
+                 console.log('adding participants to that meeting', particpantIds)
                  return app.service('meetings').patch(meeting._id, {
                    participants: participantIds
                  }).then((meeting) => {
+                   console.log('updated meeting with participants', meeting)
                    return meeting
                  })
                }).catch((err) => {
@@ -59,6 +62,7 @@ function getOrCreateMeeting (obj) {
                    meetingUrl: data.meetingUrl,
                    meta: JSON.parse(meta)
                  }).then((meeting) => {
+                   console.log('new meeting with participants', meeting)
                    return meeting
                  }).catch((err) => {
                    winston.log('info', 'couldnt create new meeting', err)

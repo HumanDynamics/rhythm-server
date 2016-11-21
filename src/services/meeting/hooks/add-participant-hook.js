@@ -8,7 +8,6 @@ const _ = require('underscore')
 const winston = require('winston')
 
 module.exports = function (hook) {
-  console.log("HOOK ARE YOU ADDING", hook)
   if (hook.data.participants) {
     winston.log('info', 'adding participant:', hook.data.participants)
     return hook.app.service('meetings').get(hook.id)
@@ -18,7 +17,7 @@ module.exports = function (hook) {
             return hook
           } else {
             hook.data.participants = _.union(oldParticipants, hook.data.participants)
-            delete hook.data.participants
+            // delete hook.data.participants
             return hook
           }
         }).catch((err) => {
