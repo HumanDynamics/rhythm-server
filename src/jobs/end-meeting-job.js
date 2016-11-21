@@ -6,7 +6,7 @@ var Promise = require('promise')
 const winston = require('winston')
 const _ = require('underscore')
 
-const MAX_TIME_SINCE_LAST_UTTERANCE = 60 * 1000 //TODO: change this back to 5*60*1000. made shorter for debugging
+const MAX_TIME_SINCE_LAST_UTTERANCE = 5 * 60 * 1000
 var pid = null
 var scope = {}
 
@@ -26,7 +26,7 @@ var getActiveMeetings = function () {
 
 // returns an object that indicates whether the given meeting should be ended.
 var isMeetingEnded = function (meeting, passedApp) {
-  winston.log('info', 'isMeetingEnded', meeting);
+  winston.log('info', 'isMeetingEnded', meeting)
   var app = passedApp === undefined ? scope.app : passedApp
   return app.service('utterances').find({
     query: {

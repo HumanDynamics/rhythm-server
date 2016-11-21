@@ -36,14 +36,16 @@ function getOrCreateParticipant (data, app) {
 
 function getOrCreateMeeting (obj) {
   winston.log('info', 'getting or creating a meeting...')
+  console.log('getOrCreateMeeting', obj)
   var data = obj.data
   var app = obj.app
   var participantIds = _.pluck(data.participants, 'participant')
+  console.log('participantIds', participantIds)
   var meta = (_.has(data, 'meta') && data.meta !== undefined) ? data.meta : '{}'
   app.service('meetings').get(data.meeting)
                .then((meeting) => {
                  return app.service('meetings').patch(meeting._id, {
-                   participants: participantIds
+                   participants: _.uniq(meeting.participants.concat(participantIds))
                  }).then((meeting) => {
                    return meeting
                  })
