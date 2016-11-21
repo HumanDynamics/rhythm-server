@@ -45,7 +45,7 @@ function getOrCreateMeeting (obj) {
   app.service('meetings').get(data.meeting)
                .then((meeting) => {
                  return app.service('meetings').patch(meeting._id, {
-                   participants: _.uniq(meeting.participants.concat(participantIds))
+                   participants: participantIds
                  }).then((meeting) => {
                    return meeting
                  })
