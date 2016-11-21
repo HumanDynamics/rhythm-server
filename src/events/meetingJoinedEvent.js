@@ -45,7 +45,7 @@ function getOrCreateMeeting (obj) {
   app.service('meetings').get(data.meeting)
                .then((meeting) => {
                  console.log('patching meeting', meeting)
-                 console.log('adding participants to that meeting', particpantIds)
+                 console.log('adding participants to that meeting', participantIds)
                  return app.service('meetings').patch(meeting._id, {
                    participants: participantIds
                  }).then((meeting) => {
