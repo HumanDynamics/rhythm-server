@@ -47,7 +47,7 @@ function getOrCreateMeeting (obj) {
                  console.log('patching meeting', meeting)
                  console.log('adding participants to that meeting', participantIds)
                  return app.service('meetings').patch(meeting._id, {
-                   participants: participantIds
+                   participants: _.uniq(meeting.participants.concat(participantIds))
                  }).then((meeting) => {
                    console.log('updated meeting with participants', meeting)
                    return meeting
