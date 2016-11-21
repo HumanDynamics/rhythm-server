@@ -177,10 +177,10 @@ function createHtml (scatterData, historyData, networkData) {
     '}\n' +
     '</style>\n'
   var htmlBody = '<body>\n' +
-    '<h1>Your Meeting: Turns Taken</h1>\n' +
-    '<p>We count a "turn" any time you speak for more than around a second. The most creative and productive teams might have their dots clumped near each other, showing that they have all contributed somewhat equally.</p>\n' +
+    '<h1>Your Meeting: Utterances Spoken</h1>\n' +
+        '<p>We count an "utterance" any time you speak for more than about a second. You might generate several utterances each time you speak. The most creative and productive teams might have their dots clumped near each other, showing that they have all contributed somewhat equally.</p>\n' +
     createScatterVisualization(scatterData) + '\n' +
-    '<h1>All Meetings: Number of Turns Taken</h1>\n' +
+    '<h1>All Meetings: Number of Utterances Spoken</h1>\n' +
     createHistoryVisualization(historyData) + '\n' +
     '</body>'
   var html = '<!DOCTYPE html>\n' +
