@@ -6,7 +6,6 @@ var Promise = require('promise')
 const winston = require('winston')
 const _ = require('underscore')
 
-const MAX_TIME_SINCE_LAST_UTTERANCE = 5 * 60 * 1000
 var pid = null
 var scope = {}
 
@@ -43,9 +42,9 @@ var isMeetingEnded = function (meeting, passedApp) {
       waitFor = Promise.resolve(new Date().getTime() - new Date(lastUtterances[0].endTime).getTime())
     }
     return waitFor.then((elapsedTime) => {
-      var meetingShouldEnd = elapsedTime > MAX_TIME_SINCE_LAST_UTTERANCE
-      winston.log('info', 'should end?:', elapsedTime, MAX_TIME_SINCE_LAST_UTTERANCE)
-      winston.log('info', 'should end?:', elapsedTime > MAX_TIME_SINCE_LAST_UTTERANCE)
+      var meetingShouldEnd = elapsedTime > process.env.MAX_TIME_SINCE_LAST_UTTERANCE
+      winston.log('info', 'should end?:', elapsedTime, process.env.MAX_TIME_SINCE_LAST_UTTERANCE)
+      winston.log('info', 'should end?:', elapsedTime > process.env.MAX_TIME_SINCE_LAST_UTTERANCE)
       return {meetingShouldEnd: meetingShouldEnd,
               meeting: meeting}
     })
