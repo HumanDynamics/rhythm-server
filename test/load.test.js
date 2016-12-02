@@ -48,7 +48,7 @@ describe('Load tests', function () {
             end_time: new Date((new Date()).getTime() + 50),
             timestamp: new Date(),
             face_delta: Faker.Helpers.randomNumber(5),
-            delta_array: _(71).times((n) => { return [Faker.Helpers.randomNumber(5), Faker.Helpers.randomNumber(5)] })
+            delta_array: _(71).times((n) => { return [Faker.Helpers.randomNumber(5)] })
           })
         }, interval)
 
