@@ -16,7 +16,7 @@ const faceSchema = new Schema({
   end_time: Date,
   face_delta: Number,
   norm_smile: Number,
-  delta_array: [[Number, Number]]
+  delta_array: [[Number]
 })
 
 const faceModel = mongoose.model('face', faceSchema)
