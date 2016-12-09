@@ -105,13 +105,14 @@ describe('turn computation', function (done) {
     setTimeout(function () {
       global.app.service('turns').find({
         query: {
-          meeting: testMeeting._id
+          meeting: testMeeting._id,
+          from: startTime // look for the turn we made
         }
       }).then((turns) => {
         // pull out just the turns
         var turn = _.map(turns[0].turns, (t) => { return _.omit(t, '_id') })
         winston.log('info', JSON.stringify(turn), JSON.stringify(expectedTurnData), turns[0].transitions)
-        assert.deepEqual(turn, expectedTurnData)
+        assert.equal(JSON.stringify(turn), JSON.stringify(expectedTurnData))
         assert.equal(turns[0].transitions, 1)
         done()
       }).catch((err) => {
