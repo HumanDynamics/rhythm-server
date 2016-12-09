@@ -64,27 +64,37 @@ function computeTurns (app, meeting, from, to) {
     _.mapObject(numUtterances, (val, key) => {
       utteranceDistribution.push({
         participant: key,
-        turns: val / totalUtterances
+        turns: val / totalUtterances // percentage of your total number of utterances relative to convo's total utterances. viz uses this to measure "contributions" to conversation with the ball
       })
     })
 
     var transitions = getTurnTransitions(utterances)
 
     var turnObj = {
+      _id: meeting,
       meeting: meeting,
-      turns: utteranceDistribution,
-      transitions: transitions,
+      turns: utteranceDistribution, // patch instead of update
+      transitions: transitions, // patch instead of update
       timestamp: new Date(),
-      from: from,
-      to: to
+      from: from, // update, to make meetings.turn be the most updated turn in the last 5 min of that meeting (this is computed every 5 seconds)
+      to: to // update
     }
-    app.service('turns').create(turnObj, {}).then((turns) => {
-      winston.log('info', 'saved turns for meeting:', meeting)
+    app.service('turns').get(meeting, {}).then((turn) => {
+      app.service('turns').update(meeting, turnObj, {}).then((newTurn) => {
+        winston.log('info', 'updated turns for meeting:', meeting)
+      }).catch((err) => {
+        winston.log('error', 'could not save turns for meeting:', turnObj, 'error:', err)
+      })
     }).catch((err) => {
-      winston.log('error', 'could not save turns for meeting:', turnObj, 'error:', err)
+      winston.log('error', 'could not get turn', err)
+      app.service('turns').create(turnObj, {}).then((newTurn) => {
+        winston.log('info', 'created turns for meeting:', meeting)
+      }).catch((err) => {
+        winston.log('error', 'could not create turns for meeting:', turnObj, 'error:', err)
+      })
     })
   }).catch((err) => {
-    winston.log('error', 'couldnt get turns...', err)
+    winston.log('error', 'couldnt get utterances...', err)
   })
 }
 

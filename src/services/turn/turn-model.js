@@ -9,6 +9,7 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const turnSchema = new Schema({
+  _id: String,
   meeting: {type: String, ref: 'Meeting'},
   timestamp: Date,
   from: Date,
