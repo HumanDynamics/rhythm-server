@@ -26,7 +26,6 @@ var getActiveMeetings = function () {
 
 // returns an object that indicates whether the given meeting should be ended.
 var isMeetingEnded = function (meeting, passedApp) {
-  winston.log('info', 'isMeetingEnded', meeting)
   var app = passedApp === undefined ? scope.app : passedApp
   return app.service('utterances').find({
     query: {
@@ -60,7 +59,6 @@ var isMeetingEnded = function (meeting, passedApp) {
 var maybeEndMeeting = function (context, passedApp) {
   var app = passedApp === undefined ? scope.app : passedApp
   if (context.meetingShouldEnd) {
-    winston.log('info', 'meetingShouldEnd', context.meeting)
     return app.service('meetings').patch(context.meeting, {participants: []})
               .then((patchedMeeting) => {
                 winston.log('info', 'patched meeting:', patchedMeeting)
