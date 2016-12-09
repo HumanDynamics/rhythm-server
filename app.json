@@ -1,5 +1,6 @@
 {
-  "name": "rhythm-server",
+  "name": "rhythm-server-singleturn",
+
   "scripts": {
   },
   "env": {
