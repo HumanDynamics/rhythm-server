@@ -18,7 +18,7 @@ const faceSchema = new Schema({
   participant: {type: String, ref: 'Participant'},
   meeting: {type: String, ref: 'Meeting'},
   timestamp: Date,
-  data: faceDataSchema
+  data: [faceDataSchema]
 })
 
 const faceModel = mongoose.model('face', faceSchema)
