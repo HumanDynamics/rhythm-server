@@ -12,11 +12,11 @@ const faceSchema = new Schema({
   participant: {type: String, ref: 'Participant'},
   meeting: {type: String, ref: 'Meeting'},
   timestamp: Date,
-  start_time: Date,
-  end_time: Date,
   face_delta: Number,
   norm_smile: Number,
-  delta_array: [Number]
+  delta_array: [Number],
+  x_array: [Number],
+  y_array: [Number]
 })
 
 const faceModel = mongoose.model('face', faceSchema)
