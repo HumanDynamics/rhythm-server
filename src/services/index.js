@@ -11,6 +11,7 @@ const authentication = require('./authentication')
 const user = require('./user')
 const meeting = require('./meeting')
 const face = require('./face')
+const frame = require('./frame')
 const mongoose = require('mongoose')
 
 module.exports = function () {
@@ -35,4 +36,5 @@ module.exports = function () {
   app.configure(turn)
   app.configure(utteranceDistribution)
   app.configure(face)
+  app.configure(frame);
 }
