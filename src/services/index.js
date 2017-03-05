@@ -36,5 +36,5 @@ module.exports = function () {
   app.configure(turn)
   app.configure(utteranceDistribution)
   app.configure(face)
-  app.configure(frame);
+  app.configure(frame)
 }
