@@ -12,7 +12,7 @@ function decryptParticipantFilter (data, connection) {
   var transformed = transformKeys(data,
                                   ['participant', 'participants'],
                                   crypto.decrypt)
-  winston.log('info', 'filter decrypted participant ids', )
+  winston.log('info', 'filter decrypted participant ids' )
   return transformed
 }
 
