@@ -12,14 +12,14 @@ function decryptParticipantFilter (data, connection) {
   var transformed = transformKeys(data,
                                   ['participant', 'participants'],
                                   crypto.decrypt)
-  winston.log('info', 'filter decrypted:', transformed)
+  winston.log('info', 'filter decrypted participant ids', )
   return transformed
 }
 
 function authenticationFilter (data, connection) {
   winston.log('info', 'auth filter, data:', data, connection.user)
   if (!connection.user) {
-    winston.log('info', 'User not authenticated.', connection.user)
+    winston.log('info', 'User not authenticated.')
     return false
   }
   return data
