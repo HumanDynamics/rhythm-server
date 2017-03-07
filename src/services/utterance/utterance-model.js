@@ -14,7 +14,7 @@ const utteranceSchema = new Schema({
   startTime: Date,
   endTime: Date,
   volumes: [{
-    timestamp: String,
+    timestamp: Number,
     vol: Number
   }]
 })
