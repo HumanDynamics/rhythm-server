@@ -7,16 +7,16 @@ const authHooks = require('feathers-authentication').hooks
 
 exports.before = {
   all: [authHooks.verifyToken()],
-  find: [globalHooks.encryptHook(['participant'])],
-  get: [globalHooks.encryptHook(['participant'])],
-  create: [participantConsentedHook, repeatHook, globalHooks.encryptHook(['participant'])],
-  update: [globalHooks.encryptHook(['participant'])],
-  patch: [globalHooks.encryptHook(['participant'])],
-  remove: [globalHooks.encryptHook(['participant'])]
+  find: [],
+  get: [],
+  create: [participantConsentedHook, repeatHook],
+  update: [],
+  patch: [],
+  remove: []
 }
 
 exports.after = {
-  all: [globalHooks.decryptHook(['participant'])],
+  all: [],
   find: [],
   get: [],
   create: [],

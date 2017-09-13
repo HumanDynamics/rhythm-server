@@ -6,15 +6,7 @@
 const winston = require('winston')
 const helpers = require('../helpers')
 const transformKeys = helpers.transformKeys
-const crypto = helpers.crypto
 
-function decryptParticipantFilter (data, connection) {
-  var transformed = transformKeys(data,
-                                  ['participant', 'participants'],
-                                  crypto.decrypt)
-  winston.log('info', 'filter decrypted:', transformed)
-  return transformed
-}
 
 function authenticationFilter (data, connection) {
   winston.log('info', 'auth filter, data:', data, connection.user)
@@ -26,6 +18,5 @@ function authenticationFilter (data, connection) {
 }
 
 module.exports = {
-  decryptParticipantFilter: decryptParticipantFilter,
   authenticationFilter: authenticationFilter
 }

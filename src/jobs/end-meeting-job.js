@@ -61,7 +61,7 @@ var maybeEndMeeting = function (context, passedApp) {
   var app = passedApp === undefined ? scope.app : passedApp
   if (context.meetingShouldEnd) {
     winston.log('info', 'meetingShouldEnd', context.meeting)
-    return app.service('meetings').patch(context.meeting, {participants: []})
+    return app.service('meetings').patch(context.meeting, {participants: [], active: false})
               .then((patchedMeeting) => {
                 winston.log('info', 'patched meeting:', patchedMeeting)
                 return patchedMeeting.participants.length === 0 &&

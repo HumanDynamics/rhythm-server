@@ -4,7 +4,7 @@ const globalHooks = require('../../../hooks')
 const authHooks = require('feathers-authentication').hooks
 
 exports.before = {
-  all: [authHooks.verifyToken(), globalHooks.encryptHook(['participant'])],
+  all: [authHooks.verifyToken()],
   find: [],
   get: [],
   create: [],
@@ -14,7 +14,7 @@ exports.before = {
 }
 
 exports.after = {
-  all: [globalHooks.decryptHook(['participant'])],
+  all: [],
   find: [],
   get: [],
   create: [],
