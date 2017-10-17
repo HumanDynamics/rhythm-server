@@ -1,7 +1,6 @@
 'use strict'
 
 // Any filters that are shared across services are here
-// decrypts data being sent out to users on service events.
 
 const winston = require('winston')
 const helpers = require('../helpers')

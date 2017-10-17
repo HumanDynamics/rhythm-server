@@ -24,6 +24,5 @@ module.exports = function () {
   // Set up our after hooks
   utteranceService.after(hooks.after)
 
-  utteranceService.filter(globalFilters.decryptParticipantFilter)
   utteranceService.filter(globalFilters.authenticationFilter)
 }
