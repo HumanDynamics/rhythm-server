@@ -1,6 +1,5 @@
 'use strict'
 
-const globalHooks = require('../../../hooks')
 const authHooks = require('feathers-authentication').hooks
 
 exports.before = {

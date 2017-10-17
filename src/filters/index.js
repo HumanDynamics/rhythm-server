@@ -3,9 +3,6 @@
 // Any filters that are shared across services are here
 
 const winston = require('winston')
-const helpers = require('../helpers')
-const transformKeys = helpers.transformKeys
-
 
 function authenticationFilter (data, connection) {
   winston.log('info', 'auth filter, data:', data, connection.user)

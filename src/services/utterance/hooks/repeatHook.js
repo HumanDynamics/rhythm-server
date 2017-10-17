@@ -16,17 +16,14 @@ exports.hook = function (hook) {
       var timeMatchThreshold = 1 * 1000 // threshold for times being "matched", in ms
       // there are some talk events from this participant
       // filter them, find if any are very close:
-      winston.log("info", "utterances found: " + foundUtterances.length);
+      // TODO this also seems expensive if there are many utterances in a meeting
+      winston.log('info', 'utterances found: ' + foundUtterances.length)
       var matches = _.filter(foundUtterances,
                              function (utterance) {
                                var startDiff = dateDiff(utterance.startTime,
                                                           hook.data.startTime)
                                var endDiff = dateDiff(utterance.endTime,
                                                         hook.data.endTime)
-                               console.log(startDiff);
-                               console.log(utterance.startTime);
-                               console.log(hook.data.startTime);
-                               console.log(utterance.endTime);
                                return (startDiff < timeMatchThreshold ||
                                        endDiff < timeMatchThreshold)
                              })
@@ -34,7 +31,7 @@ exports.hook = function (hook) {
         winston.log('info', 'Inserting new talking history data, not a repeat...')
         return hook
       } else {
-        //TODO i think it's worth considering if we should merge the speaking events
+        // TODO i think it's worth considering if we should merge the speaking events
         // instead of just dropping them
         // what if i take a one second pause during my turn?
         winston.log('info', 'Tried to insert repeat talking history data! Nuh-Uh')

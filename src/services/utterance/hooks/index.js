@@ -1,6 +1,5 @@
 'use strict'
 
-const globalHooks = require('../../../hooks')
 const repeatHook = require('./repeatHook').hook
 const participantConsentedHook = require('./participant-consented-hook')
 const authHooks = require('feathers-authentication').hooks

@@ -1,6 +1,5 @@
 'use strict'
 
-const globalHooks = require('../../../hooks')
 const computeTurnHook = require('./compute-turn-hook')
 const activateMeetingHook = require('./activate-meeting-hook')
 const deactivateMeetingHook = require('./deactivate-meeting-hook')
