@@ -20,6 +20,7 @@ function getOrCreateParticipant (data, app) {
               return app.service('participants').create({
                 _id: data.participant,
                 name: data.name,
+                email: data.email,
                 consent: data.consent || false,
                 locale: data.locale,
                 consentDate: data.consentDate || null,

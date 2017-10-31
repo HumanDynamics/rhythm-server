@@ -70,25 +70,12 @@ function getReportData (hook, callback) {
           meanLengthUtterances: participantId in meanLengthUtterances ? meanLengthUtterances[ participantId ] : 0
         }
       })
-      // get mapping between google id and addresses
-      request.get(process.env.MAPPING_URL, function (error, response, body) {
-        // {'_id': address, ...}
-        var mapping = {}
-        if (!error && response.statusCode === 200) {
-          var rows = body.split('\n')
-          for (var i = 0; i < rows.length; i++) {
-            var cols = rows[ i ].split(',')
-            mapping[ String(cols[ 0 ]) ] = cols[ 1 ]
-          }
-        }
-        // [address, ...]
-        var addresses = validParticipants.map((participant) => {
-          return mapping[ participant[ '_id' ] ]
-        })
-        callback(visualizationData, addresses)
-      }).catch(function (error) {
-        winston.log('info', '[getReportData] error: ', error)
+
+      addresses = validParticipants.map((participant) => {
+        return participant['email']
       })
+
+      callback(visualizationData, addresses)
     })
   })
 }
