@@ -5,7 +5,6 @@ const assert = require('assert')
 const _ = require('underscore')
 const helpers = require('../../src/helpers')
 
-
 describe('json transform', function () {
   it('should transform shallow values of a json object', function (done) {
     var obj = {

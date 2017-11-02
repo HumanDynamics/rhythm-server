@@ -103,7 +103,7 @@ var startMonitoringMeetings = function (app) {
     return false
   } else {
     winston.log('info', '[end-meeting-job] Starting to monitor meetings...')
-    pid = setInterval(monitorMeetings, CHECK_END_INTERVAL* 60 * 1000)
+    pid = setInterval(monitorMeetings, CHECK_END_INTERVAL * 60 * 1000)
   }
 }
 

@@ -13,7 +13,7 @@ exports.hook = function (hook) {
                {participant: hook.data.participant}]
       }
     }).then((foundUtterances) => {
-      var timeMatchThreshold = 1 * 1000 // threshold for times being "matched", in ms
+      var timeMatchThreshold = 1.5 * 1000 // threshold for times being "matched", in ms
       // there are some talk events from this participant
       // filter them, find if any are very close:
       // TODO this also seems expensive if there are many utterances in a meeting
@@ -31,9 +31,9 @@ exports.hook = function (hook) {
         winston.log('info', 'Inserting new talking history data, not a repeat...')
         return hook
       } else {
-        // TODO i think it's worth considering if we should merge the speaking events
-        // instead of just dropping them
-        // what if i take a one second pause during my turn?
+        // TODO what if i speak for one second, pause for half a second,
+        // then start speaking again
+        // is that entire next utterance dropped?
         winston.log('info', 'Tried to insert repeat talking history data! Nuh-Uh')
         hook.data = {}
         return hook

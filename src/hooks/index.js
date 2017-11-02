@@ -6,7 +6,6 @@
 // see http://docs.feathersjs.com/hooks/readme.html for more details
 // on hooks.
 
-
 module.exports = {
 }
 

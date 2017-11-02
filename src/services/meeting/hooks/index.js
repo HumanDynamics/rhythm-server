@@ -22,11 +22,12 @@ function updateTime (hook) {
 
 exports.before = {
   all: [authHooks.verifyToken()],
-  create: [addStartTime, activateMeetingHook ],
+  create: [addStartTime, activateMeetingHook],
   find: [extractUnstructuredQueryHook],
-  update: [updateTime ],
+  update: [updateTime],
   patch: [updateTime, activateMeetingHook,
-          deactivateMeetingHook, addParticipantHook ],
+          deactivateMeetingHook, removeParticipantsHook,
+          addParticipantHook],
   get: []
 }
 

@@ -42,6 +42,7 @@ function getOrCreateMeeting (obj) {
   var app = obj.app
   var participantIds = _.pluck(data.participants, 'participant')
   console.log('participantIds', participantIds)
+  winston.log('info', 'meeting meta: ', data.meta)
   var meta = (_.has(data, 'meta') && data.meta !== undefined) ? data.meta : '{}'
   app.service('meetings').get(data.meeting)
                .then((meeting) => {
