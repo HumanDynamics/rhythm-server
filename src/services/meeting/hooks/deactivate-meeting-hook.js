@@ -20,6 +20,7 @@ function shouldMakeMeetingInactive (newParticipants, meetingObject) {
 
 function reportMeeting (hook) {
   getReportData(hook, (visualizationData, addresses) => {
+    winston.log('info', "calling sendReport")
     sendReport(createVisualization(visualizationData), addresses)
   })
 }
@@ -31,15 +32,22 @@ function getReportData (hook, callback) {
   if (hook.id === Object(hook.id)) {
     meetingId = hook.id._id
   }
+  winston.log('info', "Generating report for meeting: ", meetingId)
+  //TODO unless im misinterpreting this.... this is querying for all
+  // participants (up to 1000), and then filtering on the results?
+  // can we not query participants by meeting involvement?
+  // at any rate, this fails if we have > 1000 users, no?
+  // not that i really expect to see > 1000 users, but... 
   return hook.app.service('participants').find({
     query: {
       $limit: 1000,
-      $select: [ '_id', 'name', 'meetings' ]
+      $select: [ '_id', 'email', 'name', 'meetings' ]
     }
   }).then((participants) => {
     var validParticipants = _.filter(participants.data, (participant) => {
       return _.contains(participant.meetings, meetingId)
     })
+    winston.log('info', "generating report for participants", _.map(validParticipants, (part) => part._id))
     // find utterances
     hook.app.service('utterances').find({
       query: {
@@ -70,11 +78,12 @@ function getReportData (hook, callback) {
           meanLengthUtterances: participantId in meanLengthUtterances ? meanLengthUtterances[ participantId ] : 0
         }
       })
+      winston.log('info', "getting addresses...")
 
-      addresses = validParticipants.map((participant) => {
+      var addresses = validParticipants.map((participant) => {
         return participant['email']
       })
-
+      winston.log('info', 'calling callback...')
       callback(visualizationData, addresses)
     })
   })
@@ -211,7 +220,7 @@ function createVisualization (visualizationData) {
 }
 
 function sendReport (visualization, addresses) {
-  winston.log('info', 'Sending report...')
+  winston.log('info', 'Sending report to addresses: ', addresses)
   // TODO change SMTP configurations
   // define SMTP configurations
   var smtpConfig = {
@@ -241,8 +250,10 @@ function sendReport (visualization, addresses) {
   // send email with transporter object
   transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
+      winston.log('error', error)
       return console.log('[sendReport] error: ' + error)
     }
+    winston.log('info', 'Report was sent', info.response)
     return console.log('Report was sent: ' + info.response)
   })
 }

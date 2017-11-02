@@ -6,7 +6,9 @@ var Promise = require('promise')
 const winston = require('winston')
 const _ = require('underscore')
 
-const MAX_TIME_SINCE_LAST_UTTERANCE = 5 * 60 * 1000
+const MINUTE = 60 * 1000
+const CHECK_END_INTERVAL = 0.1
+const MAX_TIME_SINCE_LAST_UTTERANCE = Number(process.env.END_MEETING_AFTER_MINUTES) * MINUTE
 var pid = null
 var scope = {}
 
@@ -26,7 +28,7 @@ var getActiveMeetings = function () {
 
 // returns an object that indicates whether the given meeting should be ended.
 var isMeetingEnded = function (meeting, passedApp) {
-  winston.log('info', 'isMeetingEnded', meeting)
+  winston.log('info', 'isMeetingEnded', meeting._id)
   var app = passedApp === undefined ? scope.app : passedApp
   return app.service('utterances').find({
     query: {
@@ -60,10 +62,10 @@ var isMeetingEnded = function (meeting, passedApp) {
 var maybeEndMeeting = function (context, passedApp) {
   var app = passedApp === undefined ? scope.app : passedApp
   if (context.meetingShouldEnd) {
-    winston.log('info', 'meetingShouldEnd', context.meeting)
+    winston.log('info', 'meetingShouldEnd', context.meeting._id)
     return app.service('meetings').patch(context.meeting, {participants: [], active: false})
               .then((patchedMeeting) => {
-                winston.log('info', 'patched meeting:', patchedMeeting)
+                winston.log('info', 'patched meeting w/ id: ', patchedMeeting._id)
                 return patchedMeeting.participants.length === 0 &&
                        patchedMeeting.active === false
               }).catch((err) => {
@@ -101,7 +103,7 @@ var startMonitoringMeetings = function (app) {
     return false
   } else {
     winston.log('info', '[end-meeting-job] Starting to monitor meetings...')
-    pid = setInterval(monitorMeetings, 1 * 60 * 1000)
+    pid = setInterval(monitorMeetings, CHECK_END_INTERVAL* 60 * 1000)
   }
 }
 
