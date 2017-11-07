@@ -29,18 +29,18 @@ var getActiveMeetings = function () {
 // returns an object that indicates whether the given meeting should be ended.
 var isMeetingEnded = function (meeting, passedApp) {
   // TODO make this return true/false instead of an object
-  winston.log('info', 'isMeetingEnded', meeting._id)
+  winston.log('info', 'isMeetingEnded', meeting)
   var app = passedApp === undefined ? scope.app : passedApp
   return app.service('utterances').find({
     query: {
-      meeting: meeting._id,
+      meeting: meeting,
       $sort: {endTime: -1},
       $limit: 1
     }
   }).then((lastUtterances) => {
     var waitFor
     if (lastUtterances.length === 0) {
-      waitFor = app.service('meetings').get(meeting._id).then((meetingObject) => {
+      waitFor = app.service('meetings').get(meeting).then((meetingObject) => {
         return (new Date().getTime() - new Date(meetingObject.startTime).getTime())
       })
     } else {
