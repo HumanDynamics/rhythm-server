@@ -6,10 +6,6 @@
 // see http://docs.feathersjs.com/hooks/readme.html for more details
 // on hooks.
 
-const cryptoHooks = require('./crypto-hooks')
-
 module.exports = {
-  encryptHook: cryptoHooks.encrypt,
-  decryptHook: cryptoHooks.decrypt
 }
 

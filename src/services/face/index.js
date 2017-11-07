@@ -24,6 +24,5 @@ module.exports = function () {
   // Set up our after hooks
   faceService.after(hooks.after)
 
-  faceService.filter(globalFilters.decryptParticipantFilter)
   faceService.filter(globalFilters.authenticationFilter)
 }

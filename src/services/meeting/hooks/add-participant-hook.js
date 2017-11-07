@@ -25,7 +25,7 @@ module.exports = function (hook) {
           return hook
         })
   } else {
-    winston.log('info', 'not adding participant:', hook.data, hook.id)
+    winston.log('info', 'not adding participant:')
     return hook
   }
 }

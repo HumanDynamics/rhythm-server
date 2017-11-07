@@ -9,7 +9,8 @@ module.exports = function () {
   const app = this
 
   const options = {
-    Model: meeting
+    Model: meeting,
+    lean: true
   }
 
   app.use('/meetings', service(options))

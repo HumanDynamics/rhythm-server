@@ -1,6 +1,5 @@
 'use strict'
 
-const globalHooks = require('../../../hooks')
 const computeTurnHook = require('./compute-turn-hook')
 const activateMeetingHook = require('./activate-meeting-hook')
 const deactivateMeetingHook = require('./deactivate-meeting-hook')
@@ -23,19 +22,19 @@ function updateTime (hook) {
 
 exports.before = {
   all: [authHooks.verifyToken()],
-  create: [addStartTime, activateMeetingHook, globalHooks.encryptHook(['participants'])],
-  find: [globalHooks.encryptHook(['participants']), extractUnstructuredQueryHook],
-  update: [updateTime, globalHooks.encryptHook(['participants'])],
+  create: [addStartTime, activateMeetingHook],
+  find: [extractUnstructuredQueryHook],
+  update: [updateTime],
   patch: [updateTime, activateMeetingHook,
-          deactivateMeetingHook, removeParticipantsHook, addParticipantHook,
-          globalHooks.encryptHook(['participants'])],
-  get: [globalHooks.encryptHook(['participants'])]
+          deactivateMeetingHook, removeParticipantsHook,
+          addParticipantHook],
+  get: []
 }
 
 exports.after = {
   create: [computeTurnHook, participantsEventHook],
   update: [computeTurnHook],
   patch: [computeTurnHook, participantsEventHook],
-  all: [globalHooks.decryptHook(['participants'])],
+  all: [],
   find: [applyUnstructuredQueryHook]
 }

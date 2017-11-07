@@ -28,7 +28,5 @@ module.exports = function () {
   // Set up our after hooks
   participantService.after(hooks.after)
 
-  participantService.filter(globalFilters.decryptParticipantFilter)
-
   participantService.filter(globalFilters.authenticationFilter)
 }
