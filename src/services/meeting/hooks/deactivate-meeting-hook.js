@@ -131,7 +131,7 @@ function createVisualization (visualizationData) {
     .attr('y', -15)
     .attr('dy', '.71em')
     .style('text-anchor', 'end')
-    .text('Avg. Length of Turns (in seconds))')
+    .text('Avg. Length of Turns (in seconds)')
 
   // draw the y axis
   var yAxis = d3.svg.axis()
@@ -168,6 +168,7 @@ function createVisualization (visualizationData) {
     .text(function (d) { return d.name })
 
   // create html file
+  // TODO pull this out to a file or smth
   var htmlStyle = '<style>\n' +
     'body {\n' +
     'font-family: "Helvetica", "Arial", sans-serif;\n' +
@@ -207,8 +208,12 @@ function createVisualization (visualizationData) {
     '</style>\n'
   var htmlBody = '<body>\n' +
         '<h1>Your Meeting: Turns Taken</h1>\n' +
-        '<p>We count a "turn" any time you speak for more than around a second. The most creative and productive teams might have their dots clumped near each other, showing that they have all contributed somewhat equally.</p>\n' +
         d3.select(document.body).node().innerHTML + '\n' +
+        '<h3> Interpreting this graph:</h3>\n' +
+        '<p> For reference, we define a "turn" as a person speaking for about one second.\n' +
+        'If the dots representing the members of your team are clustered together, this usually indicates that people have all contributed somewhat equally to the discussion.\n' +
+        'If the dots representing the members of your team are widely distributed on the graph, this may indicate unequal participation in the discussion.\n' +
+        'In general, the most effective teams, exhibiting productivity and creativity, have members who participate relatively equally in discussions.</p>\n' +
     '</body>'
   var html = '<!DOCTYPE html>\n' +
     '<meta charset="utf-8">\n' +

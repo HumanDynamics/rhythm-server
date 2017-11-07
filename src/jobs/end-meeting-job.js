@@ -21,25 +21,26 @@ var getActiveMeetings = function () {
   }).then((meetings) => {
     return meetings
   }).catch((err) => {
-    winston.log('error', 'Couldnt find all active meetings:', err)
+    winston.log('error', 'Couldnt find any active meetings:', err)
     return []
   })
 }
 
 // returns an object that indicates whether the given meeting should be ended.
 var isMeetingEnded = function (meeting, passedApp) {
+  // TODO make this return true/false instead of an object
   winston.log('info', 'isMeetingEnded', meeting._id)
   var app = passedApp === undefined ? scope.app : passedApp
   return app.service('utterances').find({
     query: {
-      meeting: meeting,
+      meeting: meeting._id,
       $sort: {endTime: -1},
       $limit: 1
     }
   }).then((lastUtterances) => {
     var waitFor
     if (lastUtterances.length === 0) {
-      waitFor = app.service('meetings').get(meeting).then((meetingObject) => {
+      waitFor = app.service('meetings').get(meeting._id).then((meetingObject) => {
         return (new Date().getTime() - new Date(meetingObject.startTime).getTime())
       })
     } else {
@@ -54,6 +55,8 @@ var isMeetingEnded = function (meeting, passedApp) {
     })
   }).catch((err) => {
     winston.log('error', 'Couldnt find last utterance:', err)
+    // TODO maybe this is why meetings end if you havent spoken yet
+    // despite the requisite elapsed time not passing
     return {meetingShouldEnd: true,
             meeting: meeting}
   })
@@ -62,7 +65,7 @@ var isMeetingEnded = function (meeting, passedApp) {
 var maybeEndMeeting = function (context, passedApp) {
   var app = passedApp === undefined ? scope.app : passedApp
   if (context.meetingShouldEnd) {
-    winston.log('info', 'meetingShouldEnd', context.meeting._id)
+    winston.log('info', 'meetingShouldEnd', JSON.stringify(context.meeting))
     return app.service('meetings').patch(context.meeting, {participants: [], active: false})
               .then((patchedMeeting) => {
                 winston.log('info', 'patched meeting w/ id: ', patchedMeeting._id)
@@ -83,6 +86,10 @@ var endInactiveMeetings = function (meetings, passedApp) {
      } */
   var app = passedApp === undefined ? scope.app : passedApp
   return Promise.all(_.map(meetings, (meeting) => {
+    // TODO why don't we close over meeting arg here instead of returning an object
+    // along that includes the meeting object?
+    // maybe i'm missing something somewhere else? need to check all invocations
+    // of isMeetingEnded
     return isMeetingEnded(meeting, app).then((meetingEnded) => { return maybeEndMeeting(meetingEnded, app) })
   }))
 }
