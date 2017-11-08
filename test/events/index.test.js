@@ -9,7 +9,7 @@ const io = require('socket.io-client')
 describe('meeting joined event', function (done) {
   var fakeJoinedEvent = {
     participant: 'joinedParticipantId',
-    meeting: 'meetingName',
+    room: 'roomName',
     name: 'fakeParticipantName'
   }
 
@@ -23,26 +23,36 @@ describe('meeting joined event', function (done) {
     ]
   })
 
+  var deactivateMeetings = function (room) {
+    global.app.service('meetings').find({ query: { room: fakeJoinedEvent.room } }).then((meetings) => {
+      meetings.forEach((meeting) => {
+        let id = meeting._id
+        global.app.service('meetings').patch(id, {
+          active: false
+        }).then((meeting) => {
+          winston.log('info', 'meeting deactivated', meeting)
+        }).catch((err) => {
+          done(err)
+        })
+      })
+    })
+  }
+
   before(function (done) {
     dropDatabase().then(() => {
       socket.emit('meetingJoined', fakeJoinedEvent)
-      done()
+      setTimeout(() => { deactivateMeetings(fakeJoinedEvent.room) }, 300)
+      setTimeout(() => { socket.emit('meetingJoined', fakeJoinedEvent) }, 400)
+      setTimeout(() => { done() }, 500)
     }).catch((err) => { done(err) })
   })
 
   after(function (done) {
-    global.app.service('meetings').patch('meetingName', {
-      active: false
-    }).then((meeting) => {
-      done()
-    }).catch((err) => {
-      done(err)
-    })
+    deactivateMeetings(fakeJoinedEvent.room)
+    done()
   })
 
   it('creates a participant & meeting when they join for the first time', function (done) {
-    this.timeout(2000)
-
     setTimeout(function () {
       global.app.service('participants').get(fakeJoinedEvent.participant)
             .then(function (participant) {
@@ -56,5 +66,19 @@ describe('meeting joined event', function (done) {
               done(err)
             })
     }, 1500)
+  })
+
+  it('creates a meeting based on group name', function (done) {
+    global.app.service('meetings').find().then((meetings) => {
+      assert(meetings.length === 2)
+      assert(meetings[0].active !== meetings[1].active)
+      meetings.forEach((meeting) => {
+        assert(meeting.room === fakeJoinedEvent.room)
+        assert(meeting._id.startsWith(fakeJoinedEvent.room))
+      })
+    }).catch((err) => {
+      done(err)
+    })
+    done()
   })
 })
