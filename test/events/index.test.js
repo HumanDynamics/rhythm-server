@@ -41,9 +41,9 @@ describe('meeting joined event', function (done) {
   before(function (done) {
     dropDatabase().then(() => {
       socket.emit('meetingJoined', fakeJoinedEvent)
-      setTimeout(() => { deactivateMeetings(fakeJoinedEvent.room) }, 200)
-      setTimeout(() => { socket.emit('meetingJoined', fakeJoinedEvent) }, 100)
-      done()
+      setTimeout(() => { deactivateMeetings(fakeJoinedEvent.room) }, 300)
+      setTimeout(() => { socket.emit('meetingJoined', fakeJoinedEvent) }, 400)
+      setTimeout(() => { done() }, 500)
     }).catch((err) => { done(err) })
   })
 
@@ -70,7 +70,6 @@ describe('meeting joined event', function (done) {
 
   it('creates a meeting based on group name', function (done) {
     global.app.service('meetings').find().then((meetings) => {
-      winston.log('info', 'LOOK AT ME DEBUG', JSON.stringify(meetings))
       assert(meetings.length === 2)
       assert(meetings[0].active !== meetings[1].active)
       meetings.forEach((meeting) => {

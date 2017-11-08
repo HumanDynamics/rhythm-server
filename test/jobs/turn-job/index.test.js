@@ -92,6 +92,11 @@ describe('turn job hook', () => {
 describe('turn computation', function (done) {
   before(function (done) {
     var testUtterancePromises = _.map(testUtterances, (utteranceObj) => {
+      // this is done out of order sometimes, which causes a test to fail.
+      // adding this log statement both for more clarity and in
+      // the hope of it slowing things down juuuuuust enough
+      // to prevent overlapping utterance creation
+      winston.log('info', 'creating utterance ', utteranceObj)
       return global.app.service('utterances').create(utteranceObj, {})
     })
     Promise.all(testUtterancePromises)
