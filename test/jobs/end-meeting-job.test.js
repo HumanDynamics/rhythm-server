@@ -12,8 +12,8 @@ var n = 0
 var meetingId = null
 
 function createMeetingAndUtterances (testName, ended, hasUtterances, done) {
-  var d1 = null
-  var d2 = null
+  let d1 = null
+  let d2 = null
   if (ended) {
     d1 = (new Date()).getTime() - 10 * 60 * 1000
     d2 = new Date(d1 + 1 * 60 * 1000)
@@ -24,19 +24,19 @@ function createMeetingAndUtterances (testName, ended, hasUtterances, done) {
 
   var testParticipants = [
     {
-      _id: testName + '-participant-' + n,
+      _id: testName + '-participant1-' + n,
       consent: true,
-      name: testName + '-participant-' + n
+      name: testName + '-participant1-' + n
     },
     {
-      _id: testName + '-participant-' + n,
+      _id: testName + '-participant2-' + n,
       consent: true,
-      name: testName + '-participant-' + n
+      name: testName + '-participant2-' + n
     },
     {
-      _id: testName + '-participant-' + n,
+      _id: testName + '-participant3-' + n,
       consent: true,
-      name: testName + '-participant-' + n
+      name: testName + '-participant3-' + n
     }
   ]
 
@@ -53,20 +53,19 @@ function createMeetingAndUtterances (testName, ended, hasUtterances, done) {
   global.app.service('meetings').create(testMeeting)
      .then(function (meeting) {
        _.each(testParticipants, function (participant, i, list) {
-         global.app.service('participants').create(participant)
+         global.app.service('participants').create(participant).then(() => {})
        })
        return testParticipants
      }).then(function (participants) {
        if (!hasUtterances) {
          return
        }
-       return global.app.service('utterances').create(
-         {
-           meeting: testMeeting._id,
-           startTime: d1,
-           endTime: d2,
-           participant: testParticipants[0]._id
-         })
+       return global.app.service('utterances').create({
+         meeting: testMeeting._id,
+         startTime: d1,
+         endTime: d2,
+         participant: testParticipants[0]._id
+       })
      }).then(function (utterance) {
        if (done !== undefined) {
          done()

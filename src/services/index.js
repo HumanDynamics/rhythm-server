@@ -18,8 +18,8 @@ module.exports = function () {
 
   let options = {
     server: {sslCA: process.env.MONGO_CERT,
-             auto_reconnect: true,
-             poolSize: 5}
+      auto_reconnect: true,
+      poolSize: 5}
   }
 
   mongoose.connect(process.env.MONGODB_URI, options)

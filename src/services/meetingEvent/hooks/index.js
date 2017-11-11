@@ -21,4 +21,3 @@ exports.after = {
   patch: [],
   remove: []
 }
-

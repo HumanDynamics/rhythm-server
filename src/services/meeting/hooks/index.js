@@ -26,8 +26,8 @@ exports.before = {
   find: [extractUnstructuredQueryHook],
   update: [updateTime],
   patch: [updateTime, activateMeetingHook,
-          deactivateMeetingHook, removeParticipantsHook,
-          addParticipantHook],
+    deactivateMeetingHook, removeParticipantsHook,
+    addParticipantHook],
   get: []
 }
 

@@ -1,6 +1,7 @@
 'use strict'
 
 const repeatHook = require('./repeatHook').hook
+const roomHook = require('./roomHook').hook
 const participantConsentedHook = require('./participant-consented-hook')
 const authHooks = require('feathers-authentication').hooks
 
@@ -8,7 +9,7 @@ exports.before = {
   all: [authHooks.verifyToken()],
   find: [],
   get: [],
-  create: [participantConsentedHook, repeatHook],
+  create: [roomHook, participantConsentedHook, repeatHook],
   update: [],
   patch: [],
   remove: []

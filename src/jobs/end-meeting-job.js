@@ -44,6 +44,7 @@ var isMeetingEnded = function (meeting, passedApp) {
         return (new Date().getTime() - new Date(meetingObject.startTime).getTime())
       })
     } else {
+      winston.log('info', 'last utterances', lastUtterances)
       waitFor = Promise.resolve(new Date().getTime() - new Date(lastUtterances[0].endTime).getTime())
     }
     return waitFor.then((elapsedTime) => {
@@ -51,14 +52,14 @@ var isMeetingEnded = function (meeting, passedApp) {
       winston.log('info', 'should end?:', elapsedTime, MAX_TIME_SINCE_LAST_UTTERANCE)
       winston.log('info', 'should end?:', elapsedTime > MAX_TIME_SINCE_LAST_UTTERANCE)
       return {meetingShouldEnd: meetingShouldEnd,
-              meeting: meeting}
+        meeting: meeting}
     })
   }).catch((err) => {
     winston.log('error', 'Couldnt find last utterance:', err)
     // TODO maybe this is why meetings end if you havent spoken yet
     // despite the requisite elapsed time not passing
     return {meetingShouldEnd: true,
-            meeting: meeting}
+      meeting: meeting}
   })
 }
 

@@ -14,4 +14,3 @@ module.exports = function () {
   app.use(logger(app))
   app.use(handler())
 }
-
