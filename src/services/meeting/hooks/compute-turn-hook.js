@@ -17,8 +17,8 @@ function shouldStopJob (meetingObject) {
 
 module.exports = function (hook) {
   if (shouldStartJob(hook.result)) {
-    turnJob.startJob(hook.app, hook.result._id)
+    turnJob.startJob(hook.app, hook.result)
   } else if (shouldStopJob(hook.result)) {
-    turnJob.stopJob(hook.result._id)
+    turnJob.stopJob(hook.result)
   }
 }

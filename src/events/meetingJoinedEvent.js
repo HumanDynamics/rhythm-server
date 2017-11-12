@@ -9,7 +9,7 @@ function addParticipantToMeeting (app, participant, meeting) {
   return app.service('meetings').get(meeting).then((meeting) => {
     // now patch the meeting to include the participant
     winston.log('info', 'patching meeting: ', meeting)
-    winston.log('info', 'adding participant to meeting: ', participant)
+    winston.log('info', 'adding participant to meeting: ', participant._id)
     var parts = meeting.participants || []
     return app.service('meetings').patch(meeting, {
       participants: _.uniq(parts.concat([participant._id]))
@@ -43,7 +43,7 @@ function getOrCreateParticipant (obj) {
         consentDate: data.consentDate || null,
         meetings: [data.meeting]
       }).then((participant) => {
-        winston.log('info', 'created a new participant', participant)
+        winston.log('info', 'created a new participant', participant._id)
         return addParticipantToMeeting(app, participant, data.meeting)
       }).catch((err) => {
         winston.log('info', 'couldnt make a new participant', err)
@@ -87,7 +87,7 @@ function getOrCreateMeeting (data, app) {
             meetingUrl: data.meetingUrl,
             meta: JSON.parse(meta)
           }).then((meeting) => {
-            winston.log('info', 'new meeting created', meeting)
+            winston.log('info', 'new meeting created', meeting._id)
             data.meeting = meeting._id
             return { data: data, app: app }
           }).catch((err) => {

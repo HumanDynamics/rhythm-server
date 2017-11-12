@@ -32,6 +32,7 @@ var testParticipants = [
 
 var testMeeting = {
   _id: 'turn-job-meeting-0',
+  room: 'turn-job',
   participants: ['p1a', 'p2a', 'p3a'],
   startTime: Faker.Date.recent(),
   active: true
@@ -73,14 +74,15 @@ describe('turn job hook', () => {
         return global.app.service('participants').create(p)
       })
       Promise.all(participantCreatePromises)
-                                       .then((participants) => { done() })
-                                       .catch((err) => { done(err) })
+        .then((participants) => { done() })
+        .catch((err) => { done(err) })
     })
   })
 
   it('started computing turns when a meeting was created', (done) => {
     global.app.service('meetings').create(testMeeting)
           .then((meeting) => {
+            winston.log('info', 'meeting compute created', meeting)
             assert(_.has(turnJob.processList, meeting._id))
             done()
           }).catch((err) => {
@@ -106,7 +108,7 @@ describe('turn computation', function (done) {
 
   it('correctly computed turns from utterance data', function (done) {
     this.timeout(6000)
-    turnAnalytics.computeTurns(global.app, testMeeting._id, startTime, new Date())
+    turnAnalytics.computeTurns(global.app, testMeeting, startTime, new Date())
     setTimeout(function () {
       global.app.service('turns').find({
         query: {

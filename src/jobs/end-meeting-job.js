@@ -44,7 +44,6 @@ var isMeetingEnded = function (meeting, passedApp) {
         return (new Date().getTime() - new Date(meetingObject.startTime).getTime())
       })
     } else {
-      winston.log('info', 'last utterances', lastUtterances)
       waitFor = Promise.resolve(new Date().getTime() - new Date(lastUtterances[0].endTime).getTime())
     }
     return waitFor.then((elapsedTime) => {
