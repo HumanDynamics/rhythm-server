@@ -34,7 +34,7 @@ exports.hook = function (hook) {
         // TODO what if i speak for one second, pause for half a second,
         // then start speaking again
         // is that entire next utterance dropped?
-        winston.log('info', 'Tried to insert repeat talking history data! Nuh-Uh')
+        winston.log('info', 'Tried to insert repeat talking history data! Nuh-Uh', matches, hook.data)
         hook.data = {}
         return hook
       }
