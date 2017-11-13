@@ -57,7 +57,7 @@ describe('utterance service', () => {
     dropDatabase().then(() => {
       socket.emit('meetingJoined', fakeJoinedEvent)
       socket.disconnect()
-      setTimeout(() => { done() }, 200)
+      setTimeout(() => { done() }, 400)
     }).catch((err) => { done(err) })
   })
 

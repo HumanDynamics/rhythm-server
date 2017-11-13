@@ -27,9 +27,11 @@ function getOrCreateParticipant (obj) {
   return app.service('participants').get(data.participant)
     .then((participant) => {
       // participant already exists
+      let email = participant.email || data.participant.email
       return app.service('participants')
         .patch(participant._id, {
-          meetings: _.uniq(participant.meetings.concat([data.meeting]))
+          meetings: _.uniq(participant.meetings.concat([data.meeting])),
+          email: email
         }).then((participant) => {
           return addParticipantToMeeting(app, participant, data.meeting)
         })
