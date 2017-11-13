@@ -44,8 +44,8 @@ describe('meeting joined event', function (done) {
     dropDatabase().then(() => {
       socket.emit('meetingJoined', fakeJoinedEvent)
       setTimeout(() => { deactivateMeetings(fakeJoinedEvent.room) }, 400)
-      setTimeout(() => { socket.emit('meetingJoined', fakeJoinedEvent) }, 600)
-      setTimeout(() => { done() }, 700)
+      setTimeout(() => { socket.emit('meetingJoined', fakeJoinedEvent) }, 800)
+      setTimeout(() => { done() }, 1200)
     }).catch((err) => { done(err) })
   })
 
