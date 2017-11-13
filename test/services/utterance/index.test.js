@@ -61,7 +61,7 @@ describe('utterance service', () => {
     }).catch((err) => { done(err) })
   })
 
-  after(function(done) {
+  after(function (done) {
     dropDatabase().then(() => { done() })
   })
 
@@ -112,10 +112,8 @@ describe('utterance service', () => {
       }).catch((err) => {
         done(err)
       })
-
     }).catch((err) => {
       done(err)
     })
   })
-
 })
