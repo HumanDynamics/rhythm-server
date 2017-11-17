@@ -5,21 +5,6 @@ const assert = require('assert')
 const _ = require('underscore')
 const helpers = require('../../src/helpers')
 
-describe('encryption functions', function () {
-  var encrypted = null
-  var data = 'encrypt-me'
-  it('should encrypt arbitrary text', function (done) {
-    encrypted = helpers.crypto.encrypt(data)
-    assert(encrypted !== data)
-    done()
-  })
-
-  it('should decrypt encrypted text', function (done) {
-    assert(helpers.crypto.decrypt(encrypted) === data)
-    done()
-  })
-})
-
 describe('json transform', function () {
   it('should transform shallow values of a json object', function (done) {
     var obj = {

@@ -6,7 +6,9 @@ var Promise = require('promise')
 const winston = require('winston')
 const _ = require('underscore')
 
-const MAX_TIME_SINCE_LAST_UTTERANCE = 5 * 60 * 1000
+const MINUTE = 60 * 1000
+const CHECK_END_INTERVAL = 0.1
+const MAX_TIME_SINCE_LAST_UTTERANCE = Number(process.env.END_MEETING_AFTER_MINUTES) * MINUTE
 var pid = null
 var scope = {}
 
@@ -19,13 +21,14 @@ var getActiveMeetings = function () {
   }).then((meetings) => {
     return meetings
   }).catch((err) => {
-    winston.log('error', 'Couldnt find all active meetings:', err)
+    winston.log('error', 'Couldnt find any active meetings:', err)
     return []
   })
 }
 
 // returns an object that indicates whether the given meeting should be ended.
 var isMeetingEnded = function (meeting, passedApp) {
+  // TODO make this return true/false instead of an object
   winston.log('info', 'isMeetingEnded', meeting)
   var app = passedApp === undefined ? scope.app : passedApp
   return app.service('utterances').find({
@@ -48,22 +51,24 @@ var isMeetingEnded = function (meeting, passedApp) {
       winston.log('info', 'should end?:', elapsedTime, MAX_TIME_SINCE_LAST_UTTERANCE)
       winston.log('info', 'should end?:', elapsedTime > MAX_TIME_SINCE_LAST_UTTERANCE)
       return {meetingShouldEnd: meetingShouldEnd,
-              meeting: meeting}
+        meeting: meeting}
     })
   }).catch((err) => {
     winston.log('error', 'Couldnt find last utterance:', err)
+    // TODO maybe this is why meetings end if you havent spoken yet
+    // despite the requisite elapsed time not passing
     return {meetingShouldEnd: true,
-            meeting: meeting}
+      meeting: meeting}
   })
 }
 
 var maybeEndMeeting = function (context, passedApp) {
   var app = passedApp === undefined ? scope.app : passedApp
   if (context.meetingShouldEnd) {
-    winston.log('info', 'meetingShouldEnd', context.meeting)
-    return app.service('meetings').patch(context.meeting, {participants: []})
+    winston.log('info', 'meetingShouldEnd', JSON.stringify(context.meeting))
+    return app.service('meetings').patch(context.meeting, {participants: [], active: false})
               .then((patchedMeeting) => {
-                winston.log('info', 'patched meeting:', patchedMeeting)
+                winston.log('info', 'patched meeting w/ id: ', patchedMeeting._id)
                 return patchedMeeting.participants.length === 0 &&
                        patchedMeeting.active === false
               }).catch((err) => {
@@ -81,6 +86,10 @@ var endInactiveMeetings = function (meetings, passedApp) {
      } */
   var app = passedApp === undefined ? scope.app : passedApp
   return Promise.all(_.map(meetings, (meeting) => {
+    // TODO why don't we close over meeting arg here instead of returning an object
+    // along that includes the meeting object?
+    // maybe i'm missing something somewhere else? need to check all invocations
+    // of isMeetingEnded
     return isMeetingEnded(meeting, app).then((meetingEnded) => { return maybeEndMeeting(meetingEnded, app) })
   }))
 }
@@ -101,7 +110,7 @@ var startMonitoringMeetings = function (app) {
     return false
   } else {
     winston.log('info', '[end-meeting-job] Starting to monitor meetings...')
-    pid = setInterval(monitorMeetings, 1 * 60 * 1000)
+    pid = setInterval(monitorMeetings, CHECK_END_INTERVAL * 60 * 1000)
   }
 }
 

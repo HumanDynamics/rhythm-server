@@ -9,7 +9,7 @@ const _ = require('underscore')
 function applyUnstructuredQuery (hook) {
   if (hook.params.meta) {
     hook.result = hook.result.filter((current) => {
-      if (_.has(current, 'meta')) {
+      if (current.meta !== undefined) {
         var match = true
         _.each(_.keys(hook.params.meta), function (key) {
           if (current.meta == null || current.meta[key] !== decodeURI(hook.params.meta[key])) {

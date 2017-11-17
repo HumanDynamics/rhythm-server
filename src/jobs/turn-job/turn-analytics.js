@@ -32,11 +32,11 @@ function getTurnTransitions (turns) {
 function computeTurns (app, meeting, from, to) {
   from = new Date(from)
   to = new Date(to)
-  winston.log('info', 'getting turn data for hangout', meeting, from, to)
+  winston.log('info', 'getting turn data for hangout', meeting._id, from, to)
 
   app.service('utterances').find({
     query: {
-      meeting: meeting,
+      meeting: meeting._id,
       // TODO: date stuff here isn't working all of a sudden.
       // should be able to do meeting AND start time.
       $and: [
@@ -71,24 +71,25 @@ function computeTurns (app, meeting, from, to) {
     var transitions = getTurnTransitions(utterances)
 
     var turnObj = {
-      _id: meeting,
-      meeting: meeting,
+      _id: meeting._id,
+      meeting: meeting._id,
+      room: meeting.room,
       turns: utteranceDistribution, // patch instead of update
       transitions: transitions, // patch instead of update
       timestamp: new Date(),
       from: from, // update, to make meetings.turn be the most updated turn in the last 5 min of that meeting (this is computed every 5 seconds)
       to: to // update
     }
-    app.service('turns').get(meeting, {}).then((turn) => {
-      app.service('turns').update(meeting, turnObj, {}).then((newTurn) => {
-        winston.log('info', 'updated turns for meeting:', meeting)
+    app.service('turns').get(meeting._id, {}).then((turn) => {
+      app.service('turns').update(meeting._id, turnObj, {}).then((newTurn) => {
+        winston.log('info', 'updated turns for meeting:', meeting._id)
       }).catch((err) => {
         winston.log('error', 'could not save turns for meeting:', turnObj, 'error:', err)
       })
     }).catch((err) => {
       winston.log('error', 'could not get turn', err)
       app.service('turns').create(turnObj, {}).then((newTurn) => {
-        winston.log('info', 'created turns for meeting:', meeting)
+        winston.log('info', 'created turns for meeting:', meeting._id)
       }).catch((err) => {
         winston.log('error', 'could not create turns for meeting:', turnObj, 'error:', err)
       })

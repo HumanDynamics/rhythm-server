@@ -10,7 +10,6 @@ const winston = require('winston')
 var d3 = require('d3')
 var jsdom = require('jsdom')
 var nodemailer = require('nodemailer')
-var request = require('request')
 
 function shouldMakeMeetingInactive (newParticipants, meetingObject) {
   return (newParticipants.length === 0 &&
@@ -20,6 +19,7 @@ function shouldMakeMeetingInactive (newParticipants, meetingObject) {
 
 function reportMeeting (hook) {
   getReportData(hook, (visualizationData, addresses) => {
+    winston.log('info', 'calling sendReport')
     sendReport(createVisualization(visualizationData), addresses)
   })
 }
@@ -31,15 +31,22 @@ function getReportData (hook, callback) {
   if (hook.id === Object(hook.id)) {
     meetingId = hook.id._id
   }
+  winston.log('info', 'Generating report for meeting: ', meetingId)
+  // TODO unless im misinterpreting this.... this is querying for all
+  // participants (up to 1000), and then filtering on the results?
+  // can we not query participants by meeting involvement?
+  // at any rate, this fails if we have > 1000 users, no?
+  // not that i really expect to see > 1000 users, but...
   return hook.app.service('participants').find({
     query: {
       $limit: 1000,
-      $select: [ '_id', 'name', 'meetings' ]
+      $select: [ '_id', 'email', 'name', 'meetings' ]
     }
   }).then((participants) => {
     var validParticipants = _.filter(participants.data, (participant) => {
       return _.contains(participant.meetings, meetingId)
     })
+    winston.log('info', 'generating report for participants', _.map(validParticipants, (part) => part._id))
     // find utterances
     hook.app.service('utterances').find({
       query: {
@@ -70,25 +77,13 @@ function getReportData (hook, callback) {
           meanLengthUtterances: participantId in meanLengthUtterances ? meanLengthUtterances[ participantId ] : 0
         }
       })
-      // get mapping between google id and addresses
-      request.get(process.env.MAPPING_URL, function (error, response, body) {
-        // {'_id': address, ...}
-        var mapping = {}
-        if (!error && response.statusCode === 200) {
-          var rows = body.split('\n')
-          for (var i = 0; i < rows.length; i++) {
-            var cols = rows[ i ].split(',')
-            mapping[ String(cols[ 0 ]) ] = cols[ 1 ]
-          }
-        }
-        // [address, ...]
-        var addresses = validParticipants.map((participant) => {
-          return mapping[ participant[ '_id' ] ]
-        })
-        callback(visualizationData, addresses)
-      }).catch(function (error) {
-        winston.log('info', '[getReportData] error: ', error)
+      winston.log('info', 'getting addresses...')
+
+      var addresses = validParticipants.map((participant) => {
+        return participant['email']
       })
+      winston.log('info', 'calling callback...')
+      callback(visualizationData, addresses)
     })
   })
 }
@@ -136,7 +131,7 @@ function createVisualization (visualizationData) {
     .attr('y', -15)
     .attr('dy', '.71em')
     .style('text-anchor', 'end')
-    .text('Avg. Length of Turns (in seconds))')
+    .text('Avg. Length of Turns (in seconds)')
 
   // draw the y axis
   var yAxis = d3.svg.axis()
@@ -173,6 +168,7 @@ function createVisualization (visualizationData) {
     .text(function (d) { return d.name })
 
   // create html file
+  // TODO pull this out to a file or smth
   var htmlStyle = '<style>\n' +
     'body {\n' +
     'font-family: "Helvetica", "Arial", sans-serif;\n' +
@@ -212,8 +208,12 @@ function createVisualization (visualizationData) {
     '</style>\n'
   var htmlBody = '<body>\n' +
         '<h1>Your Meeting: Turns Taken</h1>\n' +
-        '<p>We count a "turn" any time you speak for more than around a second. The most creative and productive teams might have their dots clumped near each other, showing that they have all contributed somewhat equally.</p>\n' +
         d3.select(document.body).node().innerHTML + '\n' +
+        '<h3> Interpreting this graph:</h3>\n' +
+        '<p> For reference, we define a "turn" as a person speaking for about one second.\n' +
+        'If the dots representing the members of your team are clustered together, this usually indicates that people have all contributed somewhat equally to the discussion.\n' +
+        'If the dots representing the members of your team are widely distributed on the graph, this may indicate unequal participation in the discussion.\n' +
+        'In general, the most effective teams, exhibiting productivity and creativity, have members who participate relatively equally in discussions.</p>\n' +
     '</body>'
   var html = '<!DOCTYPE html>\n' +
     '<meta charset="utf-8">\n' +
@@ -224,7 +224,7 @@ function createVisualization (visualizationData) {
 }
 
 function sendReport (visualization, addresses) {
-  winston.log('info', 'Sending report...')
+  winston.log('info', 'Sending report to addresses: ', addresses)
   // TODO change SMTP configurations
   // define SMTP configurations
   var smtpConfig = {
@@ -254,8 +254,10 @@ function sendReport (visualization, addresses) {
   // send email with transporter object
   transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
+      winston.log('error', error)
       return console.log('[sendReport] error: ' + error)
     }
+    winston.log('info', 'Report was sent', info.response)
     return console.log('Report was sent: ' + info.response)
   })
 }

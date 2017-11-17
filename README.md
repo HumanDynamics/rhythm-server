@@ -38,7 +38,8 @@ in a Google Hangout.
     cd path/to/rhythm-server; npm install
     ```
 
-3. Start your app
+3. Copy env_template -> .env and set values accordingly
+4. Start your app
 
     ```
     npm start

@@ -14,6 +14,7 @@ const turnSchema = new Schema({
   timestamp: Date,
   from: Date,
   to: Date,
+  room: String,
   transitions: Number,
   turns: [{
     participant: {type: String, ref: 'participant'},

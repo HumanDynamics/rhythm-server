@@ -12,6 +12,7 @@ const Schema = mongoose.Schema
 const participantSchema = new Schema({
   _id: String,
   name: String,
+  email: String,
   meetings: [{type: String, ref: 'meeting'}],
   consent: Boolean,
   consentDate: Date,

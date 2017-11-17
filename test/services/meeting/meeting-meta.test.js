@@ -45,7 +45,8 @@ describe('meta data in meeting', function () {
   it('successfully saves a meeting with no metadata', function (done) {
     app.service('meetings').create(m1)
        .then(function (meeting) {
-         assert(m1)
+         assert(meeting)
+         assert(_.isEqual(meeting._id, m1._id))
          done()
        }).catch(function (err) {
          done(err)
@@ -55,8 +56,8 @@ describe('meta data in meeting', function () {
   it('successfully saves a meeting that has metadata', function (done) {
     app.service('meetings').create(m2)
        .then(function (meeting) {
-         assert(_.has(m2, 'meta'))
-         assert(_.isEqual(m2.meta, {key: 'value'}))
+         assert(_.isEqual(meeting._id, m2._id))
+         assert(_.isEqual(meeting.meta, m2.meta))
          done()
        }).catch(function (err) {
          done(err)
@@ -66,7 +67,9 @@ describe('meta data in meeting', function () {
   it('successfully finds a meeting with meta filter', function (done) {
     app.service('meetings').find({query: {meta: {key: 'value'}}})
        .then(function (meetings) {
-         assert(meetings[0]._id === 'meeting-metadata-1')
+         assert(meetings)
+         assert(_.isEqual(meetings[0]._id, 'meeting-metadata-1'))
+         assert(_.isEqual(meetings[0].meta, m2.meta))
          done()
        }).catch(function (err) {
          done(err)
