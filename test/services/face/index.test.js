@@ -13,12 +13,12 @@ describe('face service', () => {
   })
 
   var face = {
-    participant : "jordan",
-    timestamp : new Date(),
-    y_array : [],
-    x_array : [],
-    delta_array : [],
-    room: "room"
+    participant: 'jordan',
+    timestamp: new Date(),
+    y_array: [],
+    x_array: [],
+    delta_array: [],
+    room: 'room'
   }
 
   var fakeJoinedEvent = {
@@ -51,10 +51,8 @@ describe('face service', () => {
   it('created a face', function (done) {
     app.service('faces').create(face).then((created) => {
       winston.log('info', 'created fcace', JSON.stringify(created))
-      assert.equal(created.meeting, "room-1")
+      assert.equal(created.meeting, 'room-1')
       done()
     }).catch((err) => done(err))
   })
-
-
 })

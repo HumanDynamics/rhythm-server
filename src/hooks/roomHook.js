@@ -2,7 +2,7 @@ const winston = require('winston')
 
 exports.hook = function (hook) {
   if (hook.data.meeting !== undefined || hook.data.room === undefined) {
-    winston.log("skipping room hook")
+    winston.log('skipping room hook')
     return hook
   }
   winston.log('info', 'hook before roomHook: ', hook.data)
