@@ -2,7 +2,7 @@
 
 const repeatHook = require('./repeatHook').hook
 const mergeHook = require('./mergeHook').hook
-const roomHook = require('./roomHook').hook
+const roomHook = require('../../../hooks/roomHook').hook
 const participantConsentedHook = require('./participant-consented-hook')
 const authHooks = require('feathers-authentication').hooks
 

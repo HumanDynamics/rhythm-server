@@ -31,22 +31,22 @@ describe('utterance service', () => {
   var utterances = [
     {
       participant: 'bob',
-      meeting: 'roomName-1',
+      room: 'roomName',
       startTime: d1 - 9000,
       endTime: d1 - 5000,
       volumes: []
     },
     {
       participant: 'bob',
-      meeting: 'roomName-1',
+      room: 'roomName',
       startTime: d1 - 4000,
       endTime: d1 - 2000,
       volumes: []
     },
     {
       participant: 'bob',
-      meeting: 'roomName-1',
-      startTime: d1 - 1900,
+      room: 'roomName',
+      startTime: d1 - 1950,
       endTime: d1,
       volumes: []
     }
@@ -73,6 +73,7 @@ describe('utterance service', () => {
   it('created an utterance', function (done) {
     app.service('utterances').create(utterances[0]).then((utter) => {
       winston.log('info', 'utterance created', JSON.stringify(utter))
+      assert(utter.meeting !== undefined)
       assert.equal(utter.startTime.getTime(), utterances[0].startTime)
       assert.equal(utter.endTime.getTime(), utterances[0].endTime)
       assert.equal(utter.participant, utterances[0].participant)
@@ -85,6 +86,7 @@ describe('utterance service', () => {
   it('created a second utterance', function (done) {
     app.service('utterances').create(utterances[1]).then((utter) => {
       winston.log('info', 'utterance created', JSON.stringify(utter))
+      assert(utter.meeting !== undefined)
       assert.equal(utter.startTime.getTime(), utterances[1].startTime)
       assert.equal(utter.endTime.getTime(), utterances[1].endTime)
       assert.equal(utter.participant, utterances[1].participant)
