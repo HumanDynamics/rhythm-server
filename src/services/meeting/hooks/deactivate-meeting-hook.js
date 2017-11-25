@@ -80,7 +80,11 @@ function getReportData (hook, callback) {
       winston.log('info', 'getting addresses...')
 
       var addresses = validParticipants.map((participant) => {
-        return participant['email']
+        if (partcipant['email'] !== undefined) {
+          return participant['email']
+        } else {
+          return 'invalid'
+        }
       })
       winston.log('info', 'calling callback...')
       callback(visualizationData, addresses)
@@ -240,6 +244,7 @@ function sendReport (visualization, addresses) {
   var transporter = nodemailer.createTransport(smtpConfig)
   // TODO change email data
   // setup email data
+  addresses = addresses.fiter((ele) => ele !== 'invalid')
   var mailOptions = {
     from: process.env.REPORT_EMAIL_FROM,
     to: addresses,
