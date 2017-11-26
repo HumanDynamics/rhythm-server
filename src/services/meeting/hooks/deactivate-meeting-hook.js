@@ -80,7 +80,7 @@ function getReportData (hook, callback) {
       winston.log('info', 'getting addresses...')
 
       var addresses = validParticipants.map((participant) => {
-        if (partcipant['email'] !== undefined) {
+        if (participant['email'] !== undefined) {
           return participant['email']
         } else {
           return 'invalid'
@@ -242,9 +242,11 @@ function sendReport (visualization, addresses) {
   }
   // create transporter object
   var transporter = nodemailer.createTransport(smtpConfig)
-  // TODO change email data
   // setup email data
-  addresses = addresses.fiter((ele) => ele !== 'invalid')
+  // we filter the obviously invalid emails out, but it's still
+  // possible there could be invalid addresses here.
+  // this is fine, it should still behave
+  addresses = addresses.filter((ele) => ele !== 'invalid')
   var mailOptions = {
     from: process.env.REPORT_EMAIL_FROM,
     to: addresses,
