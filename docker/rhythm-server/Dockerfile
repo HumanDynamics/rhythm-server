@@ -1,4 +1,4 @@
-FROM node:5.4.0
+FROM node:8
 LABEL Description="This image is used to for developing the rhythm-server"
 
 ENV AUTH_ID_FIELD="id"
