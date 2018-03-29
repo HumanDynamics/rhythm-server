@@ -1,6 +1,7 @@
 #! /bin/bash
 
 # Default paths to the rhythm working directories
+RHYTHM_RTC_PATH=~/Projects/riff/rhythm-rtc
 RHYTHM_SERVER_PATH=~/Projects/riff/rhythm-server
 RHYTHM_MONGO_DATA_PATH=~/Projects/riff/rhythm-server/data
 DOCKER_ENGINE_IP=127.0.0.1
@@ -42,7 +43,7 @@ case $1 in
     make-images)
 		# Create the docker images
 		docker build -t local/rhythm-server docker/rhythm-server
-		# docker build -t local/rhythm-rtc docker/rhythm-rtc
+		docker build -t local/rhythm-rtc    docker/rhythm-rtc
 		;;
     initial-start)
 		# run the webserver for accessing the testpage at localhost/tests/integration/testpage-divs.html
@@ -54,6 +55,9 @@ case $1 in
 
 		# run the rhythm-server
 		docker run -d --net rhythm -p ${DOCKER_ENGINE_IP}:3000:3000 -v ${RHYTHM_SERVER_PATH}:/app -w /app --name rhythm-server local/rhythm-server
+
+		# run the rhythm-rtc
+		docker run -d --net rhythm -p ${DOCKER_ENGINE_IP}:3001:3001 -v ${RHYTHM_RTC_PATH}:/app -w /app --name rhythm-rtc local/rhythm-rtc
 		;;
     start)
 		# start the containers once they've been created using initial-start
