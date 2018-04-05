@@ -4,7 +4,7 @@
 const assert = require('assert')
 const io = require('socket.io-client')
 const Faker = require('Faker')
-const feathers = require('feathers-client')
+const feathers = require('@feathersjs/client')
 const _ = require('underscore')
 
 const testUsers = 50

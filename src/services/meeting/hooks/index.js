@@ -8,7 +8,7 @@ const removeParticipantsHook = require('./remove-participants-hook')
 const addParticipantHook = require('./add-participant-hook')
 const extractUnstructuredQueryHook = require('./extract_unstructured_query-hook')
 const applyUnstructuredQueryHook = require('./apply_unstructured_query-hook')
-const authHooks = require('feathers-authentication').hooks
+const authHooks = require('@feathersjs/authentication').hooks
 
 function addStartTime (hook) {
   hook.data.start_time = new Date()

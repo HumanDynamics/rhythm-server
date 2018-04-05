@@ -4,7 +4,7 @@ const repeatHook = require('./repeatHook').hook
 const mergeHook = require('./mergeHook').hook
 const roomHook = require('../../../hooks/roomHook').hook
 const participantConsentedHook = require('./participant-consented-hook')
-const authHooks = require('feathers-authentication').hooks
+const authHooks = require('@feathersjs/authentication').hooks
 
 exports.before = {
   all: [authHooks.verifyToken()],

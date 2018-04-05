@@ -1,16 +1,14 @@
 /* eslint-env mocha */
 'use strict'
 
-const feathersServer = require('feathers')
+const feathersServer = require('@feathersjs/feathers')
 const MongoClient = require('mongodb').MongoClient
 const winston = require('winston')
 const Promise = require('promise')
 const mongoose = require('mongoose')
-const feathers = require('feathers-client')
+const feathers = require('@feathersjs/client')
 const io = require('socket.io-client')
 
-// for server
-const hooks = require('feathers-hooks')
 const user = require('../../src/services/user')
 
 global.socket = io.connect('http://localhost:' + process.env.PORT, {
@@ -43,7 +41,7 @@ function createUser (db) {
       mongoose.connect(mongoUrl)
       mongoose.Promise = global.Promise
     })
-    var serverNoAuth = feathersServer().configure(hooks()).configure(user)
+    var serverNoAuth = feathersServer().configure(user)
     // serverNoAuth.listen(3000)
     return serverNoAuth.service('users').create({
       email: 'hello',
@@ -55,7 +53,7 @@ function createUser (db) {
       winston.log('info', 'error creating user:', err)
       reject(err)
     })
-  })
+  });
 }
 
 function authenticate () {

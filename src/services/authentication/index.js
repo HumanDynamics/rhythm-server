@@ -1,7 +1,7 @@
 'use strict'
 
 const winston = require('winston')
-const authentication = require('feathers-authentication')
+const authentication = require('@feathersjs/authentication')
 
 module.exports = function () {
   const app = this
