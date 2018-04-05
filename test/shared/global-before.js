@@ -53,7 +53,7 @@ function createUser (db) {
       winston.log('info', 'error creating user:', err)
       reject(err)
     })
-  });
+  })
 }
 
 function authenticate () {

@@ -2,7 +2,7 @@
 
 const path = require('path')
 const serveStatic = require('@feathersjs/feathers').static
-const express = require('@feathersjs/express');
+const express = require('@feathersjs/express')
 const compress = require('compression')
 const cors = require('cors')
 const feathers = require('@feathersjs/feathers')
