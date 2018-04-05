@@ -1,5 +1,6 @@
 'use strict'
 
+const { discard } = require('feathers-hooks-common')
 const auth = require('@feathersjs/authentication').hooks
 
 exports.before = {
@@ -40,7 +41,7 @@ exports.before = {
 }
 
 exports.after = {
-  all: [hooks.remove('password')],
+  all: [discard('password')],   // remove password field once authentication is done
   find: [],
   get: [],
   create: [],

@@ -36,6 +36,7 @@
     "cors": "^2.8.4",
     "d3": "^3.5.17",
     "dotenv": "^2.0.0",
+    "feathers-hooks-common": "^4.10.0",
     "feathers-mongoose": "^3.6.2",
     "jsdom": "^9.8.3",
     "mongoose": "4.4.11",
