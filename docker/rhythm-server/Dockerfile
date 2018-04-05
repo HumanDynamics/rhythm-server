@@ -1,6 +1,9 @@
 FROM node:8
 LABEL Description="This image runs the rhythm-server which collects utterance info made by participants in meetings"
 
+# Modified bashrc which defines some aliases
+COPY bashrc /root/.bashrc
+
 EXPOSE 3000
 
 # rhythm-server repository working directory must be bound at /app and all dependent packages installed
