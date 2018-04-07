@@ -8,7 +8,7 @@ const removeParticipantsHook = require('./remove-participants-hook')
 const addParticipantHook = require('./add-participant-hook')
 const extractUnstructuredQueryHook = require('./extract_unstructured_query-hook')
 const applyUnstructuredQueryHook = require('./apply_unstructured_query-hook')
-const authHooks = require('@feathersjs/authentication').hooks
+const auth = require('@feathersjs/authentication')
 
 function addStartTime (hook) {
   hook.data.start_time = new Date()
@@ -21,7 +21,7 @@ function updateTime (hook) {
 }
 
 exports.before = {
-  all: [authHooks.verifyToken()],
+  all: [auth.hooks.authenticate('jwt')],
   create: [addStartTime, activateMeetingHook],
   find: [extractUnstructuredQueryHook],
   update: [updateTime],

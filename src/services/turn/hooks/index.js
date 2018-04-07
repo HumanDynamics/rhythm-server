@@ -1,9 +1,9 @@
 'use strict'
 
-const authHooks = require('@feathersjs/authentication').hooks
+const auth = require('@feathersjs/authentication')
 
 exports.before = {
-  all: [authHooks.verifyToken()],
+  all: [auth.hooks.authenticate('jwt')],
   find: [],
   get: [],
   create: [],
