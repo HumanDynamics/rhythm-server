@@ -3,7 +3,6 @@
 const service = require('feathers-mongoose')
 const utterance = require('./utterance-model')
 const hooks = require('./hooks')
-const globalFilters = require('../../filters')
 
 module.exports = function () {
   const app = this
@@ -20,6 +19,4 @@ module.exports = function () {
 
   // Set up our hooks
   utteranceService.hooks(hooks)
-
-  utteranceService.filter(globalFilters.authenticationFilter)
 }

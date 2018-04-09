@@ -3,7 +3,6 @@
 const service = require('feathers-mongoose')
 const face = require('./face-model')
 const hooks = require('./hooks')
-const globalFilters = require('../../filters')
 
 module.exports = function () {
   const app = this
@@ -20,6 +19,4 @@ module.exports = function () {
 
   // Set up our hooks
   faceService.hooks(hooks)
-
-  faceService.filter(globalFilters.authenticationFilter)
 }

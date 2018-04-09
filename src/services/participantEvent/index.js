@@ -3,7 +3,6 @@
 const service = require('feathers-mongoose')
 const participantEvent = require('./participantEvent-model')
 const hooks = require('./hooks')
-const globalFilters = require('../../filters')
 
 module.exports = function () {
   const app = this
@@ -24,6 +23,4 @@ module.exports = function () {
 
   // Set up our hooks
   participantEventService.hooks(hooks)
-
-  participantEventService.filter(globalFilters.authenticationFilter)
 }
