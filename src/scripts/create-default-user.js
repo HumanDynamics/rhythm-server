@@ -40,13 +40,13 @@ module.exports = function () {
     }
   }).then(function (userOrTrue) {
     return client.authenticate({
-      type: 'token',
+      strategy: 'jwt',
       email: DEFAULT_USER_EMAIL,
       password: DEFAULT_USER_PASSWORD
     })
   }).then(function (authResult) {
     if (authResult !== undefined) {
-      fs.writeFile(path.join(__dirname, 'DEFAULT_USER_TOKEN.txt'), authResult.token, function (err) {
+      fs.writeFile(path.join(__dirname, 'DEFAULT_USER_TOKEN.txt'), authResult.accessToken, function (err) {
         if (err) {
           return console.log(err)
         }

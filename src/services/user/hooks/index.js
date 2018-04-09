@@ -1,19 +1,18 @@
 'use strict'
 
-const { discard, populate } = require('feathers-hooks-common')
 const auth = require('@feathersjs/authentication')
-const local = require('feathers-authentication-local')
-const { queryWithCurrentUser, restrictToOwner } = require('feathers-authentication-hooks')
+const local = require('@feathersjs/authentication-local')
+const { discard } = require('feathers-hooks-common')
+
+const { restrictToOwner } = require('feathers-authentication-hooks')
 
 exports.before = {
   all: [],
   find: [
-    auth.hooks.authenticate('jwt'),
-    populate()
+    auth.hooks.authenticate('jwt')
   ],
   get: [
     auth.hooks.authenticate('jwt'),
-    populate(),
     restrictToOwner({ ownerField: '_id' })
   ],
   create: [
@@ -22,17 +21,14 @@ exports.before = {
   ],
   update: [
     auth.hooks.authenticate('jwt'),
-    populate(),
     restrictToOwner({ ownerField: '_id' })
   ],
   patch: [
     auth.hooks.authenticate('jwt'),
-    populate(),
     restrictToOwner({ ownerField: '_id' })
   ],
   remove: [
     auth.hooks.authenticate('jwt'),
-    populate(),
     restrictToOwner({ ownerField: '_id' })
   ]
 }

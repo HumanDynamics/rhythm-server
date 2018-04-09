@@ -15,14 +15,11 @@ module.exports = function () {
   // Initialize our service with any options it requires
   app.use('/utterances', service(options))
 
-  // Get our initialize service to that we can bind hooks
+  // Get our service so that we can bind hooks
   const utteranceService = app.service('/utterances')
 
-  // Set up our before hooks
-  utteranceService.before(hooks.before)
-
-  // Set up our after hooks
-  utteranceService.after(hooks.after)
+  // Set up our hooks
+  utteranceService.hooks(hooks)
 
   utteranceService.filter(globalFilters.authenticationFilter)
 }

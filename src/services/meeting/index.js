@@ -16,8 +16,7 @@ module.exports = function () {
   app.use('/meetings', service(options))
 
   const meetingService = app.service('/meetings')
-  meetingService.before(hooks.before)
-  meetingService.after(hooks.after)
+  meetingService.hooks(hooks)
 
   meetingService.filter(authenticationFilter)
 }

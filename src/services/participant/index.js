@@ -19,14 +19,11 @@ module.exports = function () {
   // Initialize our service with any options it requires
   app.use('/participants', service(options))
 
-  // Get our initialize service to that we can bind hooks
+  // Get our service so that we can bind hooks
   const participantService = app.service('/participants')
 
-  // Set up our before hooks
-  participantService.before(hooks.before)
-
-  // Set up our after hooks
-  participantService.after(hooks.after)
+  // Set up our hooks
+  participantService.hooks(hooks)
 
   participantService.filter(globalFilters.authenticationFilter)
 }

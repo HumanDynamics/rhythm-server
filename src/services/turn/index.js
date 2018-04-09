@@ -15,13 +15,11 @@ module.exports = function () {
   // Initialize our service with any options it requires
   app.use('/turns', service(options))
 
-  // Get our initialize service to that we can bind hooks
+  // Get our service so that we can bind hooks
   const turnService = app.service('/turns')
 
-  // Set up our before hooks
-  turnService.before(hooks.before)
+  // Set up our hooks
+  turnService.hooks(hooks)
 
-  // Set up our after hooks
-  turnService.after(hooks.after)
   turnService.filter(globalFilters.authenticationFilter)
 }

@@ -2,7 +2,7 @@
 'use strict'
 
 const assert = require('assert')
-const Faker = require('Faker')
+const Faker = require('faker')
 const winston = require('winston')
 const _ = require('underscore')
 const turnJob = require('../../../src/jobs').turnJob
