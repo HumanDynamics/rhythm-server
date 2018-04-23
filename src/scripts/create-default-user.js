@@ -19,7 +19,6 @@ module.exports = function () {
 
   const client = feathers()
     .configure(feathers.socketio(socket))
-    .configure(feathers.hooks())
     .configure(feathers.authentication())
 
   const DEFAULT_USER_EMAIL = process.env.DEFAULT_USER_EMAIL

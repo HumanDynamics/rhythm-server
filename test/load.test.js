@@ -3,7 +3,7 @@
 
 const assert = require('assert')
 const io = require('socket.io-client')
-const Faker = require('Faker')
+const Faker = require('faker')
 const feathers = require('@feathersjs/client')
 const _ = require('underscore')
 
@@ -39,7 +39,7 @@ describe('Load tests', function () {
             participant: 'participant' + ioIndex,
             startTime: new Date(),
             endTime: new Date((new Date()).getTime() + 50),
-            volumes: _(10).times((n) => { return Faker.Helpers.randomNumber(5) })
+            volumes: _(10).times((n) => { return Faker.helpers.random.number(5) })
           })
           socket.emit('face::create', {
             meeting: 'meeting' + ioIndex,
@@ -47,8 +47,8 @@ describe('Load tests', function () {
             start_time: new Date(),
             end_time: new Date((new Date()).getTime() + 50),
             timestamp: new Date(),
-            face_delta: Faker.Helpers.randomNumber(5),
-            delta_array: _(71).times((n) => { return [Faker.Helpers.randomNumber(5)] })
+            face_delta: Faker.random.number(5),
+            delta_array: _(71).times((n) => { return [Faker.random.number(5)] })
           })
         }, interval)
 
@@ -75,7 +75,6 @@ describe('Load tests', function () {
       'force new connection': true
     })
     var app = feathers()
-    .configure(feathers.hooks())
     .configure(feathers.socketio(socket))
     var turns = app.service('turns')
     var recvdTurns = []

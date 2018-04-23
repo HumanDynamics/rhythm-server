@@ -58,7 +58,6 @@ function createUser (db) {
 
 function authenticate () {
   const client = feathers().configure(feathers.socketio(global.socket))
-                           .configure(feathers.hooks())
                            .configure(feathers.authentication())
   return client.authenticate({
     type: 'local',
