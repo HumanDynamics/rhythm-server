@@ -6,6 +6,9 @@ const request = require('request')
 const winston = require('winston')
 const app = require('../src/app')
 
+// No logging to the console (which may mean no logging at all, but it gets in the way of the test output otherwise.
+winston.remove(winston.transports.Console)
+
 before(function (done) {
   global.app = app
   winston.log('info', 'mongo:', process.env.MONGODB_URI)
