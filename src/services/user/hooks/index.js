@@ -2,7 +2,7 @@
 
 const auth = require('@feathersjs/authentication')
 const local = require('@feathersjs/authentication-local')
-const { discard } = require('feathers-hooks-common')
+const { iff, isProvider, discard } = require('feathers-hooks-common')
 
 const { restrictToOwner } = require('feathers-authentication-hooks')
 
@@ -34,7 +34,9 @@ exports.before = {
 }
 
 exports.after = {
-  all: [discard('password')],   // remove password field once authentication is done
+  // remove password field once authentication is done only for external calls
+  //   see https://github.com/feathers-plus/feathers-hooks-common/issues/139
+  all: [iff(isProvider('external'), discard('password'))],
   find: [],
   get: [],
   create: [],

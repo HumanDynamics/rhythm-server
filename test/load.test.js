@@ -4,7 +4,8 @@
 const assert = require('assert')
 const io = require('socket.io-client')
 const Faker = require('faker')
-const feathers = require('@feathersjs/client')
+const feathers = require('@feathersjs/feathers')
+const socketio = require('@feathersjs/socketio-client')
 const _ = require('underscore')
 
 const testUsers = 50
@@ -74,9 +75,9 @@ describe('Load tests', function () {
       ],
       'force new connection': true
     })
-    var app = feathers()
-    .configure(feathers.socketio(socket))
-    var turns = app.service('turns')
+    var client = feathers()
+      .configure(socketio(socket))
+    var turns = client.service('turns')
     var recvdTurns = []
     for (var i = 0; i < testUsers; i++) { recvdTurns[i] = 0 }
     var isDone = false
