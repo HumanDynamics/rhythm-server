@@ -7,8 +7,14 @@
 const _ = require('underscore')
 const winston = require('winston')
 
-var d3 = require('d3')
-var jsdom = require('jsdom')
+var d3 = Object.assign({},
+                       require("d3-selection"),
+                       require("d3-array"),
+                       require("d3-axis"),
+                       require("d3-scale"),
+                       require("d3-scale-chromatic"))
+
+var { JSDOM } = require('jsdom')
 var nodemailer = require('nodemailer')
 
 function shouldMakeMeetingInactive (newParticipants, meetingObject) {
@@ -93,17 +99,19 @@ function createVisualization (visualizationData) {
   var margin = { top: 20, right: 15, bottom: 60, left: 60 }
   var width = 800 - margin.left - margin.right
   var height = 500 - margin.top - margin.bottom
-  var color = d3.scale.category20()
+  // TODO: think about color, start here: https://medium.com/@Elijah_Meeks/color-advice-for-data-visualization-with-d3-js-33b5adc41c90
+  // d3 v5 removed category20 which was used here.
+  var color = d3.scaleOrdinal(d3.schemeCategory10)
 
-  var x = d3.scale.linear()
+  var x = d3.scaleLinear()
     .domain([ 0, d3.max(visualizationData, function (d) { return d.meanLengthUtterances }) + 5 ])
     .range([ 0, width ])
 
-  var y = d3.scale.linear()
+  var y = d3.scaleLinear()
     .domain([ 0, d3.max(visualizationData, function (d) { return d.numUtterances }) + 1 ])
     .range([ height, 0 ])
 
-  var document = jsdom.jsdom()
+  const { document } = (new JSDOM(``)).window
   var chart = d3.select(document.body)
     .append('svg')
     .attr('width', width + margin.right + margin.left)
@@ -117,9 +125,7 @@ function createVisualization (visualizationData) {
     .attr('class', 'main')
 
   // draw the x axis
-  var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient('bottom')
+  var xAxis = d3.axisBottom(x)
 
   main.append('g')
     .attr('transform', 'translate(0,' + height + ')')
@@ -134,9 +140,7 @@ function createVisualization (visualizationData) {
     .text('Avg. Length of Turns (in seconds)')
 
   // draw the y axis
-  var yAxis = d3.svg.axis()
-    .scale(y)
-    .orient('left')
+  var yAxis = d3.axisLeft(y)
 
   main.append('g')
     .attr('transform', 'translate(0,0)')
