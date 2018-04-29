@@ -16,7 +16,8 @@ const scripts = require('./scripts')
 const channels = require('./channels')
 
 // Create an Express compatible Feathers application
-const app = module.exports = express(feathers())
+const app = express(feathers())
+module.exports = app
 
 app.configure(configuration(path.join(__dirname, '..')))
 
@@ -36,7 +37,7 @@ app.use(compress())
        'flashsocket',
        'htmlfile',
        'xhr-polling',
-       'jsonp-polling'
+       'jsonp-polling',
      ])
 
      io.on('connection', (socket) => {

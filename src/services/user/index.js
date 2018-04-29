@@ -5,12 +5,12 @@ const user = require('./user-model')
 const hooks = require('./hooks')
 
 module.exports = function () {
-  const app = this
+  const app = this          // eslint-disable-line consistent-this
 
   const options = {
     Model: user,
     paginate: {
-      default: 5,
+      'default': 5,
       max: 25
     }
   }

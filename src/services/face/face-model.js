@@ -8,16 +8,18 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
+/* eslint-disable camelcase */
 const faceSchema = new Schema({
-  participant: {type: String, ref: 'Participant'},
-  meeting: {type: String, ref: 'Meeting'},
+  participant: { type: String, ref: 'Participant' },
+  meeting: { type: String, ref: 'Meeting' },
   timestamp: Date,
   face_delta: Number,
   norm_smile: Number,
-  delta_array: [Number],
-  x_array: [Number],
-  y_array: [Number]
+  delta_array: [ Number ],
+  x_array: [ Number ],
+  y_array: [ Number ]
 })
+/* eslint-enable camelcase */
 
 const faceModel = mongoose.model('face', faceSchema)
 

@@ -4,10 +4,10 @@ const auth = require('@feathersjs/authentication')
 const roomHook = require('../../../hooks/roomHook').hook
 
 exports.before = {
-  all: [auth.hooks.authenticate('jwt')],
+  all: [ auth.hooks.authenticate('jwt') ],
   find: [],
   get: [],
-  create: [roomHook],
+  create: [ roomHook ],
   update: [],
   patch: [],
   remove: []

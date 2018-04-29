@@ -36,7 +36,7 @@ exports.before = {
 exports.after = {
   // remove password field once authentication is done only for external calls
   //   see https://github.com/feathers-plus/feathers-hooks-common/issues/139
-  all: [iff(isProvider('external'), discard('password'))],
+  all: [ iff(isProvider('external'), discard('password')) ],
   find: [],
   get: [],
   create: [],

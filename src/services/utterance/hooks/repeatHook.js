@@ -6,13 +6,14 @@ function dateDiff (d1, d2) {
 }
 
 exports.hook = function (hook) {
-  hook.app.service('utterances').find(
-    {
+  hook.app.service('utterances')
+    .find({
       query: {
-        $and: [{meeting: hook.data.meeting},
-               {participant: hook.data.participant}]
+        $and: [{ meeting: hook.data.meeting },
+               { participant: hook.data.participant }]
       }
-    }).then((foundUtterances) => {
+    })
+    .then((foundUtterances) => {
       var timeMatchThreshold = 1.5 * 1000 // threshold for times being "matched", in ms
       // there are some talk events from this participant
       // filter them, find if any are very close:
@@ -21,9 +22,9 @@ exports.hook = function (hook) {
       var matches = _.filter(foundUtterances,
                              function (utterance) {
                                var startDiff = dateDiff(utterance.startTime,
-                                                          hook.data.startTime)
+                                                        hook.data.startTime)
                                var endDiff = dateDiff(utterance.endTime,
-                                                        hook.data.endTime)
+                                                      hook.data.endTime)
                                return (startDiff < timeMatchThreshold ||
                                        endDiff < timeMatchThreshold)
                              })

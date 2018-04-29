@@ -6,7 +6,7 @@ const local = require('@feathersjs/authentication-local')
 const jwt = require('@feathersjs/authentication-jwt')
 
 module.exports = function () {
-  const app = this
+  const app = this          // eslint-disable-line consistent-this
 
   let config = {
     jwt: {},
@@ -27,7 +27,7 @@ module.exports = function () {
     app.service('authentication').hooks({
       before: {
         create: [
-          auth.hooks.authenticate(['jwt', 'local'])
+          auth.hooks.authenticate([ 'jwt', 'local' ])
         ]
       }
     })
