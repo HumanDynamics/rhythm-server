@@ -1,8 +1,12 @@
 ---
+plugins:
+  - promise
 env:
   node: true
   mocha: true
-extends: 'eslint:recommended'
+extends:
+  - eslint:recommended
+  - plugin:promise/recommended
 parserOptions:
   ecmaVersion: 2017
   sourceType: script
@@ -128,6 +132,7 @@ rules:
     - error
     - always
   operator-linebreak: off
+  promise/no-nesting: off
   prefer-rest-params: error
   prefer-spread: error
   quote-props:
