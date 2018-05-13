@@ -38,8 +38,10 @@ module.exports = function () {
   return app.service('users').find({
     email: DEFAULT_USER_EMAIL
   }).then(function (users) {
+    winston.debug(`found user w/ email: ${DEFAULT_USER_EMAIL}: ${JSON.stringify(users.data)}`)
     return users.data.length > 0
   }).then(function (foundUser) {
+    winston.debug(`found user ${foundUser}`)
     if (!foundUser) {
       return app.service('users').create({
         email: DEFAULT_USER_EMAIL,
@@ -50,26 +52,28 @@ module.exports = function () {
     }
   }).then(function (userOrTrue) {
     return client.authenticate({
-      strategy: 'jwt',
+      strategy: 'local',
       email: DEFAULT_USER_EMAIL,
       password: DEFAULT_USER_PASSWORD
     })
   }).then(function (authResult) {
+    winston.debug(`client authentication: ${JSON.stringify(authResult)}`)
     if (authResult !== undefined) {
       fs.writeFile(path.join(__dirname, 'DEFAULT_USER_TOKEN.txt'), authResult.accessToken, function (err) {
         if (err) {
-          return console.log(err)
+          winston.error('error saving user token', err)
+          return false
         }
       })
       socket.disconnect()
       return true
     } else {
-      console.log('auth error')
+      winston.error('auth error')
       socket.disconnect()
       return false
     }
   }).catch(function (err) {
-    console.log('could not connect to app', err)
+    winston.error('could not connect to app', err)
     socket.disconnect()
     return false
   })
