@@ -16,7 +16,7 @@ const user = require('../../src/services/user')
 // winston.level = 'debug'
 
 global.socket = io.connect('http://localhost:' + process.env.PORT, {
-  'transports': [
+  transports: [
     'websocket',
     'flashsocket',
     'jsonp-polling',

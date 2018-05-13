@@ -37,7 +37,7 @@ function createMeetingAndUtterances (testName) {
 
   var testMeeting = {
     _id: testName + n,
-    participants: [testParticipants[0]._id, testParticipants[1]._id, testParticipants[2]._id],
+    participants: [ testParticipants[0]._id, testParticipants[1]._id, testParticipants[2]._id ],
     startTime: d2,
     endTime: null,
     active: true
@@ -64,20 +64,22 @@ function createMeetingAndUtterances (testName) {
     }
   ]
 
-  return global.app.service('meetings').create(testMeeting)
-     .then(function (meeting) {
-       _.each(testParticipants, function (participant, i, list) {
-         global.app.service('participants').create(participant)
-       })
-       _.each(testUtterances, function (utterance, i, list) {
-         global.app.service('utterances').create(utterance)
-       })
-       assert(meeting.active === true)
-       n += 1
-       return meeting
-     }).catch(function (err) {
-       return err
-     })
+  return global.app.service('meetings')
+    .create(testMeeting)
+    .then(function (meeting) {
+      _.each(testParticipants, function (participant, i, list) {
+        global.app.service('participants').create(participant)
+      })
+      _.each(testUtterances, function (utterance, i, list) {
+        global.app.service('utterances').create(utterance)
+      })
+      assert(meeting.active === true)
+      n += 1
+      return meeting
+    })
+    .catch(function (err) {
+      return err
+    })
 }
 
 describe('deactivate meeting hook', function () {
@@ -89,43 +91,54 @@ describe('deactivate meeting hook', function () {
   })
 
   beforeEach(function (done) {
-    createMeetingAndUtterances('deactivate-meeting-hook').then(function (meeting) {
-      meetingId = meeting
-      done()
-    }).catch(function (err) {
-      done(err)
-    })
+    createMeetingAndUtterances('deactivate-meeting-hook')
+      .then(function (meeting) {
+        meetingId = meeting
+        done()
+      })
+      .catch(function (err) {
+        done(err)
+      })
   })
 
   it('sets an empty meeting inactive after all participants leave', function (done) {
-    global.app.service('meetings').patch(meetingId, {
-      participants: []
-    }).then(function (meeting) {
-      winston.log('info', 'deactivated meeting:', meeting)
-      assert(meeting.active === false)
-      assert(meeting.endTime !== null)
-      done()
-    }).catch(function (err) {
-      done(err)
-    })
+    global.app.service('meetings')
+      .patch(meetingId, {
+        participants: []
+      })
+      .then(function (meeting) {
+        winston.log('info', 'deactivated meeting:', meeting)
+        assert(meeting.active === false)
+        assert(meeting.endTime !== null)
+        done()
+      })
+      .catch(function (err) {
+        done(err)
+      })
   })
 
   it('creates a meeting end event successfully', function (done) {
-    global.app.service('meetings').patch(meetingId, {
-      participants: []
-    }).then(function (meeting) {
-      global.app.service('meetingEvents').find({
-        query: { $and: [{meeting: meetingId},
-                        {event: 'end'}]
-        }
-      }).then(function (meetingEvents) {
-        assert(meetingEvents.length > 0)
-        done()
-      }).catch(function (err) {
+    global.app.service('meetings')
+      .patch(meetingId, {
+        participants: []
+      })
+      .then(function (meeting) {
+        global.app.service('meetingEvents')
+          .find({
+            query: { $and: [{ meeting: meetingId },
+                            { event: 'end' }]
+            }
+          })
+          .then(function (meetingEvents) {
+            assert(meetingEvents.length > 0)
+            done()
+          })
+          .catch(function (err) {
+            done(err)
+          })
+      })
+      .catch(function (err) {
         done(err)
       })
-    }).catch(function (err) {
-      done(err)
-    })
   })
 })

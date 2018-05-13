@@ -17,7 +17,7 @@ describe('Load tests', function () {
     while (ioIndex < testUsers) {
       (function () {
         var socket = io.connect('http://localhost:3000', {
-          'transports': [
+          transports: [
             'websocket',
             'flashsocket',
             'jsonp-polling',
@@ -42,6 +42,7 @@ describe('Load tests', function () {
             endTime: new Date((new Date()).getTime() + 50),
             volumes: _(10).times((n) => { return Faker.helpers.random.number(5) })
           })
+          /* eslint-disable camelcase */
           socket.emit('face::create', {
             meeting: 'meeting' + ioIndex,
             participant: 'participant' + ioIndex,
@@ -49,8 +50,9 @@ describe('Load tests', function () {
             end_time: new Date((new Date()).getTime() + 50),
             timestamp: new Date(),
             face_delta: Faker.random.number(5),
-            delta_array: _(71).times((n) => { return [Faker.random.number(5)] })
+            delta_array: _(71).times((n) => { return [ Faker.random.number(5) ] })
           })
+          /* eslint-enable camelcase */
         }, interval)
 
         setTimeout(function () {
@@ -66,7 +68,7 @@ describe('Load tests', function () {
 
   it('receives turn events for each hangout', function (done) {
     var socket = io.connect('http://localhost:3000', {
-      'transports': [
+      transports: [
         'websocket',
         'flashsocket',
         'jsonp-polling',
@@ -79,7 +81,9 @@ describe('Load tests', function () {
       .configure(socketio(socket))
     var turns = client.service('turns')
     var recvdTurns = []
-    for (var i = 0; i < testUsers; i++) { recvdTurns[i] = 0 }
+    for (let i = 0; i < testUsers; i++) {
+      recvdTurns[i] = 0
+    }
     var isDone = false
 
     turns.on('created', function (turn) {
@@ -88,7 +92,7 @@ describe('Load tests', function () {
       if (recvdTurns[meeting] >= 3) {
         if (!isDone) {
           isDone = true
-          for (var i = 0; i < testUsers; i++) {
+          for (let i = 0; i < testUsers; i++) {
             assert.equal(recvdTurns[i], 3)
           }
           done()

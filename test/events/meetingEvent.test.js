@@ -23,13 +23,13 @@ describe('Meeting event', function () {
       isMicrophoneMute: true
     }
 
-    var options = { 'transports': [
+    var options = { transports: [
       'websocket',
       'flashsocket',
       'jsonp-polling',
       'xhr-polling',
       'htmlfile'
-    ]}
+    ] }
 
     var socket = io('http://localhost:3000', options)
 

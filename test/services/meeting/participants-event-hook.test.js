@@ -51,7 +51,7 @@ describe('participants event hook', function () {
     global.app.service('participantEvents').find({
       query: {
         meeting: meetingId,
-        $sort: {timestamp: -1}
+        $sort: { timestamp: -1 }
       }
     }).then(function (participantEvents) {
       var participants = participantEvents.data[0].participants
@@ -65,13 +65,13 @@ describe('participants event hook', function () {
   it('creates a participantEvent when a meeting is changed', function (done) {
     this.timeout = 3000
     global.app.service('meetings').patch(meetingId, {
-      participants: ['p1', 'p2']
+      participants: [ 'p1', 'p2' ]
     }).then(function (meeting) {
       setTimeout(function () {
         global.app.service('participantEvents').find({
           query: {
             meeting: meetingId,
-            $sort: {timestamp: -1}
+            $sort: { timestamp: -1 }
           }
         }).then(function (participantEvents) {
           var participants = participantEvents.data[0].participants

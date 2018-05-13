@@ -12,6 +12,7 @@ describe('face service', () => {
     assert.ok(app.service('faces'))
   })
 
+  /* eslint-disable camelcase */
   var face = {
     participant: 'jordan',
     timestamp: new Date(),
@@ -20,6 +21,7 @@ describe('face service', () => {
     delta_array: [],
     room: 'room'
   }
+  /* eslint-enable camelcase */
 
   var fakeJoinedEvent = {
     participant: 'bob',
@@ -31,7 +33,7 @@ describe('face service', () => {
   }
 
   var socket = io.connect('http://localhost:3000', {
-    'transports': [
+    transports: [
       'websocket',
       'flashsocket',
       'jsonp-polling',
@@ -41,18 +43,22 @@ describe('face service', () => {
   })
 
   before(function (done) {
-    dropDatabase().then(() => {
-      socket.emit('meetingJoined', fakeJoinedEvent)
-      socket.disconnect()
-      setTimeout(() => { done() }, 400)
-    }).catch((err) => { done(err) })
+    dropDatabase()
+      .then(() => {
+        socket.emit('meetingJoined', fakeJoinedEvent)
+        socket.disconnect()
+        setTimeout(() => { done() }, 400)
+      })
+      .catch((err) => { done(err) })
   })
 
   it('created a face', function (done) {
-    app.service('faces').create(face).then((created) => {
-      winston.log('info', 'created fcace', JSON.stringify(created))
-      assert.equal(created.meeting, 'room-1')
-      done()
-    }).catch((err) => done(err))
+    app.service('faces').create(face)
+      .then((created) => {
+        winston.log('info', 'created fcace', JSON.stringify(created))
+        assert.equal(created.meeting, 'room-1')
+        done()
+      })
+      .catch(err => done(err))
   })
 })

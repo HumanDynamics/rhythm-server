@@ -18,7 +18,7 @@ describe('utterance service', () => {
   }
 
   var socket = io.connect('http://localhost:3000', {
-    'transports': [
+    transports: [
       'websocket',
       'flashsocket',
       'jsonp-polling',
