@@ -8,11 +8,11 @@ const _ = require('underscore')
 const winston = require('winston')
 
 var d3 = Object.assign({},
-                       require("d3-selection"),
-                       require("d3-array"),
-                       require("d3-axis"),
-                       require("d3-scale"),
-                       require("d3-scale-chromatic"))
+                       require('d3-selection'),
+                       require('d3-array'),
+                       require('d3-axis'),
+                       require('d3-scale'),
+                       require('d3-scale-chromatic'))
 
 var { JSDOM } = require('jsdom')
 var nodemailer = require('nodemailer')
@@ -111,7 +111,7 @@ function createVisualization (visualizationData) {
     .domain([ 0, d3.max(visualizationData, function (d) { return d.numUtterances }) + 1 ])
     .range([ height, 0 ])
 
-  const { document } = (new JSDOM(``)).window
+  const { document } = (new JSDOM('')).window
   var chart = d3.select(document.body)
     .append('svg')
     .attr('width', width + margin.right + margin.left)
