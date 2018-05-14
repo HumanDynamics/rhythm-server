@@ -21,14 +21,16 @@ function createMeeting () {
     active: false
   }
 
-  return global.app.service('meetings').create(activeMeeting)
-            .then(function (meeting) {
-              assert(meeting.active === false)
-              n += 1
-              return meeting
-            }).catch(function (err) {
-              return err
-            })
+  return global.app.service('meetings')
+           .create(activeMeeting)
+           .then(function (meeting) {
+             assert(meeting.active === false)
+             n += 1
+             return meeting
+           })
+           .catch(function (err) {
+             return err
+           })
 }
 
 describe('participants event hook', function () {
@@ -39,52 +41,63 @@ describe('participants event hook', function () {
   var meetingId = null
 
   beforeEach(function (done) {
-    createMeeting().then(function (meeting) {
-      meetingId = meeting
-      done()
-    }).catch(function (err) {
-      done(err)
-    })
+    createMeeting()
+      .then(function (meeting) {
+        meetingId = meeting
+        done()
+      })
+      .catch(function (err) {
+        done(err)
+      })
   })
 
   it('creates a participantEvent when a meeting is created', function (done) {
-    global.app.service('participantEvents').find({
-      query: {
-        meeting: meetingId,
-        $sort: { timestamp: -1 }
-      }
-    }).then(function (participantEvents) {
-      var participants = participantEvents.data[0].participants
-      assert(participants.length === 0)
-      done()
-    }).catch(function (err) {
-      done(err)
-    })
+    global.app.service('participantEvents')
+      .find({
+        query: {
+          meeting: meetingId,
+          $sort: { timestamp: -1 }
+        }
+      })
+      .then(function (participantEvents) {
+        var participants = participantEvents.data[0].participants
+        assert(participants.length === 0)
+        done()
+      })
+      .catch(function (err) {
+        done(err)
+      })
   })
 
   it('creates a participantEvent when a meeting is changed', function (done) {
     this.timeout = 3000
-    global.app.service('meetings').patch(meetingId, {
-      participants: [ 'p1', 'p2' ]
-    }).then(function (meeting) {
-      setTimeout(function () {
-        global.app.service('participantEvents').find({
-          query: {
-            meeting: meetingId,
-            $sort: { timestamp: -1 }
-          }
-        }).then(function (participantEvents) {
-          var participants = participantEvents.data[0].participants
-          assert(_.contains(participants, 'p1'))
-          assert(_.contains(participants, 'p2'))
-          assert(participants.length === 2)
-          done()
-        }).catch(function (err) {
-          done(err)
-        })
-      }, 1000)
-    }).catch(function (err) {
-      done(err)
-    })
+    global.app.service('meetings')
+      .patch(meetingId, {
+        participants: [ 'p1', 'p2' ]
+      })
+      .then(function (meeting) {
+        setTimeout(function () {
+          global.app.service('participantEvents')
+            .find({
+              query: {
+                meeting: meetingId,
+                $sort: { timestamp: -1 }
+              }
+            })
+            .then(function (participantEvents) {
+              var participants = participantEvents.data[0].participants
+              assert(_.contains(participants, 'p1'))
+              assert(_.contains(participants, 'p2'))
+              assert(participants.length === 2)
+              done()
+            })
+            .catch(function (err) {
+              done(err)
+            })
+        }, 1000)
+      })
+      .catch(function (err) {
+        done(err)
+      })
   })
 })
