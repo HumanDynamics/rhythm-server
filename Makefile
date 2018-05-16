@@ -57,8 +57,9 @@ clean-build :
 	-rm -f dist/*
 
 start-dev :
-	docker-compose run rhythm-server bash
-	docker-compose rm --force
+	-docker-compose run rhythm-server bash
+	-docker-compose rm --force
+	-docker-compose stop
 
 ./node_modules/.bin/wtfnode :
 	npm install wtfnode --no-save

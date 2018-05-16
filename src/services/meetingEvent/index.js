@@ -18,12 +18,9 @@ module.exports = function () {
   // Initialize our service with any options it requires
   app.use('/meetingEvents', service(options))
 
-  // Get our initialize service to that we can bind hooks
+  // Get our service so that we can bind hooks
   const meetingEventService = app.service('/meetingEvents')
 
-  // Set up our before hooks
-  meetingEventService.before(hooks.before)
-
-  // Set up our after hooks
-  meetingEventService.after(hooks.after)
+  // Set up our hooks
+  meetingEventService.hooks(hooks)
 }

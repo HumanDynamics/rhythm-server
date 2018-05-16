@@ -1,47 +1,42 @@
 'use strict'
 
-const hooks = require('feathers-hooks')
-const auth = require('feathers-authentication').hooks
+const auth = require('@feathersjs/authentication')
+const local = require('@feathersjs/authentication-local')
+const { iff, isProvider, discard } = require('feathers-hooks-common')
+
+const { restrictToOwner } = require('feathers-authentication-hooks')
 
 exports.before = {
   all: [],
   find: [
-    auth.verifyToken(),
-    auth.populateUser(),
-    auth.restrictToAuthenticated()
+    auth.hooks.authenticate('jwt')
   ],
   get: [
-    auth.verifyToken(),
-    auth.populateUser(),
-    auth.restrictToAuthenticated(),
-    auth.restrictToOwner({ ownerField: '_id' })
+    auth.hooks.authenticate('jwt'),
+    restrictToOwner({ ownerField: '_id' })
   ],
   create: [
-    auth.verifyToken(),
-    auth.hashPassword()
+    auth.hooks.authenticate('jwt'),
+    local.hooks.hashPassword()
   ],
   update: [
-    auth.verifyToken(),
-    auth.populateUser(),
-    auth.restrictToAuthenticated(),
-    auth.restrictToOwner({ ownerField: '_id' })
+    auth.hooks.authenticate('jwt'),
+    restrictToOwner({ ownerField: '_id' })
   ],
   patch: [
-    auth.verifyToken(),
-    auth.populateUser(),
-    auth.restrictToAuthenticated(),
-    auth.restrictToOwner({ ownerField: '_id' })
+    auth.hooks.authenticate('jwt'),
+    restrictToOwner({ ownerField: '_id' })
   ],
   remove: [
-    auth.verifyToken(),
-    auth.populateUser(),
-    auth.restrictToAuthenticated(),
-    auth.restrictToOwner({ ownerField: '_id' })
+    auth.hooks.authenticate('jwt'),
+    restrictToOwner({ ownerField: '_id' })
   ]
 }
 
 exports.after = {
-  all: [hooks.remove('password')],
+  // remove password field once authentication is done only for external calls
+  //   see https://github.com/feathers-plus/feathers-hooks-common/issues/139
+  all: [iff(isProvider('external'), discard('password'))],
   find: [],
   get: [],
   create: [],
