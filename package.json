@@ -1,7 +1,7 @@
 {
   "name": "rhythm-server",
   "description": "server for breakout, a measurement and feedback framework for human communication",
-  "version": "0.4.0-dev.1",
+  "version": "0.4.0-dev.2",
   "homepage": "",
   "main": "src/",
   "keywords": [
