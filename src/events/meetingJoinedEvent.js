@@ -6,18 +6,20 @@ const winston = require('winston')
 const _ = require('underscore')
 
 function addParticipantToMeeting (app, participant, meeting) {
-  return app.service('meetings').get(meeting).then((meeting) => {
-    // now patch the meeting to include the participant
-    winston.log('info', 'patching meeting: ', meeting)
-    winston.log('info', 'adding participant to meeting: ', participant._id)
-    var parts = meeting.participants || []
-    return app.service('meetings').patch(meeting, {
-      participants: _.uniq(parts.concat([participant._id]))
-    }).then((meeting) => {
-      winston.log('info', 'updated meeting with participants: ', meeting)
-      return meeting
+  return app.service('meetings')
+    .get(meeting)
+    .then((meeting) => {
+      // now patch the meeting to include the participant
+      winston.log('info', 'patching meeting: ', meeting)
+      winston.log('info', 'adding participant to meeting: ', participant._id)
+      var parts = meeting.participants || []
+      return app.service('meetings')
+        .patch(meeting, { participants: _.uniq(parts.concat([ participant._id ])) })
+        .then((meeting) => {
+          winston.log('info', 'updated meeting with participants: ', meeting)
+          return meeting
+        })
     })
-  })
 }
 
 function getOrCreateParticipant (obj) {
@@ -30,27 +32,32 @@ function getOrCreateParticipant (obj) {
       let email = participant.email || data.participant.email
       return app.service('participants')
         .patch(participant._id, {
-          meetings: _.uniq(participant.meetings.concat([data.meeting])),
+          meetings: _.uniq(participant.meetings.concat([ data.meeting ])),
           email: email
-        }).then((participant) => {
+        })
+        .then((participant) => {
           return addParticipantToMeeting(app, participant, data.meeting)
         })
-    }).catch((err) => {
+    })
+    .catch((err) => {
       winston.log('info', 'creating a new participant...', err)
-      return app.service('participants').create({
-        _id: data.participant,
-        name: data.name,
-        email: data.email,
-        consent: data.consent || false,
-        consentDate: data.consentDate || null,
-        meetings: [data.meeting]
-      }).then((participant) => {
-        winston.log('info', 'created a new participant', participant._id)
-        return addParticipantToMeeting(app, participant, data.meeting)
-      }).catch((err) => {
-        winston.log('info', 'couldnt make a new participant', err)
-        return err
-      })
+      return app.service('participants')
+        .create({
+          _id: data.participant,
+          name: data.name,
+          email: data.email,
+          consent: data.consent || false,
+          consentDate: data.consentDate || null,
+          meetings: [ data.meeting ]
+        })
+        .then((participant) => {
+          winston.log('info', 'created a new participant', participant._id)
+          return addParticipantToMeeting(app, participant, data.meeting)
+        })
+        .catch((err) => {
+          winston.log('info', 'couldnt make a new participant', err)
+          return err
+        })
     })
 }
 
@@ -79,24 +86,27 @@ function getOrCreateMeeting (data, app) {
         winston.log('info', 'no meeting found', data)
         winston.log('info', 'creating meeting')
         // get the number of meetings for this group
-        return app.service('meetings').find({ query: { room: data.room } }).then((mtgs) => {
-          // generate an id for the new meeting based on room
-          let id = data.room + '-' + (mtgs.length + 1)
-          return app.service('meetings').create({
-            _id: id,
-            room: data.room,
-            active: true,
-            meetingUrl: data.meetingUrl,
-            meta: JSON.parse(meta)
-          }).then((meeting) => {
-            winston.log('info', 'new meeting created', meeting._id)
-            data.meeting = meeting._id
-            return { data: data, app: app }
-          }).catch((err) => {
-            winston.log('error', 'couldnt create new meeting', err)
-            return err
+        return app.service('meetings').find({ query: { room: data.room } })
+          .then((mtgs) => {
+            // generate an id for the new meeting based on room
+            let id = data.room + '-' + (mtgs.length + 1)
+            return app.service('meetings').create({
+              _id: id,
+              room: data.room,
+              active: true,
+              meetingUrl: data.meetingUrl,
+              meta: JSON.parse(meta)
+            })
+            .then((meeting) => {
+              winston.log('info', 'new meeting created', meeting._id)
+              data.meeting = meeting._id
+              return { data: data, app: app }
+            })
+            .catch((err) => {
+              winston.log('error', 'couldnt create new meeting', err)
+              return err
+            })
           })
-        })
       }
     })
 }

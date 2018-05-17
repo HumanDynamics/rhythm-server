@@ -9,8 +9,8 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const participantEventSchema = new Schema({
-  participants: [{type: String, ref: 'Participant'}],
-  meeting: {type: String, ref: 'Meeting'},
+  participants: [{ type: String, ref: 'Participant' }],
+  meeting: { type: String, ref: 'Meeting' },
   timestamp: Date
 })
 

@@ -1,0 +1,184 @@
+---
+plugins:
+  - promise
+env:
+  node: true
+extends:
+  - eslint:recommended
+  - plugin:promise/recommended
+parserOptions:
+  ecmaVersion: 2017
+  sourceType: script
+rules:
+  array-bracket-spacing:
+    - error
+    - always
+    -
+      objectsInArrays: false
+  arrow-parens:
+    - error
+    - as-needed
+    -
+      requireForBlockBody: true
+  arrow-spacing: error
+  block-spacing: error
+  brace-style:
+    - error
+    - 1tbs              # I very much prefer allman -mjl
+    -
+      allowSingleLine: true
+  camelcase:
+    - error
+    -
+      properties: always
+  comma-dangle:
+    - error
+    - only-multiline
+  comma-spacing: error
+  comma-style: error
+  computed-property-spacing: error
+  consistent-return: error
+  consistent-this: error
+  curly:
+    - error
+    - multi-line
+  dot-location:
+    - error
+    - property
+  eqeqeq: error
+  func-call-spacing: error
+  generator-star-spacing:
+    - error
+    -
+      before: false
+      after: true
+  global-require: error
+  indent:
+    - error
+    - 2
+    -
+      SwitchCase: 1
+      FunctionDeclaration:
+        parameters: first
+        body: 1
+      FunctionExpression:
+        parameters: first
+        body: 1
+      MemberExpression: off
+      CallExpression:
+        arguments: first
+      ArrayExpression: first
+      ObjectExpression: first
+      ImportDeclaration: first
+  key-spacing:
+    - error
+    -
+      beforeColon: false
+      afterColon: true
+      mode: minimum
+  keyword-spacing: error
+  linebreak-style:
+    - error
+    - unix
+  max-len:
+    - warn
+    -
+      code: 120
+      ignoreStrings: false
+      ignoreTemplateLiterals: false
+      ignoreRegExpLiterals: false
+      ignoreTrailingComments: true
+      ignoreUrls: true
+  newline-per-chained-call:
+    - error
+    -
+      ignoreChainWithDepth: 3
+  no-console: warn
+  no-eq-null: error
+  no-extend-native: error
+  no-extra-parens: warn
+  no-fallthrough: error
+  no-global-assign: error
+  no-magic-numbers: off
+  no-multi-assign: error
+  no-multi-spaces:
+    - error
+    -
+      ignoreEOLComments: true
+  no-new: error
+  no-octal-escape: error
+  no-shadow: error
+  no-shadow-restricted-names: error
+  no-trailing-spaces: error
+  no-unused-vars: warn
+  no-use-before-define:
+    - error
+    -
+      functions: false
+  no-useless-call: error
+  no-useless-return: error
+  no-var: off                       # this is probably worth turning on and fixing at some point
+  no-whitespace-before-property: error
+  object-curly-newline: off
+  object-curly-spacing:
+    - error
+    - always
+  object-property-newline:
+    - error
+    -
+      allowAllPropertiesOnSameLine: true
+  one-var-declaration-per-line:
+    - error
+    - always
+  operator-linebreak: off
+  promise/no-nesting: off
+  prefer-rest-params: error
+  prefer-spread: error
+  quote-props:
+    - error
+    - as-needed
+    -
+      keywords: true
+  quotes:
+    - error
+    - single
+    -
+      avoidEscape: true
+      allowTemplateLiterals: true
+  rest-spread-spacing: error
+  semi:
+    - error
+    - never
+  semi-spacing: error
+  sort-imports: error
+  space-before-blocks: error
+  space-before-function-paren:
+    - error
+    -
+      anonymous: always
+      named: always
+      asyncArrow: ignore
+  space-in-parens: error
+  space-infix-ops: error
+  space-unary-ops:
+    - error
+    -
+      words: true
+      nonwords: false
+  spaced-comment:
+    - warn
+    - always
+    -
+      line:
+        markers:
+          - /
+      block:
+        exceptions:
+          - "*"
+        balanced: true
+  symbol-description: error
+  template-curly-spacing:
+    - error
+    - never
+  valid-jsdoc: warn
+  yoda: error

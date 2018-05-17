@@ -8,10 +8,10 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const meetingSchema = new Schema({
-  _id: {type: String},
-  participants: [{type: String, ref: 'Participant'}],
+  _id: { type: String },
+  participants: [{ type: String, ref: 'Participant' }],
   room: String,
-  startTime: {type: Date, 'default': Date.now},
+  startTime: { type: Date, 'default': Date.now },
   endTime: Date,
   active: Boolean,
   meetingUrl: String,

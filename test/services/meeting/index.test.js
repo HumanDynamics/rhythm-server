@@ -2,15 +2,15 @@
 'use strict'
 
 const assert = require('assert')
-const Faker = require('Faker')
+const Faker = require('faker')
 
 const app = require('../../../src/app')
 
 describe('meeting service', () => {
   var testMeeting = {
-    _id: Faker.Helpers.randomNumber(500).toString(),
-    participants: ['p1', 'p2', 'p3'],
-    startTime: Faker.Date.recent(),
+    _id: Faker.random.number(500).toString(),
+    participants: [ 'p1', 'p2', 'p3' ],
+    startTime: Faker.date.recent(),
     active: false
   }
 
@@ -22,12 +22,13 @@ describe('meeting service', () => {
 
   it('creates a new meeting', function (done) {
     app.service('meetings')
-       .create(testMeeting, {})
-       .then((meeting) => {
-         assert(meeting._id === testMeeting._id)
-         done()
-       }).catch((err) => {
-         done(err)
-       })
+      .create(testMeeting, {})
+      .then((meeting) => {
+        assert(meeting._id === testMeeting._id)
+        done()
+      })
+      .catch((err) => {
+        done(err)
+      })
   })
 })

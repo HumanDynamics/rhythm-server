@@ -12,7 +12,7 @@ describe('json transform', function () {
       b: 3,
       c: 4
     }
-    var newObj = helpers.transformKeys(obj, ['a'], (val) => { return val + 1 })
+    var newObj = helpers.transformKeys(obj, [ 'a' ], (val) => { return val + 1 })
     assert(_.isEqual(newObj, {
       a: 3,
       b: 3,
@@ -23,13 +23,13 @@ describe('json transform', function () {
 
   it('should transform nested values of a json object', function (done) {
     var obj = {
-      a: {d: 2},
+      a: { d: 2 },
       b: 3,
       c: 4
     }
-    var newObj = helpers.transformKeys(obj, ['d'], (val) => { return val + 1 })
+    var newObj = helpers.transformKeys(obj, [ 'd' ], (val) => { return val + 1 })
     assert(_.isEqual(newObj, {
-      a: {d: 3},
+      a: { d: 3 },
       b: 3,
       c: 4
     }))
@@ -38,13 +38,13 @@ describe('json transform', function () {
 
   it('should transform array values of a json object', function (done) {
     var obj = {
-      a: [2, 3],
+      a: [ 2, 3 ],
       b: 3,
       c: 4
     }
-    var newObj = helpers.transformKeys(obj, ['a'], (val) => { return val + 1 })
+    var newObj = helpers.transformKeys(obj, [ 'a' ], (val) => { return val + 1 })
     assert(_.isEqual(newObj, {
-      a: [3, 4],
+      a: [ 3, 4 ],
       b: 3,
       c: 4
     }))

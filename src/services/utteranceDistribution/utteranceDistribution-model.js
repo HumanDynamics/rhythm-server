@@ -9,9 +9,9 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const utteranceDistributionSchema = new Schema({
-  meeting: {type: String, ref: 'Meeting'},
+  meeting: { type: String, ref: 'Meeting' },
   talkTimes: [{
-    participant: {type: String, ref: 'Participant'},
+    participant: { type: String, ref: 'Participant' },
     seconds: Number
   }],
   timestamp: Date

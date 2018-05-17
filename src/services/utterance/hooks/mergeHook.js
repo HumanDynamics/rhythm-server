@@ -7,7 +7,7 @@ exports.hook = function (hook) {
     query: {
       meeting: hook.data.meeting,
       participant: hook.data.participant,
-      $sort: {endTime: -1},
+      $sort: { endTime: -1 },
       $limit: 1
     }
   }).then((lastUtterances) => {

@@ -3,8 +3,9 @@
 
 const assert = require('assert')
 const io = require('socket.io-client')
-const Faker = require('Faker')
-const feathers = require('feathers-client')
+const Faker = require('faker')
+const feathers = require('@feathersjs/feathers')
+const socketio = require('@feathersjs/socketio-client')
 const _ = require('underscore')
 
 const testUsers = 50
@@ -16,7 +17,7 @@ describe('Load tests', function () {
     while (ioIndex < testUsers) {
       (function () {
         var socket = io.connect('http://localhost:3000', {
-          'transports': [
+          transports: [
             'websocket',
             'flashsocket',
             'jsonp-polling',
@@ -39,17 +40,19 @@ describe('Load tests', function () {
             participant: 'participant' + ioIndex,
             startTime: new Date(),
             endTime: new Date((new Date()).getTime() + 50),
-            volumes: _(10).times((n) => { return Faker.Helpers.randomNumber(5) })
+            volumes: _(10).times((n) => { return Faker.helpers.random.number(5) })
           })
+          /* eslint-disable camelcase */
           socket.emit('face::create', {
             meeting: 'meeting' + ioIndex,
             participant: 'participant' + ioIndex,
             start_time: new Date(),
             end_time: new Date((new Date()).getTime() + 50),
             timestamp: new Date(),
-            face_delta: Faker.Helpers.randomNumber(5),
-            delta_array: _(71).times((n) => { return [Faker.Helpers.randomNumber(5)] })
+            face_delta: Faker.random.number(5),
+            delta_array: _(71).times((n) => { return [ Faker.random.number(5) ] })
           })
+          /* eslint-enable camelcase */
         }, interval)
 
         setTimeout(function () {
@@ -65,7 +68,7 @@ describe('Load tests', function () {
 
   it('receives turn events for each hangout', function (done) {
     var socket = io.connect('http://localhost:3000', {
-      'transports': [
+      transports: [
         'websocket',
         'flashsocket',
         'jsonp-polling',
@@ -74,12 +77,13 @@ describe('Load tests', function () {
       ],
       'force new connection': true
     })
-    var app = feathers()
-    .configure(feathers.hooks())
-    .configure(feathers.socketio(socket))
-    var turns = app.service('turns')
+    var client = feathers()
+      .configure(socketio(socket))
+    var turns = client.service('turns')
     var recvdTurns = []
-    for (var i = 0; i < testUsers; i++) { recvdTurns[i] = 0 }
+    for (let i = 0; i < testUsers; i++) {
+      recvdTurns[i] = 0
+    }
     var isDone = false
 
     turns.on('created', function (turn) {
@@ -88,7 +92,7 @@ describe('Load tests', function () {
       if (recvdTurns[meeting] >= 3) {
         if (!isDone) {
           isDone = true
-          for (var i = 0; i < testUsers; i++) {
+          for (let i = 0; i < testUsers; i++) {
             assert.equal(recvdTurns[i], 3)
           }
           done()

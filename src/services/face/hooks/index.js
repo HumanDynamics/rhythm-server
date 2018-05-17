@@ -1,13 +1,13 @@
 'use strict'
 
-const authHooks = require('feathers-authentication').hooks
+const auth = require('@feathersjs/authentication')
 const roomHook = require('../../../hooks/roomHook').hook
 
 exports.before = {
-  all: [authHooks.verifyToken()],
+  all: [ auth.hooks.authenticate('jwt') ],
   find: [],
   get: [],
-  create: [roomHook],
+  create: [ roomHook ],
   update: [],
   patch: [],
   remove: []

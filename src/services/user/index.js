@@ -5,12 +5,12 @@ const user = require('./user-model')
 const hooks = require('./hooks')
 
 module.exports = function () {
-  const app = this
+  const app = this          // eslint-disable-line consistent-this
 
   const options = {
     Model: user,
     paginate: {
-      default: 5,
+      'default': 5,
       max: 25
     }
   }
@@ -18,12 +18,9 @@ module.exports = function () {
   // Initialize our service with any options it requires
   app.use('/users', service(options))
 
-  // Get our initialize service to that we can bind hooks
+  // Get our service so that we can bind hooks
   const userService = app.service('/users')
 
-  // Set up our before hooks
-  userService.before(hooks.before)
-
-  // Set up our after hooks
-  userService.after(hooks.after)
+  // Set up our hooks
+  userService.hooks(hooks)
 }

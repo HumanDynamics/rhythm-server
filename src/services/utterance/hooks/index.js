@@ -4,13 +4,13 @@ const repeatHook = require('./repeatHook').hook
 const mergeHook = require('./mergeHook').hook
 const roomHook = require('../../../hooks/roomHook').hook
 const participantConsentedHook = require('./participant-consented-hook')
-const authHooks = require('feathers-authentication').hooks
+const auth = require('@feathersjs/authentication')
 
 exports.before = {
-  all: [authHooks.verifyToken()],
+  all: [ auth.hooks.authenticate('jwt') ],
   find: [],
   get: [],
-  create: [participantConsentedHook, roomHook, mergeHook, repeatHook],
+  create: [ participantConsentedHook, roomHook, mergeHook, repeatHook ],
   update: [],
   patch: [],
   remove: []

@@ -16,10 +16,10 @@ describe('meeting participants change', function () {
     const meetingService = global.app.service('meetings')
     var testMeeting = {
       _id: 'participants-patched-1',
-      participants: ['p1', 'p2', 'p3'],
+      participants: [ 'p1', 'p2', 'p3' ],
       startTime: new Date()
     }
-    var endParticipants = ['p1', 'p2']
+    var endParticipants = [ 'p1', 'p2' ]
 
     meetingService.on('patched', function (meeting) {
       if (meeting._id === testMeeting._id) {
@@ -44,10 +44,10 @@ describe('meeting participants change', function () {
     const meetingService = global.app.service('meetings')
     var testMeeting = {
       _id: 'participants-patched-2',
-      participants: ['p1', 'p2'],
+      participants: [ 'p1', 'p2' ],
       startTime: new Date()
     }
-    var endParticipants = ['p1', 'p2', 'p3']
+    var endParticipants = [ 'p1', 'p2', 'p3' ]
 
     meetingService.on('patched', function (meeting) {
       if (meeting._id === testMeeting._id) {
