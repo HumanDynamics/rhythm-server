@@ -42,7 +42,7 @@ function createMeetingAndUtterances (testName, ended, hasUtterances, done) {
 
   var testMeeting = {
     _id: testName + n,
-    participants: [testParticipants[0]._id, testParticipants[1]._id],
+    participants: [ testParticipants[0]._id, testParticipants[1]._id ],
     startTime: d1,
     endTime: null,
     active: true
@@ -50,32 +50,36 @@ function createMeetingAndUtterances (testName, ended, hasUtterances, done) {
 
   meetingId = testName + n
 
-  global.app.service('meetings').create(testMeeting)
-     .then(function (meeting) {
-       _.each(testParticipants, function (participant, i, list) {
-         global.app.service('participants').create(participant).then(() => {})
-       })
-       return testParticipants
-     }).then(function (participants) {
-       if (!hasUtterances) {
-         return
-       }
-       return global.app.service('utterances').create({
-         meeting: testMeeting._id,
-         startTime: d1,
-         endTime: d2,
-         participant: testParticipants[0]._id
-       })
-     }).then(function (utterance) {
-       if (done !== undefined) {
-         done()
-       }
-     }).catch(function (err) {
-       winston.log('info', '[end-meeting-job] error: ', err)
-       if (done !== undefined) {
-         done(err)
-       }
-     })
+  global.app.service('meetings')
+    .create(testMeeting)
+    .then(function (meeting) {
+      _.each(testParticipants, function (participant, i, list) {
+        global.app.service('participants').create(participant).then(() => {})
+      })
+      return testParticipants
+    })
+    .then(function (participants) {
+      if (!hasUtterances) {
+        return
+      }
+      return global.app.service('utterances').create({
+        meeting: testMeeting._id,
+        startTime: d1,
+        endTime: d2,
+        participant: testParticipants[0]._id
+      })
+    })
+    .then(function (utterance) {
+      if (done !== undefined) {
+        done()
+      }
+    })
+    .catch(function (err) {
+      winston.log('info', '[end-meeting-job] error: ', err)
+      if (done !== undefined) {
+        done(err)
+      }
+    })
 
   n += 1
 }
@@ -126,27 +130,33 @@ describe('end meeting job', function () {
     })
 
     it('should change an inactive meetings ended state', function (done) {
-      endMeetingJob._isMeetingEnded(endedMeeting, global.app).then(function (res) {
-        assert(res.meetingShouldEnd)
-        return endMeetingJob._maybeEndMeeting(res, global.app)
-      }).then(function (didEndMeeting) {
-        assert(didEndMeeting)
-        done()
-      }).catch(function (err) {
-        done(err)
-      })
+      endMeetingJob._isMeetingEnded(endedMeeting, global.app)
+        .then(function (res) {
+          assert(res.meetingShouldEnd)
+          return endMeetingJob._maybeEndMeeting(res, global.app)
+        })
+        .then(function (didEndMeeting) {
+          assert(didEndMeeting)
+          done()
+        })
+        .catch(function (err) {
+          done(err)
+        })
     })
 
     it('shouldnt change an active meetings end state', function (done) {
-      endMeetingJob._isMeetingEnded(aliveMeeting, global.app).then(function (res) {
-        assert(!res.meetingShouldEnd)
-        return endMeetingJob._maybeEndMeeting(res, global.app)
-      }).then(function (didEndMeeting) {
-        assert(!didEndMeeting)
-        done()
-      }).catch(function (err) {
-        done(err)
-      })
+      endMeetingJob._isMeetingEnded(aliveMeeting, global.app)
+        .then(function (res) {
+          assert(!res.meetingShouldEnd)
+          return endMeetingJob._maybeEndMeeting(res, global.app)
+        })
+        .then(function (didEndMeeting) {
+          assert(!didEndMeeting)
+          done()
+        })
+        .catch(function (err) {
+          done(err)
+        })
     })
   })
 
@@ -167,25 +177,27 @@ describe('end meeting job', function () {
     })
 
     it('should end all inactive meetings', function (done) {
-      endMeetingJob._endInactiveMeetings([endedMeeting, aliveMeeting], global.app)
+      endMeetingJob._endInactiveMeetings([ endedMeeting, aliveMeeting ], global.app)
                    .then(function (endedMeetings) {
                      winston.log('info', '[end-meeting-job] ended meetings:', endedMeetings)
                      assert(endedMeetings[0])
                      assert(!endedMeetings[1])
                      done()
-                   }).catch(function (err) {
+                   })
+                   .catch(function (err) {
                      done(err)
                    })
     })
 
     it('should end inactive meetings without utterances', function (done) {
-      endMeetingJob._endInactiveMeetings([endedMeetingWithoutUtterances, aliveMeetingWithoutUtterances], global.app)
+      endMeetingJob._endInactiveMeetings([ endedMeetingWithoutUtterances, aliveMeetingWithoutUtterances ], global.app)
                    .then(function (endedMeetings) {
                      winston.log('info', '[end-meeting-job] ended meetings:', endedMeetings)
                      assert(endedMeetings[0])
                      assert(!endedMeetings[1])
                      done()
-                   }).catch(function (err) {
+                   })
+                   .catch(function (err) {
                      done(err)
                    })
     })

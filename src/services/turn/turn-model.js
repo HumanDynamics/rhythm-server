@@ -10,14 +10,14 @@ const Schema = mongoose.Schema
 
 const turnSchema = new Schema({
   _id: String,
-  meeting: {type: String, ref: 'Meeting'},
+  meeting: { type: String, ref: 'Meeting' },
   timestamp: Date,
   from: Date,
   to: Date,
   room: String,
   transitions: Number,
   turns: [{
-    participant: {type: String, ref: 'participant'},
+    participant: { type: String, ref: 'participant' },
     turns: Number
   }]
 })

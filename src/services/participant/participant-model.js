@@ -13,7 +13,7 @@ const participantSchema = new Schema({
   _id: String,
   name: String,
   email: String,
-  meetings: [{type: String, ref: 'meeting'}],
+  meetings: [{ type: String, ref: 'meeting' }],
   consent: Boolean,
   consentDate: Date,
   createdAt: { type: Date, 'default': Date.now },

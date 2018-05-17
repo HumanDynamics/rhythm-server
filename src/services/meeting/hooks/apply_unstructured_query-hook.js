@@ -12,7 +12,7 @@ function applyUnstructuredQuery (hook) {
       if (current.meta !== undefined) {
         var match = true
         _.each(_.keys(hook.params.meta), function (key) {
-          if (current.meta == null || current.meta[key] !== decodeURI(hook.params.meta[key])) {
+          if (current.meta === null || current.meta[key] !== decodeURI(hook.params.meta[key])) {
             match = false
           }
         })

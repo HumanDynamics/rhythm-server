@@ -52,7 +52,7 @@ function getReportData (hook, callback) {
     var validParticipants = _.filter(participants.data, (participant) => {
       return _.contains(participant.meetings, meetingId)
     })
-    winston.log('info', 'generating report for participants', _.map(validParticipants, (part) => part._id))
+    winston.log('info', 'generating report for participants', _.map(validParticipants, part => part._id))
     // find utterances
     hook.app.service('utterances').find({
       query: {
@@ -76,11 +76,11 @@ function getReportData (hook, callback) {
       })
       // [{'name': ..., 'numUtterances': ..., 'meanLengthUtterances': ...}, ...]
       var visualizationData = validParticipants.map((participant) => {
-        var participantId = participant[ '_id' ]
+        var participantId = participant['_id']
         return {
-          name: participant[ 'name' ],
-          numUtterances: participantId in numUtterances ? numUtterances[ participantId ] : 0,
-          meanLengthUtterances: participantId in meanLengthUtterances ? meanLengthUtterances[ participantId ] : 0
+          name: participant['name'],
+          numUtterances: participantId in numUtterances ? numUtterances[participantId] : 0,
+          meanLengthUtterances: participantId in meanLengthUtterances ? meanLengthUtterances[participantId] : 0
         }
       })
       winston.log('info', 'getting addresses...')
@@ -158,7 +158,8 @@ function createVisualization (visualizationData) {
 
   var node = g.selectAll('scatter-dots')
     .data(visualizationData)
-    .enter().append('g')
+    .enter()
+    .append('g')
 
   node.append('svg:circle')
     .style('fill', function (d) { return color(d.name) })
@@ -267,7 +268,7 @@ function sendReport (visualization, addresses) {
 }
 
 function createMeetingEndEvent (hook) {
-  var meetingId = (hook.method === 'create') ? hook.data._id : hook.id
+  var meetingId = (hook.method === 'create') ? hook.data._id : hook.id      // eslint-disable-line no-extra-parens
   return hook.app.service('meetingEvents').create({
     meeting: meetingId,
     event: 'end',

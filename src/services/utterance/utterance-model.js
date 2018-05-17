@@ -9,8 +9,8 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const utteranceSchema = new Schema({
-  participant: {type: String, ref: 'Participant'},
-  meeting: {type: String, ref: 'Meeting'},
+  participant: { type: String, ref: 'Participant' },
+  meeting: { type: String, ref: 'Meeting' },
   startTime: Date,
   endTime: Date,
   volumes: [{

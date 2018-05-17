@@ -16,7 +16,7 @@ const user = require('../../src/services/user')
 // winston.level = 'debug'
 
 global.socket = io.connect('http://localhost:' + process.env.PORT, {
-  'transports': [
+  transports: [
     'websocket',
     'flashsocket',
     'jsonp-polling',
@@ -41,23 +41,27 @@ function dropDatabase () {
 function createUser (mongoClient) {
   winston.log('info', 'creating user...')
   return new Promise(function (resolve, reject) {
-    mongoClient.close().then(function () {
-      mongoose.connect(mongoUrl)
-      mongoose.Promise = global.Promise
-    })
+    mongoClient.close()
+      .then(function () {
+        mongoose.connect(mongoUrl)
+        mongoose.Promise = global.Promise
+      })
     var serverNoAuth = feathers().configure(user)
     // serverNoAuth.listen(3000)
-    return serverNoAuth.service('users').create({
-      email: 'hello',
-      password: 'password'
-    }).then((user) => {
-      winston.info('created user...')
-      winston.debug(user)
-      resolve(user)
-    }).catch((err) => {
-      winston.log('info', 'error creating user:', err)
-      reject(err)
-    })
+    return serverNoAuth.service('users')
+      .create({
+        email: 'hello',
+        password: 'password'
+      })
+      .then((user) => {
+        winston.info('created user...')
+        winston.debug(user)
+        resolve(user)
+      })
+      .catch((err) => {
+        winston.log('info', 'error creating user:', err)
+        reject(err)
+      })
   })
 }
 
@@ -72,13 +76,15 @@ function authenticate () {
   client
     .configure(socketio(global.socket))
     .configure(auth(config))
-  return client.authenticate({
-    strategy: 'local',
-    email: 'hello',
-    password: 'password'
-  }).then((res) => {
-    return client
-  })
+  return client
+           .authenticate({
+             strategy: 'local',
+             email: 'hello',
+             password: 'password'
+           })
+           .then((res) => {
+             return client
+           })
 }
 
 before(function (done) {
@@ -87,14 +93,16 @@ before(function (done) {
                 .then((app) => {
                   global.app = app
                   done()
-                }).catch((err) => {
+                })
+                .catch((err) => {
                   done(err)
                   winston.log('info', '[pre-test] error creating test app:', err)
                 })
 })
 
 after(function (done) {
-  dropDatabase().then(() => { done() }).catch((err) => { done(err) })
+  dropDatabase().then(() => { done() })
+                .catch((err) => { done(err) })
 })
 
 module.exports.dropDatabase = dropDatabase

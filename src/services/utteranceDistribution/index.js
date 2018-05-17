@@ -5,12 +5,12 @@ const utteranceDistribution = require('./utteranceDistribution-model')
 const hooks = require('./hooks')
 
 module.exports = function () {
-  const app = this
+  const app = this          // eslint-disable-line consistent-this
 
   const options = {
     Model: utteranceDistribution,
     paginate: {
-      default: 5,
+      'default': 5,
       max: 25
     }
   }

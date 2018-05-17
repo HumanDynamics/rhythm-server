@@ -30,7 +30,7 @@ describe('meta data in meeting', function () {
     startTime: d2,
     endTime: d1,
     active: false,
-    meta: {key: 'value'}
+    meta: { key: 'value' }
   }
 
   var m3 = {
@@ -39,62 +39,74 @@ describe('meta data in meeting', function () {
     startTime: d2,
     endTime: d1,
     active: false,
-    meta: {key: 'value with spaces'}
+    meta: { key: 'value with spaces' }
   }
 
   it('successfully saves a meeting with no metadata', function (done) {
-    app.service('meetings').create(m1)
-       .then(function (meeting) {
-         assert(meeting)
-         assert(_.isEqual(meeting._id, m1._id))
-         done()
-       }).catch(function (err) {
-         done(err)
-       })
+    app.service('meetings')
+      .create(m1)
+      .then(function (meeting) {
+        assert(meeting)
+        assert(_.isEqual(meeting._id, m1._id))
+        done()
+      })
+      .catch(function (err) {
+        done(err)
+      })
   })
 
   it('successfully saves a meeting that has metadata', function (done) {
-    app.service('meetings').create(m2)
-       .then(function (meeting) {
-         assert(_.isEqual(meeting._id, m2._id))
-         assert(_.isEqual(meeting.meta, m2.meta))
-         done()
-       }).catch(function (err) {
-         done(err)
-       })
+    app.service('meetings')
+      .create(m2)
+      .then(function (meeting) {
+        assert(_.isEqual(meeting._id, m2._id))
+        assert(_.isEqual(meeting.meta, m2.meta))
+        done()
+      })
+      .catch(function (err) {
+        done(err)
+      })
   })
 
   it('successfully finds a meeting with meta filter', function (done) {
-    app.service('meetings').find({query: {meta: {key: 'value'}}})
-       .then(function (meetings) {
-         assert(meetings)
-         assert(_.isEqual(meetings[0]._id, 'meeting-metadata-1'))
-         assert(_.isEqual(meetings[0].meta, m2.meta))
-         done()
-       }).catch(function (err) {
-         done(err)
-       })
+    app.service('meetings')
+      .find({ query: { meta: { key: 'value' } } })
+      .then(function (meetings) {
+        assert(meetings)
+        assert(_.isEqual(meetings[0]._id, 'meeting-metadata-1'))
+        assert(_.isEqual(meetings[0].meta, m2.meta))
+        done()
+      })
+      .catch(function (err) {
+        done(err)
+      })
   })
 
   it('successfully finds the meeting after url decoding the meta fields', function (done) {
-    app.service('meetings').create(m3).then(function (meeting) {
-      app.service('meetings').find({query: {meta: {key: 'value%20with%20spaces'}}})
-       .then(function (meetings) {
-         assert(meetings[0]._id === 'meeting-metadata-3')
-         done()
-       }).catch(function (err) {
-         done(err)
-       })
-    })
+    app.service('meetings')
+      .create(m3)
+      .then(function (meeting) {
+        app.service('meetings')
+          .find({ query: { meta: { key: 'value%20with%20spaces' } } })
+          .then(function (meetings) {
+            assert(meetings[0]._id === 'meeting-metadata-3')
+            done()
+          })
+          .catch(function (err) {
+            done(err)
+          })
+      })
   })
 
   it('doesnt find a meeting with meta when there isnt one', function (done) {
-    app.service('meetings').find({query: {meta: {key: 'not value'}}})
-       .then(function (meetings) {
-         assert(_.isEmpty(meetings))
-         done()
-       }).catch(function (err) {
-         done(err)
-       })
+    app.service('meetings')
+      .find({ query: { meta: { key: 'not value' } } })
+      .then(function (meetings) {
+        assert(_.isEmpty(meetings))
+        done()
+      })
+      .catch(function (err) {
+        done(err)
+      })
   })
 })

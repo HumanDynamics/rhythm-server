@@ -19,23 +19,27 @@ describe('participant service', () => {
 
   it('creates a new participant', function (done) {
     app.service('participants')
-    .create(testParticipant, {})
-    .then((participant) => {
-      assert(testParticipant._id === participant._id)
-      done()
-    }).catch((err) => {
-      done(err)
-    })
+      .create(testParticipant, {})
+      .then((participant) => {
+        assert(testParticipant._id === participant._id)
+        done()
+      })
+      .catch((err) => {
+        done(err)
+      })
   })
 
   it('patches a participant', function (done) {
-    app.service('participants').patch(testParticipant._id, {
-      consent: true
-    }).then((participant) => {
-      assert(participant.consent === true)
-      done()
-    }).catch((err) => {
-      done(err)
-    })
+    app.service('participants')
+      .patch(testParticipant._id, {
+        consent: true
+      })
+      .then((participant) => {
+        assert(participant.consent === true)
+        done()
+      })
+      .catch((err) => {
+        done(err)
+      })
   })
 })

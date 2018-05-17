@@ -14,13 +14,15 @@ const face = require('./face')
 const mongoose = require('mongoose')
 
 module.exports = function () {
-  const app = this
+  const app = this          // eslint-disable-line consistent-this
 
+  /* eslint-disable camelcase */
   let options = {
-    server: {sslCA: process.env.MONGO_CERT,
-      auto_reconnect: true,
-      poolSize: 5}
+    server: { sslCA: process.env.MONGO_CERT,
+              auto_reconnect: true,
+              poolSize: 5 }
   }
+  /* eslint-enable camelcase */
 
   mongoose.connect(process.env.MONGODB_URI, options)
   mongoose.Promise = global.Promise
